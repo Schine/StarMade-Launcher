@@ -1,0 +1,104 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include <QMouseEvent>
+#include <iostream>
+#include <fstream>
+#include <shellapi.h>
+#include <chrono>
+#include <thread>
+#include <QMessageBox>
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
+    // Pass flags so that no borders/frames appear on window
+    ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::checkJavaVersion(int maxFileReadAttempts)
+{
+    ShellExecute(nullptr, L"open", L"cmd.exe", L"/C java -version 2> .javaversion", 0, SW_HIDE);
+    std::string line;
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // Wait for version file to be written.
+    std::ifstream verFile(".javaversion");
+    int attemptCount = 0;
+    bool javaOkay = false;
+    while (attemptCount < maxFileReadAttempts)
+    {
+        if (verFile.is_open())
+        {
+            while (getline(verFile, line))
+            {
+                if (line.find("java version") != std::string::npos) // Found some version, could possibly check version
+                {
+                    javaOkay = true;
+                }
+            }
+            verFile.close();
+            break; // Stop attempts
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // If attempt failed, wait for version file to be written, again
+
+        ++attemptCount;
+    }
+    if (attemptCount >= maxFileReadAttempts)
+    {
+        QMessageBox::warning(nullptr, "Warning", "Failed to get Java version. If you don't have Java installed, install it before starting!");
+    }
+    else if (!javaOkay)
+    {
+        // Open message letting user choose to install java
+        int button = QMessageBox::question(nullptr, "Java Not Found", "Java not found! Select Java installation type:", "Default", "Manual", "Ignore", 0, 2);
+        if (button == 0)
+        {
+            // Install java silently - using default location
+            ShellExecute(nullptr, L"open", L"cmd.exe", L"/C jxpiinstall.exe /s", 0, SW_HIDE);
+        }
+        else if (button == 1)
+        {
+            // Install java manually - user can change install directory
+            ShellExecute(nullptr, L"open", L"cmd.exe", L"/C jxpiinstall.exe", 0, SW_HIDE);
+        }
+    }
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->pos().x() >= this->width() - GLWidget::CLOSE_BUTTON_OFFSET - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
+            event->pos().x() <= this->width() - GLWidget::CLOSE_BUTTON_OFFSET + GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
+            event->pos().y() >= GLWidget::CLOSE_BUTTON_OFFSET - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
+            event->pos().y() < GLWidget::CLOSE_BUTTON_OFFSET + GLWidget::CLOSE_BUTTON_SIZE / 2.0F)
+    {
+        this->close();
+    }
+    else if (event->pos().x() >= this->width() - GLWidget::MINIMIZE_BUTTON_OFFSET_X - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
+            event->pos().x() <= this->width() - GLWidget::MINIMIZE_BUTTON_OFFSET_X + GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
+            event->pos().y() >= GLWidget::CLOSE_BUTTON_OFFSET - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
+            event->pos().y() < GLWidget::CLOSE_BUTTON_OFFSET + GLWidget::CLOSE_BUTTON_SIZE / 2.0F)
+    {
+        m_mouseClickPos.setY(-1);
+        this->setWindowState((this->windowState() & ~Qt::WindowActive) | Qt::WindowMinimized);
+    }
+    else
+    {
+        m_mouseClickPos = event->pos();
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_mouseClickPos.y() > 0 && event->buttons() && Qt::LeftButton && m_mouseClickPos.y() < this->height() * 0.05)
+    {
+        QPoint diff = event->pos() - m_mouseClickPos;
+        QPoint newPos = this->pos() + diff;
+        this->move(newPos);
+    }
+}
