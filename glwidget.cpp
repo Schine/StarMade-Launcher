@@ -45,9 +45,6 @@ void GLWidget::paintGL()
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    const int BAR_BORDER = 4;
-    const int BOTTOM_BAR_HEIGHT = 175;
-
     // Bottom Bar
     glBegin(GL_QUADS);
         glColor3f(0.25, 0.25, 0.25);
@@ -101,9 +98,6 @@ void GLWidget::paintGL()
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    const int LAUNCH_BUTTON_WIDTH = 200;
-    const int LAUNCH_BUTTON_HEIGHT = 90;
-    const int LAUNCH_BUTTON_BORDER_SIZE = 5;
     // Launch button
     glBegin(GL_QUADS);
     glColor3f(0.1, 0.6, 0.1);
