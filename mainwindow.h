@@ -16,6 +16,7 @@ public:
     ~MainWindow();
 
     void checkJavaVersion(int maxFileReadAttempts = 3);
+    BOOL shouldInstall64Bit();
 
     void mousePressEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);

@@ -57,17 +57,40 @@ void MainWindow::checkJavaVersion(int maxFileReadAttempts)
     {
         // Open message letting user choose to install java
         int button = QMessageBox::question(nullptr, "Java Not Found", "Java not found! Select Java installation type:", "Default", "Manual", "Ignore", 0, 2);
+        std::wstring command;
+        if (shouldInstall64Bit())
+        {
+            command = std::wstring(L"jre-8u40-windows-x64.exe");
+        }
+        else
+        {
+            command = std::wstring(L"jre-8u40-windows-i586.exe");
+        }
         if (button == 0)
         {
             // Install java silently - using default location
-            ShellExecute(nullptr, L"open", L"cmd.exe", L"/C jxpiinstall.exe /s", 0, SW_HIDE);
+            std::wstring combined = std::wstring(L"/C ") + command + std::wstring(L" /s");
+            ShellExecute(nullptr, L"open", L"cmd.exe", combined.c_str(), 0, SW_HIDE);
         }
         else if (button == 1)
         {
             // Install java manually - user can change install directory
-            ShellExecute(nullptr, L"open", L"cmd.exe", L"/C jxpiinstall.exe", 0, SW_HIDE);
+            std::wstring combined = std::wstring(L"/C ") + command;
+            ShellExecute(nullptr, L"open", L"cmd.exe", combined.c_str(), 0, SW_HIDE);
         }
     }
+}
+
+BOOL MainWindow::shouldInstall64Bit()
+{
+#if defined(_WIN64)
+    return TRUE;
+#elif defined(_WIN32)
+    BOOL f64 = FALSE;
+    return IsWow64Process(GetCurrentProcess(), &f64) && f64;
+#else
+    return FALSE;
+#endif
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
