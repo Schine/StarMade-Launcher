@@ -2,6 +2,7 @@
 #define GLWIDGET_H
 
 #include <QGLWidget>
+#include "launcherwidget.h"
 
 class GLWidget : public QGLWidget
 {
@@ -20,13 +21,13 @@ public:
     explicit GLWidget(QWidget* parent = 0);
     ~GLWidget();
 
-    GLuint loadTexture(QString fileName);
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
 private:
     GLuint m_schineLogo;
     GLuint m_background;
+    LauncherWidget* m_mainWidget;
 };
 
 #endif // GLWIDGET_H

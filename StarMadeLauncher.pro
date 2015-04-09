@@ -16,9 +16,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    glwidget.cpp
+    glwidget.cpp \
+    launcherwidget.cpp \
+    widgetpane.cpp \
+    glutil.cpp \
+    gltexture.cpp
 
 HEADERS  += mainwindow.h \
-    glwidget.h
+    glwidget.h \
+    launcherwidget.h \
+    widgetpane.h \
+    glutil.h \
+    gltexture.h
 
 FORMS    += mainwindow.ui

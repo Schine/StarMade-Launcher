@@ -81,7 +81,7 @@ void MainWindow::checkJavaVersion(int maxFileReadAttempts)
     }
 }
 
-BOOL MainWindow::shouldInstall64Bit()
+int MainWindow::shouldInstall64Bit()
 {
 #if defined(_WIN64)
     return TRUE;
