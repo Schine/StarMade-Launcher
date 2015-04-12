@@ -44,7 +44,7 @@ void MainWindow::init()
     WidgetPane* schineLogo = new WidgetPane(m_mainWidget.get());
     schineLogo->setPosition(Vector2I(27, 16));
     schineLogo->setSize(Vector2I(42, 42));
-    schineLogo->setTexture(std::string("schine_small.png"));
+    schineLogo->setTexture(std::string("data/textures/schine_small.png"));
 
     WidgetPane* rightBar = new WidgetPane(m_mainWidget.get());
     rightBar->setPosition(Vector2I(918, 66));

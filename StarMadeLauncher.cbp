@@ -9,7 +9,7 @@
 			<Target title="Debug">
 				<Option output="bin/Debug/StarMadeLauncher" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
@@ -33,24 +33,22 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="gltexture.cpp" />
-		<Unit filename="gltexture.h" />
-		<Unit filename="glutil.cpp" />
-		<Unit filename="glutil.h" />
-		<Unit filename="glwidget.cpp" />
-		<Unit filename="glwidget.h" />
-		<Unit filename="launcherwidget.cpp" />
-		<Unit filename="launcherwidget.h" />
-		<Unit filename="main.cpp" />
-		<Unit filename="mainwindow.cpp" />
-		<Unit filename="mainwindow.h" />
-		<Unit filename="ogl.h" />
-		<Unit filename="vector2.cpp" />
-		<Unit filename="vector2.h" />
-		<Unit filename="vector3.cpp" />
-		<Unit filename="vector3.h" />
-		<Unit filename="widgetpane.cpp" />
-		<Unit filename="widgetpane.h" />
+		<Unit filename="include/gltexture.h" />
+		<Unit filename="include/glutil.h" />
+		<Unit filename="include/launcherwidget.h" />
+		<Unit filename="include/mainwindow.h" />
+		<Unit filename="include/ogl.h" />
+		<Unit filename="include/vector2.h" />
+		<Unit filename="include/vector3.h" />
+		<Unit filename="include/widgetpane.h" />
+		<Unit filename="src/gltexture.cpp" />
+		<Unit filename="src/glutil.cpp" />
+		<Unit filename="src/launcherwidget.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/mainwindow.cpp" />
+		<Unit filename="src/vector2.cpp" />
+		<Unit filename="src/vector3.cpp" />
+		<Unit filename="src/widgetpane.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

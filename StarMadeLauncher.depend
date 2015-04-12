@@ -95,3 +95,53 @@
 	"ogl.h"
 	<string>
 
+1428877622 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\gltexture.cpp
+	"gltexture.h"
+	"glutil.h"
+	<iostream>
+	<string>
+	"ogl.h"
+
+1428880693 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\glutil.cpp
+	"glutil.h"
+	<string>
+	<png.h>
+	<iostream>
+
+1428818387 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\launcherwidget.cpp
+	"launcherwidget.h"
+	<assert.h>
+
+1428867297 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
+	"mainwindow.h"
+	<GL/glew.h>
+	<windows.h>
+	<windef.h>
+	<GLFW/glfw3.h>
+	<GLFW/glfw3native.h>
+	<memory>
+	<iostream>
+
+1428819647 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\vector2.cpp
+	"vector2.h"
+
+1428819605 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\vector3.cpp
+	"vector3.h"
+
+1428862352 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgetpane.cpp
+	"widgetpane.h"
+	<iostream>
+	"ogl.h"
+	<string>
+
+1428886037 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
+	"mainwindow.h"
+	<iostream>
+	<fstream>
+	<chrono>
+	<windows.h>
+	<shellapi.h>
+	<thread>
+	"ogl.h"
+	"widgetpane.h"
+
