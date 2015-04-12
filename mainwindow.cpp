@@ -1,127 +1,121 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
-#include <QMouseEvent>
 #include <iostream>
 #include <fstream>
-#include <shellapi.h>
 #include <chrono>
+#ifdef _WIN32
+#include <windows.h>
+#include <shellapi.h>
+#endif // _WIN32
 #include <thread>
-#include <QMessageBox>
+#include "ogl.h"
+#include "widgetpane.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
-    // Pass flags so that no borders/frames appear on window
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(int borderSizeX, int borderSizeY)
+    : m_size(0, 0),
+    m_mousePosition(0, 0),
+    m_mouseLastClickedPosition(0, 0),
+    m_closeRequested(false),
+    m_windowMoveRequest(0, 0),
+    m_borderSize(borderSizeX, borderSizeY)
 {
-    ui->setupUi(this);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
 }
 
-void MainWindow::checkJavaVersion(int maxFileReadAttempts)
+void MainWindow::init()
 {
-    ShellExecute(nullptr, L"open", L"cmd.exe", L"/C java -version 2> .javaversion", 0, SW_HIDE);
-    std::string line;
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // Wait for version file to be written.
-    std::ifstream verFile(".javaversion");
-    int attemptCount = 0;
-    bool javaOkay = false;
-    while (attemptCount < maxFileReadAttempts)
+    glClearColor(0.1, 0.1, 0.1, 1.0F);
+    glDisable(GL_DEPTH_TEST);
+
+    WidgetPane* mainWidget = new WidgetPane();
+    mainWidget->setPosition(Vector2I(0, 0));
+    mainWidget->setSize(Vector2I(width(), height()));
+    mainWidget->setColor(66, 66, 66);
+    m_mainWidget = std::shared_ptr<WidgetPane>(mainWidget);
+
+    WidgetPane* topBar = new WidgetPane(m_mainWidget.get());
+    topBar->setPosition(Vector2I(0, 0));
+    topBar->setSize(Vector2I(width(), 66));
+    topBar->setColor(39, 39, 39);
+
+    WidgetPane* schineLogo = new WidgetPane(m_mainWidget.get());
+    schineLogo->setPosition(Vector2I(27, 16));
+    schineLogo->setSize(Vector2I(42, 42));
+    schineLogo->setTexture(std::string("schine_small.png"));
+
+    WidgetPane* rightBar = new WidgetPane(m_mainWidget.get());
+    rightBar->setPosition(Vector2I(918, 66));
+    rightBar->setSize(Vector2I(282, 685));
+    rightBar->setColor(85, 85, 85);
+}
+
+void MainWindow::update(double deltatTime)
+{
+
+}
+
+void MainWindow::render()
+{
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    this->m_mainWidget->draw();
+}
+
+void MainWindow::resize(int w, int h)
+{
+    std::cout << w << " " << h << std::endl;
+    m_size.setXY(w, h);
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0f, this->width(), this->height(), 0.0f, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    this->m_mainWidget->setPosition(Vector2I(0, 0));
+    this->m_mainWidget->setSize(Vector2I(w, h));
+}
+
+void MainWindow::mouseClicked(int button, bool press)
+{
+    if (press)
     {
-        if (verFile.is_open())
+        if (m_mousePosition.x() >= this->width() - CLOSE_BUTTON_OFFSET - CLOSE_BUTTON_SIZE / 2.0F &&
+                m_mousePosition.x() <= this->width() - CLOSE_BUTTON_OFFSET + CLOSE_BUTTON_SIZE / 2.0F &&
+                m_mousePosition.y() >= CLOSE_BUTTON_OFFSET - CLOSE_BUTTON_SIZE / 2.0F &&
+                m_mousePosition.y() < CLOSE_BUTTON_OFFSET + CLOSE_BUTTON_SIZE / 2.0F)
         {
-            while (getline(verFile, line))
-            {
-                if (line.find("java version") != std::string::npos) // Found some version, could possibly check version
-                {
-                    javaOkay = true;
-                }
-            }
-            verFile.close();
-            break; // Stop attempts
+            m_closeRequested = true;
         }
-
-        std::this_thread::sleep_for(std::chrono::seconds(1)); // If attempt failed, wait for version file to be written, again
-
-        ++attemptCount;
-    }
-    if (attemptCount >= maxFileReadAttempts)
-    {
-        QMessageBox::warning(nullptr, "Warning", "Failed to get Java version. If you don't have Java installed, install it before starting!");
-    }
-    else if (!javaOkay)
-    {
-        // Open message letting user choose to install java
-        int button = QMessageBox::question(nullptr, "Java Not Found", "Java not found! Select Java installation type:", "Default", "Manual", "Ignore", 0, 2);
-        std::wstring command;
-        if (shouldInstall64Bit())
+        else if (m_mousePosition.x() >= this->width() - MINIMIZE_BUTTON_OFFSET_X - CLOSE_BUTTON_SIZE / 2.0F &&
+                m_mousePosition.x() <= this->width() - MINIMIZE_BUTTON_OFFSET_X + CLOSE_BUTTON_SIZE / 2.0F &&
+                m_mousePosition.y() >= CLOSE_BUTTON_OFFSET - CLOSE_BUTTON_SIZE / 2.0F &&
+                m_mousePosition.y() < CLOSE_BUTTON_OFFSET + CLOSE_BUTTON_SIZE / 2.0F)
         {
-            command = std::wstring(L"jre-8u40-windows-x64.exe");
+            m_mouseLastClickedPosition.setXY(-1, -1);
+            setMinimizeRequested(true);
         }
         else
         {
-            command = std::wstring(L"jre-8u40-windows-i586.exe");
+            m_mouseLastClickedPosition.setXY(m_mousePosition.x(), m_mousePosition.y());
         }
-        if (button == 0)
-        {
-            // Install java silently - using default location
-            std::wstring combined = std::wstring(L"/C ") + command + std::wstring(L" /s");
-            ShellExecute(nullptr, L"open", L"cmd.exe", combined.c_str(), 0, SW_HIDE);
-        }
-        else if (button == 1)
-        {
-            // Install java manually - user can change install directory
-            std::wstring combined = std::wstring(L"/C ") + command;
-            ShellExecute(nullptr, L"open", L"cmd.exe", combined.c_str(), 0, SW_HIDE);
-        }
-    }
-}
-
-int MainWindow::shouldInstall64Bit()
-{
-#if defined(_WIN64)
-    return TRUE;
-#elif defined(_WIN32)
-    BOOL f64 = FALSE;
-    return IsWow64Process(GetCurrentProcess(), &f64) && f64;
-#else
-    return FALSE;
-#endif
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    if (event->pos().x() >= this->width() - GLWidget::CLOSE_BUTTON_OFFSET - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
-            event->pos().x() <= this->width() - GLWidget::CLOSE_BUTTON_OFFSET + GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
-            event->pos().y() >= GLWidget::CLOSE_BUTTON_OFFSET - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
-            event->pos().y() < GLWidget::CLOSE_BUTTON_OFFSET + GLWidget::CLOSE_BUTTON_SIZE / 2.0F)
-    {
-        this->close();
-    }
-    else if (event->pos().x() >= this->width() - GLWidget::MINIMIZE_BUTTON_OFFSET_X - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
-            event->pos().x() <= this->width() - GLWidget::MINIMIZE_BUTTON_OFFSET_X + GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
-            event->pos().y() >= GLWidget::CLOSE_BUTTON_OFFSET - GLWidget::CLOSE_BUTTON_SIZE / 2.0F &&
-            event->pos().y() < GLWidget::CLOSE_BUTTON_OFFSET + GLWidget::CLOSE_BUTTON_SIZE / 2.0F)
-    {
-        m_mouseClickPos.setY(-1);
-        this->setWindowState((this->windowState() & ~Qt::WindowActive) | Qt::WindowMinimized);
     }
     else
     {
-        m_mouseClickPos = event->pos();
+        m_mouseLastClickedPosition.setXY(-1, -1);
     }
 }
 
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
+void MainWindow::mouseMoved(double xPos, double yPos)
 {
-    if (m_mouseClickPos.y() > 0 && event->buttons() && Qt::LeftButton && m_mouseClickPos.y() < this->height() * 0.05)
+    m_mousePosition.setXY(xPos, yPos);
+    if (m_mouseLastClickedPosition.y() > 0 && m_mouseLastClickedPosition.y() < this->height() * 0.05)
     {
-        QPoint diff = event->pos() - m_mouseClickPos;
-        QPoint newPos = this->pos() + diff;
-        this->move(newPos);
+        std::cout << (yPos - m_mouseLastClickedPosition.y()) << std::endl;
+
+        m_windowMoveRequest.setXY(xPos - m_mouseLastClickedPosition.x() + m_borderSize.x(), yPos - m_mouseLastClickedPosition.y() + 30);
     }
 }

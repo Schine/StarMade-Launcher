@@ -1,0 +1,51 @@
+Determining if files pthread.h exist failed with the following output:
+Change Dir: C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTryCompileExec2489933311/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec2489933311.dir\build.make CMakeFiles/cmTryCompileExec2489933311.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/CMakeFiles/CMakeTmp'
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E cmake_progress_report C:\Users\Mitch\Dropbox\Development\Env\C++\Projects\StarMadeLauncher\StarMadeLauncher\lib\glfw-3.1.1\build\CMakeFiles\CMakeTmp\CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2489933311.dir/CheckIncludeFiles.c.obj
+C:\MinGW\bin\gcc.exe    -o CMakeFiles\cmTryCompileExec2489933311.dir\CheckIncludeFiles.c.obj   -c C:\Users\Mitch\Dropbox\Development\Env\C++\Projects\StarMadeLauncher\StarMadeLauncher\lib\glfw-3.1.1\build\CMakeFiles\CMakeTmp\CheckIncludeFiles.c
+C:\Users\Mitch\Dropbox\Development\Env\C++\Projects\StarMadeLauncher\StarMadeLauncher\lib\glfw-3.1.1\build\CMakeFiles\CMakeTmp\CheckIncludeFiles.c:2:21: fatal error: pthread.h: No such file or directory
+ #include <pthread.h>
+                     ^
+compilation terminated.
+CMakeFiles\cmTryCompileExec2489933311.dir\build.make:56: recipe for target 'CMakeFiles/cmTryCompileExec2489933311.dir/CheckIncludeFiles.c.obj' failed
+mingw32-make.exe[1]: *** [CMakeFiles/cmTryCompileExec2489933311.dir/CheckIncludeFiles.c.obj] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/CMakeFiles/CMakeTmp'
+Makefile:116: recipe for target 'cmTryCompileExec2489933311/fast' failed
+mingw32-make.exe: *** [cmTryCompileExec2489933311/fast] Error 2
+
+Source:
+/* */
+#include <pthread.h>
+
+
+int main(void){return 0;}
+
+Performing C SOURCE FILE Test _GLFW_HAS_64ASLR failed with the following output:
+Change Dir: C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/bin/mingw32-make.exe" "cmTryCompileExec4172621818/fast"
+C:/MinGW/bin/mingw32-make.exe -f CMakeFiles\cmTryCompileExec4172621818.dir\build.make CMakeFiles/cmTryCompileExec4172621818.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/CMakeFiles/CMakeTmp'
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E cmake_progress_report C:\Users\Mitch\Dropbox\Development\Env\C++\Projects\StarMadeLauncher\StarMadeLauncher\lib\glfw-3.1.1\build\CMakeFiles\CMakeTmp\CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec4172621818.dir/src.c.obj
+C:\MinGW\bin\gcc.exe   -D_GLFW_HAS_64ASLR -Wl,--high-entropy-va   -o CMakeFiles\cmTryCompileExec4172621818.dir\src.c.obj   -c C:\Users\Mitch\Dropbox\Development\Env\C++\Projects\StarMadeLauncher\StarMadeLauncher\lib\glfw-3.1.1\build\CMakeFiles\CMakeTmp\src.c
+Linking C executable cmTryCompileExec4172621818.exe
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTryCompileExec4172621818.dir\link.txt --verbose=1
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -E remove -f CMakeFiles\cmTryCompileExec4172621818.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\cmTryCompileExec4172621818.dir/objects.a @CMakeFiles\cmTryCompileExec4172621818.dir\objects1.rsp
+C:\MinGW\bin\gcc.exe   -D_GLFW_HAS_64ASLR -Wl,--high-entropy-va    -Wl,--whole-archive CMakeFiles\cmTryCompileExec4172621818.dir/objects.a -Wl,--no-whole-archive  -o cmTryCompileExec4172621818.exe -Wl,--out-implib,libcmTryCompileExec4172621818.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTryCompileExec4172621818.dir\linklibs.rsp
+c:/mingw/bin/../lib/gcc/mingw32/4.8.1/../../../../mingw32/bin/ld.exe: unrecognized option '--high-entropy-va'
+c:/mingw/bin/../lib/gcc/mingw32/4.8.1/../../../../mingw32/bin/ld.exe: use the --help option for usage information
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTryCompileExec4172621818.dir\build.make:89: recipe for target 'cmTryCompileExec4172621818.exe' failed
+mingw32-make.exe[1]: *** [cmTryCompileExec4172621818.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/CMakeFiles/CMakeTmp'
+Makefile:116: recipe for target 'cmTryCompileExec4172621818/fast' failed
+mingw32-make.exe: *** [cmTryCompileExec4172621818/fast] Error 2
+
+Source file was:
+int main(void) { return 0; }

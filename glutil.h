@@ -1,12 +1,13 @@
 #ifndef GLUTIL_H
 #define GLUTIL_H
 
-#include <QGLWidget>
+#include <string>
+#include "ogl.h"
 
 class GLUtil
 {
 public:
-    static GLuint loadTexture(QString fileName);
+    static GLuint loadTexture(std::string fileName, int *width, int *height);
 };
 
 #endif // GLUTIL_H

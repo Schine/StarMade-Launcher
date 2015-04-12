@@ -2,7 +2,8 @@
 #define LAUNCHERWIDGET_H
 
 #include <memory>
-#include <QPoint>
+#include "vector2.h"
+#include <vector>
 
 class LauncherWidget
 {
@@ -19,14 +20,14 @@ public:
     bool isDirtyRecursive() const;
     virtual void draw() = 0;
     virtual void init() = 0;
-    QPoint getPosition() const { return m_position; }
-    QPoint getSize() const { return m_size; }
-    void setPosition(QPoint position) { m_position = position; }
-    void setSize(QPoint size) { m_size = size; }
+    Vector2I getPosition() const { return m_position; }
+    Vector2I getSize() const { return m_size; }
+    void setPosition(Vector2I position) { m_position = position; }
+    void setSize(Vector2I size) { m_size = size; }
 private:
     bool m_hidden;
-    QPoint m_position;
-    QPoint m_size;
+    Vector2I m_position;
+    Vector2I m_size;
     std::vector<LauncherWidget*> m_children;
     bool m_dirty; // Should be re-rendered
 };

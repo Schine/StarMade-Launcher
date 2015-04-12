@@ -1,0 +1,1459 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="GLFW" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\src\;CMake Files\docs\;CMake Files\examples\;CMake Files\tests\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install/local">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 install/local" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install/strip">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 install/strip" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="uninstall">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 uninstall" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="install">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 install" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="list_install_components">
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 list_install_components" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="glfw">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/libglfw3.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add option="-D_GLFW_USE_CONFIG_H" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 glfw" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="glfw/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/libglfw3.a" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src" />
+         <Option object_output="./" />
+         <Option type="2" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add option="-D_GLFW_USE_CONFIG_H" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 glfw/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="gears">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/gears.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 gears" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="gears/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/gears.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 gears/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="splitview">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/splitview.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 splitview" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="splitview/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/splitview.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 splitview/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="wave">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/wave.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 wave" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="wave/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/wave.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 wave/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="boing">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/boing.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 boing" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="boing/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/boing.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 boing/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="simple">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/simple.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 simple" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="simple/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/simple.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 simple/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="particles">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/particles.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 particles" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="particles/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/particles.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 particles/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="heightmap">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/heightmap.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 heightmap" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="heightmap/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/heightmap.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 heightmap/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/examples/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="title">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/title.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 title" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="title/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/title.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 title/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="joysticks">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/joysticks.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 joysticks" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="joysticks/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/joysticks.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 joysticks/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="cursor">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/cursor.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 cursor" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="cursor/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/cursor.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 cursor/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="sharing">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/sharing.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 sharing" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="sharing/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/sharing.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 sharing/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="defaults">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/defaults.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 defaults" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="defaults/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/defaults.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 defaults/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="iconify">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/iconify.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 iconify" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="iconify/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/iconify.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 iconify/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="cursoranim">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/cursoranim.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 cursoranim" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="cursoranim/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/cursoranim.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 cursoranim/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="windows">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/windows.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 windows" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="windows/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/windows.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 windows/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="accuracy">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/accuracy.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 accuracy" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="accuracy/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/accuracy.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 accuracy/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="peter">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/peter.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 peter" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="peter/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/peter.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 peter/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="clipboard">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/clipboard.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clipboard" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="clipboard/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/clipboard.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clipboard/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="threads">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/threads.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 threads" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="threads/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/threads.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 threads/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="tearing">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/tearing.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 tearing" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="tearing/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/tearing.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 tearing/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="reopen">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/reopen.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 reopen" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="reopen/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/reopen.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 reopen/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="glfwinfo">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/glfwinfo.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 glfwinfo" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="glfwinfo/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/glfwinfo.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 glfwinfo/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="events">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/events.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 events" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="events/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/events.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 events/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="empty">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/empty.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 empty" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="empty/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/empty.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="0" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 empty/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="gamma">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/gamma.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 gamma" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="gamma/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/gamma.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 gamma/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="fsaa">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/fsaa.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 fsaa" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="fsaa/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/fsaa.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 fsaa/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="monitors">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/monitors.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 monitors" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="monitors/fast">
+         <Option output="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/monitors.exe" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DUNICODE" />
+            <Add option="-DWINVER=0x0501" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps" />
+            <Add directory="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/../../../../include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include" />
+            <Add directory="c:\mingw\bin\../lib/gcc/mingw32/4.8.1/include-fixed" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 monitors/fast" />
+            <CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/tests/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps/getopt.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps/glad.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps/tinycthread.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/boing.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/gears.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/heightmap.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/particles.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/simple.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/splitview.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/wave.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/context.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/init.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/input.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/monitor.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/wgl_context.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/win32_init.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/win32_monitor.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/win32_time.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/win32_tls.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/win32_window.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/window.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/winmm_joystick.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/accuracy.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/clipboard.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/cursor.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/cursoranim.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/defaults.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/empty.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/events.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/fsaa.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/gamma.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/glfwinfo.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/iconify.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/joysticks.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/monitors.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/peter.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/reopen.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/sharing.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/tearing.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/threads.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/title.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/windows.c">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/build/src/glfw_config.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps/getopt.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps/glad/glad.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/deps/tinycthread.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include/GLFW/glfw3.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/include/GLFW/glfw3native.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/internal.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/wgl_context.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/win32_platform.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/win32_tls.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/winmm_joystick.h">
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/cmake_uninstall.cmake.in">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/glfw3Config.cmake.in">
+          <Option virtualFolder="CMake Files\src\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/glfw_config.h.in">
+          <Option virtualFolder="CMake Files\src\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/glfw3.pc.in">
+          <Option virtualFolder="CMake Files\src\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/src/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\src\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/docs/Doxyfile.in">
+          <Option virtualFolder="CMake Files\docs\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/examples/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\examples\" />
+      </Unit>
+      <Unit filename="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/glfw-3.1.1/tests/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\tests\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

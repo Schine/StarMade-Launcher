@@ -1,0 +1,10 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/freeglut-3.0.0/build/freeglut.rc
+

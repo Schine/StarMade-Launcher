@@ -1,6 +1,7 @@
 #include "widgetpane.h"
-#include <QtGui/qopengl.h>
 #include <iostream>
+#include "ogl.h"
+#include <string>
 
 WidgetPane::WidgetPane(LauncherWidget* parent)
     : LauncherWidget(parent),
@@ -34,7 +35,7 @@ void WidgetPane::draw()
     }
 
     glBegin(GL_QUADS);
-    glColor3f(m_color.red() / 255.0F, m_color.green() / 255.0F, m_color.blue() / 255.0F);
+    glColor3f(m_color.x() / 255.0F, m_color.y() / 255.0F, m_color.z() / 255.0F);
     if (m_hasTexture) glTexCoord2f(0.0F, 1.0F);
     glVertex3f(this->getPosition().x(),                         this->getPosition().y(), 0.0);
     if (m_hasTexture) glTexCoord2f(1.0F, 1.0F);
@@ -62,10 +63,10 @@ void WidgetPane::init()
 
 void WidgetPane::setColor(float r, float g, float b)
 {
-    m_color.setRgb(r, g, b);
+    m_color.setXYZ(r, g, b);
 }
 
-void WidgetPane::setTexture(QString fileName)
+void WidgetPane::setTexture(const std::string& fileName)
 {
     m_texture = std::shared_ptr<GLTexture>(GLTexture::fromFile(fileName));
     m_hasTexture = true;

@@ -1,0 +1,2 @@
+C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/freeglut-3.0.0/build/CMakeFiles/freeglut_static.dir
+C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/freeglut-3.0.0/build/CMakeFiles/freeglut.dir

@@ -2,6 +2,8 @@
 #include <assert.h>
 
 LauncherWidget::LauncherWidget(LauncherWidget* parent)
+    : m_position(0, 0),
+    m_size(0, 0)
 {
     if (parent != nullptr)
     {

@@ -1,21 +1,26 @@
 #include "gltexture.h"
 #include "glutil.h"
 #include <iostream>
+#include <string>
+#include "ogl.h"
 
-GLTexture::GLTexture(QString fileName, GLuint handle)
+GLTexture::GLTexture(std::string fileName, GLuint handle, int width, int height)
     : m_fileName(fileName),
-      m_handle(handle)
+      m_handle(handle),
+      m_textureSize(width, height)
 {
 }
 
-GLTexture *GLTexture::fromFile(QString fileName)
+GLTexture *GLTexture::fromFile(std::string fileName)
 {
-    return new GLTexture(fileName, GLUtil::loadTexture(fileName));
+    int width, height;
+    GLuint handle = GLUtil::loadTexture(fileName, &width, &height);
+    return new GLTexture(fileName, handle, width, height);
 }
 
-GLTexture *GLTexture::fromOGLHandle(QString fileName, GLuint handle)
+GLTexture *GLTexture::fromOGLHandle(std::string fileName, GLuint handle, int width, int height)
 {
-    return new GLTexture(fileName, handle);
+    return new GLTexture(fileName, handle, width, height);
 }
 
 GLTexture::~GLTexture()

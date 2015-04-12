@@ -1,20 +1,24 @@
 #ifndef GLTEXTURE_H
 #define GLTEXTURE_H
 
-#include <QGLWidget>
+#include <string>
+#include "vector2.h"
+
+typedef unsigned int GLuint;
 
 class GLTexture
 {
 public:
-    static GLTexture* fromFile(QString fileName);
-    static GLTexture* fromOGLHandle(QString fileName, GLuint handle);
+    static GLTexture* fromFile(std::string fileName);
+    static GLTexture* fromOGLHandle(std::string fileName, GLuint handle, int width, int height);
     ~GLTexture();
     void bind();
     void unbind();
 private:
-    GLTexture(QString fileName, GLuint handle);
-    QString m_fileName;
+    GLTexture(std::string fileName, GLuint handle, int width, int height);
+    std::string m_fileName;
     GLuint m_handle;
+    Vector2I m_textureSize;
 };
 
 #endif // GLTEXTURE_H
