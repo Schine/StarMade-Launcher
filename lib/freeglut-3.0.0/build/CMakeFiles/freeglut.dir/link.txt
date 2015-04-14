@@ -1,4 +1,0 @@
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E remove -f CMakeFiles\freeglut.dir/objects.a
-c:\MinGW\bin\ar.exe cr CMakeFiles\freeglut.dir/objects.a @CMakeFiles\freeglut.dir\objects1.rsp
-c:\MinGW\bin\gcc.exe    -Wall -pedantic  -shared -o bin\libfreeglut.dll -Wl,--out-implib,lib\libfreeglut.dll.a -Wl,--major-image-version,0,--minor-image-version,0 -Wl,--whole-archive CMakeFiles\freeglut.dir/objects.a -Wl,--no-whole-archive @CMakeFiles\freeglut.dir\linklibs.rsp -Wl,--output-def,freeglut.def
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -Dlib="C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/freeglut-3.0.0/build/CMakeFiles/CMakeGNUtoMS_lib.bat" -Ddef=freeglut.def -Ddll=bin\libfreeglut.dll -Dimp=lib\libfreeglut.dll.a -P "C:/Program Files (x86)/CMake/share/cmake-3.2/Modules/Platform/GNUtoMS_lib.cmake"

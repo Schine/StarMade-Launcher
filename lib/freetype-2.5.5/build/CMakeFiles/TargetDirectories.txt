@@ -1,2 +1,0 @@
-C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/freetype-2.5.5/build/CMakeFiles/freetype.dir
-C:/Users/Mitch/Dropbox/Development/Env/C++/Projects/StarMadeLauncher/StarMadeLauncher/lib/freetype-2.5.5/build/CMakeFiles/dist.dir

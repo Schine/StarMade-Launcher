@@ -1,3 +1,0 @@
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E remove -f CMakeFiles\particles.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\particles.dir/objects.a @CMakeFiles\particles.dir\objects1.rsp
-C:\MinGW\bin\gcc.exe    -mwindows -Wl,--whole-archive CMakeFiles\particles.dir/objects.a -Wl,--no-whole-archive  -o particles.exe -Wl,--out-implib,libparticles.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\particles.dir\linklibs.rsp

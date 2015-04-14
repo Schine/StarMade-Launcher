@@ -1,3 +1,0 @@
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -E remove -f CMakeFiles\heightmap.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\heightmap.dir/objects.a @CMakeFiles\heightmap.dir\objects1.rsp
-C:\MinGW\bin\gcc.exe    -mwindows -Wl,--whole-archive CMakeFiles\heightmap.dir/objects.a -Wl,--no-whole-archive  -o heightmap.exe -Wl,--out-implib,libheightmap.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\heightmap.dir\linklibs.rsp
