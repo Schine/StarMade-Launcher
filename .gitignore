@@ -1,0 +1,5 @@
+lib/freeglut-3.0.0/*
+lib/freetype-2.5.5/*
+lib/libpng-1.2.37/*
+lib/glfw-3.1.1/*
+lib/glew-1.12.0/*
