@@ -10,6 +10,7 @@
 #include <GLFW/glfw3native.h>
 #include <memory>
 #include <iostream>
+#include "fontrenderer.h"
 
 std::shared_ptr<MainWindow> m_mainWindow;
 
@@ -38,14 +39,13 @@ int main(int argc, char *argv[])
     }
 
     const int windowSizeX = 1200;
-    const int windowSizeY = 700;
+    const int windowSizeY = 750;
     window = glfwCreateWindow(windowSizeX, windowSizeY, "StarMade Launcher", NULL, NULL);
 
     glfwSetMouseButtonCallback(window, &mouseButtonCallback);
     glfwSetCursorPosCallback(window, &mousePositionCallback);
 
     int borderSizeX = 0;
-    int borderSizeY = 0;
 
     // Remove window "Decoration" on windows
     // http://stackoverflow.com/questions/2398746/removing-window-border
@@ -59,8 +59,6 @@ int main(int argc, char *argv[])
     GetClientRect(hwnd, &clientRect);
 
     borderSizeX = ((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left)) / 2;
-    borderSizeY = ((windowRect.top - windowRect.bottom) - (clientRect.top - clientRect.bottom)) / 2;
-    std::cout << borderSizeX << " " << borderSizeY << std::endl;
 
     LONG lStyle = GetWindowLong(hwnd, GWL_STYLE);
     lStyle &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
@@ -70,13 +68,21 @@ int main(int argc, char *argv[])
     lExStyle &= ~(WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
     SetWindowLong(hwnd, GWL_EXSTYLE, lExStyle);
 
-    SetWindowPos(hwnd, NULL, 0,0,1200,700, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+    SetWindowPos(hwnd, NULL, 0,0,windowSizeX,windowSizeY, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
 #endif // _WIN32
 
 
     glfwMakeContextCurrent(window);
+
+    std::vector<FontListEntry> fontList;
+    fontList.push_back(FontListEntry::BABAS_NEUE_12);
+    fontList.push_back(FontListEntry::BABAS_NEUE_16);
+    fontList.push_back(FontListEntry::BABAS_NEUE_24);
+    fontList.push_back(FontListEntry::BABAS_NEUE_32);
+    fontList.push_back(FontListEntry::BABAS_NEUE_64);
+    FontRenderer::init(fontList);
+
     m_mainWindow = std::shared_ptr<MainWindow>(new MainWindow(borderSizeX, 0));
-    m_mainWindow->init();
     m_mainWindow->resize(windowSizeX, windowSizeY);
     m_mainWindow->init();
     //w.checkJavaVersion(3);

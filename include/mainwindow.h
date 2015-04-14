@@ -24,7 +24,7 @@ public:
     ~MainWindow();
 
     void init();
-    void update(double deltatTime);
+    void update(double deltaTime);
     void render();
     void resize(int w, int h);
     int width() { return m_size.x(); }

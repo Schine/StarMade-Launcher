@@ -58,7 +58,7 @@ void WidgetPane::draw()
 
 void WidgetPane::init()
 {
-
+    initChildren();
 }
 
 void WidgetPane::setColor(float r, float g, float b)

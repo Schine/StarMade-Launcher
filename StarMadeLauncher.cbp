@@ -14,6 +14,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="../StarMadeLauncher" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -24,6 +25,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="../StarMadeLauncher" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -40,6 +42,7 @@
 		<Unit filename="include/ogl.h" />
 		<Unit filename="include/vector2.h" />
 		<Unit filename="include/vector3.h" />
+		<Unit filename="include/widgetbutton.h" />
 		<Unit filename="include/widgetpane.h" />
 		<Unit filename="src/gltexture.cpp" />
 		<Unit filename="src/glutil.cpp" />
@@ -48,6 +51,7 @@
 		<Unit filename="src/mainwindow.cpp" />
 		<Unit filename="src/vector2.cpp" />
 		<Unit filename="src/vector3.cpp" />
+		<Unit filename="src/widgetbutton.cpp" />
 		<Unit filename="src/widgetpane.cpp" />
 		<Extensions>
 			<code_completion />

@@ -1,0 +1,29 @@
+#ifndef FONTRENDERER_H
+#define FONTRENDERER_H
+
+#include <vector>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+class FontType
+{
+public:
+    int create();
+private:
+    FT_Face m_face;
+};
+
+class FontRenderer
+{
+    public:
+        FontRenderer();
+        virtual ~FontRenderer();
+        static int init();
+    protected:
+    private:
+        static FT_Library m_library;
+        static std::vector<FontType> m_fontTypes;
+};
+
+#endif // FONTRENDERER_H

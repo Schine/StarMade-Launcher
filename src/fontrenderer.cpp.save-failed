@@ -1,0 +1,108 @@
+#include "fontrenderer.h"
+#include <iostream>
+#include FT_GLYPH_H
+
+FT_Library FontRenderer::m_library;
+std::vector<std::shared_ptr<FontType>> FontRenderer::m_fontTypes;
+
+int FontRenderer::init(const std::string* fileNames, const int* fontSizes, int fontCount)
+{
+    int error = FT_Init_FreeType(&m_library);
+    if (error != FT_Err_Ok)
+    {
+        std::cerr << "An error occurred during freetype2 initialization" << std::endl;
+        return error;
+    }
+
+    for (int i = 0; i < fontCount; ++i)
+    {
+        std::shared_ptr<FontType> type = std::shared_ptr<FontType>(new FontType());
+        error = type->create(fileNames[i], fontSizes[i], m_library);
+        if (error != FT_Err_Ok)
+        {
+            return error;
+        }
+        m_fontTypes.push_back(type);
+    }
+
+    return 0;
+}
+
+int FontType::create(const std::string& fileName, int fontSize, const FT_Library& library)
+{
+    // Font face describes a given typeface and style
+    int error = FT_New_Face(library, fileName.c_str(), 0, &m_face);
+
+    if (error == FT_Err_Unknown_File_Format)
+    {
+        std::cerr << "Unknown file format: " << fileName << std::endl;
+        return error;
+    }
+    else
+    {
+        std::cerr << "Error opening font: " << fileName << std::endl;
+        return error;
+    }
+
+    FT_Set_Char_Size(m_face, fontSize << 6, fontSize << 6, 96, 96);
+
+    glGenTextures(128, m_textures);
+
+    for (size_t i = 0; i < 128; ++i)
+    {
+        error = FT_Load_Glyph(m_face, FT_Get_Char_Index(m_face, i), FT_LOAD_DEFAULT);
+
+        if (error != FT_Err_Ok)
+        {
+            std::cerr << "Error loading freetype glyph" << std::endl;
+            break;
+        }
+
+        FT_Glyph glyph;
+        error = FT_Get_Glyph(m_face->glyph, &glyph);
+
+        if (error != FT_Err_Ok)
+        {
+            std::cerr << "Error getting freetype glyph" << std::endl;
+            break;
+        }
+
+        // Glyph to bitmap
+        FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
+        FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
+
+        FT_Bitmap& bitmap = bitmapGlyph->bitmap;
+
+        size_t bmSize = 1;
+        while (bmSize < bitmap.width || bmSize < bitmap.rows)
+        {
+            bmSize <<= 1;
+        }
+
+        size_t width = bmSize;
+        size_t height = bmSize;
+
+        GLubyte* expandedData = new GLubyte[2 * width * height];
+
+        GLubyte byte = 0;
+        for (size_t j = 0; j < height; ++j)
+        {
+            for (size_t k = 0; k < width; ++k)
+            {
+                byte = (k >= bitmap.width || j >= bitmap.rows) ? 0 : bitmap.buffer[k + j * bitmap.width];
+                expandedData[2 * (k + j * width)] = byte;
+                expandedData[2 * (k + j * width) + 1] = byte;
+            }
+        }
+
+        glBindTexture(GL_TEXTURE_2D, m_textures[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, expandedData);
+
+        delete[] expandedData;
+    }
+
+    return error;
+}
