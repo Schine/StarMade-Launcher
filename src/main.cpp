@@ -14,6 +14,14 @@
 
 std::shared_ptr<MainWindow> m_mainWindow;
 
+void scrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+{
+    if (m_mainWindow != nullptr)
+    {
+        m_mainWindow->mouseWheelScrolled(xOffset, yOffset);
+    }
+}
+
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
     if (m_mainWindow != nullptr)
@@ -44,6 +52,7 @@ int main(int argc, char *argv[])
 
     glfwSetMouseButtonCallback(window, &mouseButtonCallback);
     glfwSetCursorPosCallback(window, &mousePositionCallback);
+    glfwSetScrollCallback(window, &scrollCallback);
 
     int borderSizeX = 0;
 

@@ -64,7 +64,7 @@ Vector2F FontRenderer::getTextSize(FontListEntry font, const std::string& text)
         std::shared_ptr<FontChar> fontC = fontType->getFontChar((int)charAt);
         textSize.setXY(textSize.x() + fontC->getSize().x(), std::max(fontC->getSize().y(), textSize.y()));
     }
-    return Vector2F(textSize.x() / 2.0F, fontType->getFontSize());
+    return Vector2F(textSize.x(), fontType->getFontSize());
 }
 
 int FontType::create(FontListEntry font, const FT_Library& library)
@@ -241,5 +241,5 @@ void FontChar::bindTexture()
 
 Vector2F FontChar::getSize()
 {
-    return Vector2F(m_charSize.x() + m_advance, m_charSize.y());
+    return Vector2F(m_advance, m_charSize.y());
 }

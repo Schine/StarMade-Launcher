@@ -29,6 +29,7 @@ public:
     virtual void mouseMoved(Vector2D newPos);
     virtual void mouseClicked(Vector2D clickPos, int button, bool press);
     virtual void keyTyped(char keyTyped, bool repeat);
+    virtual void mouseWheelScrolled(double xOffset, double yOffset);
 private:
     bool m_hidden;
     Vector2I m_position;

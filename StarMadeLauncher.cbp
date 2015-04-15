@@ -46,6 +46,7 @@
 		<Unit filename="include/vector3.h" />
 		<Unit filename="include/widgetbutton.h" />
 		<Unit filename="include/widgetpane.h" />
+		<Unit filename="include/widgettextarea.h" />
 		<Unit filename="src/fontrenderer.cpp" />
 		<Unit filename="src/gltexture.cpp" />
 		<Unit filename="src/glutil.cpp" />
@@ -56,6 +57,7 @@
 		<Unit filename="src/vector3.cpp" />
 		<Unit filename="src/widgetbutton.cpp" />
 		<Unit filename="src/widgetpane.cpp" />
+		<Unit filename="src/widgettextarea.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

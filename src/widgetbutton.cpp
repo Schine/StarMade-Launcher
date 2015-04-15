@@ -41,7 +41,6 @@ void WidgetButton::init()
 
 void WidgetButton::update(double delta)
 {
-    LauncherWidget::update(delta);
 }
 
 void WidgetButton::mouseMoved(Vector2D newPos)

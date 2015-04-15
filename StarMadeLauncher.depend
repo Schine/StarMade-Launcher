@@ -108,11 +108,11 @@
 	<png.h>
 	<iostream>
 
-1428896421 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\launcherwidget.cpp
+1429081284 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\launcherwidget.cpp
 	"launcherwidget.h"
 	<assert.h>
 
-1429072858 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
+1429081466 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
 	"mainwindow.h"
 	<GL/glew.h>
 	<windows.h>
@@ -135,7 +135,7 @@
 	"ogl.h"
 	<string>
 
-1429072873 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
+1429081437 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
 	"mainwindow.h"
 	<iostream>
 	<fstream>
@@ -149,6 +149,7 @@
 	"widgetpane.h"
 	"widgetbutton.h"
 	"fontrenderer.h"
+	"widgettextarea.h"
 
 1428877615 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\gltexture.h
 	<string>
@@ -169,12 +170,12 @@
 	<GL/glu.h>
 	<GL/glut.h>
 
-1428896700 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\launcherwidget.h
+1429081234 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\launcherwidget.h
 	<memory>
 	"vector2.h"
 	<vector>
 
-1428895772 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\mainwindow.h
+1429081165 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\mainwindow.h
 	<vector2.h>
 	<memory>
 
@@ -186,17 +187,17 @@
 
 1428819632 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\vector3.h
 
-1429075305 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgetbutton.cpp
+1429080436 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgetbutton.cpp
 	"widgetbutton.h"
 	"fontrenderer.h"
 	<iostream>
 
-1429072412 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgetbutton.h
+1429076152 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgetbutton.h
 	<string>
 	"widgetpane.h"
 	"fontrenderer.h"
 
-1429075261 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\fontrenderer.cpp
+1429080065 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\fontrenderer.cpp
 	"fontrenderer.h"
 	<iostream>
 
@@ -207,4 +208,15 @@
 	<ft2build.h>
 	"ogl.h"
 	"vector2.h"
+
+1429081356 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
+	"widgettextarea.h"
+	<iostream>
+	<sstream>
+
+1429081314 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgettextarea.h
+	<vector>
+	<string>
+	"widgetpane.h"
+	"fontrenderer.h"
 

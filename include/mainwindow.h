@@ -31,6 +31,7 @@ public:
     int height() { return m_size.y(); }
     void mouseClicked(int button, bool press);
     void mouseMoved(double xPos, double yPos);
+    void mouseWheelScrolled(double xOffset, double yOffset);
     bool isCloseRequested() const { return m_closeRequested; }
     bool isMinimizeRequested() const { return m_minimizeRequested; }
     void setMinimizeRequested(bool request) { m_minimizeRequested = request; }

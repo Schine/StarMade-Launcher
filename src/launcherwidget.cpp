@@ -82,6 +82,7 @@ void LauncherWidget::update(double delta)
             assert(child->getPosition().y() >= getPosition().y());
             assert(child->getPosition().y() + child->getSize().y() <= getPosition().y() + getSize().y());
             m_firstUpdate = false;
+            child->init();
         }
         child->update(delta);
     }
@@ -92,6 +93,14 @@ void LauncherWidget::mouseMoved(Vector2D newPos)
     for (size_t i = 0; i < m_children.size(); ++i)
     {
         m_children[i]->mouseMoved(newPos);
+    }
+}
+
+void LauncherWidget::mouseWheelScrolled(double xOffset, double yOffset)
+{
+    for (size_t i = 0; i < m_children.size(); ++i)
+    {
+        m_children[i]->mouseWheelScrolled(xOffset, yOffset);
     }
 }
 
