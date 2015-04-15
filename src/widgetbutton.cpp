@@ -2,11 +2,12 @@
 #include "fontrenderer.h"
 #include <iostream>
 
-WidgetButton::WidgetButton(const std::string& text, IButtonCallback* callback, LauncherWidget* parent)
+WidgetButton::WidgetButton(const std::string& text, FontListEntry font, IButtonCallback* callback, LauncherWidget* parent)
     : WidgetPane(parent),
     m_callback(callback),
     m_isHovered(false),
-    m_text(text)
+    m_text(text),
+    m_font(font)
 {
 }
 
@@ -29,9 +30,8 @@ void WidgetButton::draw()
         setColor(255, 255, 255);
     }
     WidgetPane::draw();
-    FontListEntry font = FontListEntry::BABAS_NEUE_12;
-    Vector2F textSize = FontRenderer::getTextSize(font, m_text);
-    FontRenderer::renderText(font, m_text, Vector2I(getPosition().x() + getSize().x() / 2 - textSize.x() / 2, getPosition().y() + getSize().y() / 2 + textSize.y() / 2));
+    Vector2F textSize = FontRenderer::getTextSize(m_font, m_text);
+    FontRenderer::renderText(m_font, m_text, Vector2I(getPosition().x() + getSize().x() / 2 - textSize.x() / 2, getPosition().y() + getSize().y() / 2 + textSize.y() / 2));
 }
 
 void WidgetButton::init()

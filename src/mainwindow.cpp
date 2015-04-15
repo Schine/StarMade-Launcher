@@ -56,13 +56,13 @@ void MainWindow::init()
     rightBar->setSize(Vector2I(282, 685));
     rightBar->setColor(85, 85, 85);
 
-    WidgetButton* launchButton = new WidgetButton("LAUNCH", nullptr, rightBar);
+    WidgetButton* launchButton = new WidgetButton("LAUNCH", FontListEntry::GEO_SANS_LIGHT_32, nullptr, rightBar);
     launchButton->setPosition(Vector2I(929, 649));
     launchButton->setSize(Vector2I(256, 87));
     launchButton->setColor(255, 255, 255);
     launchButton->setTexture(std::string("data/textures/launch_button.png"));
 
-    WidgetButton* skinSelection = new WidgetButton("Skin Selection", nullptr, rightBar);
+    WidgetButton* skinSelection = new WidgetButton("Skin Selection", FontListEntry::BABAS_NEUE_12, nullptr, rightBar);
     skinSelection->setPosition(Vector2I(929, 374));
     skinSelection->setSize(Vector2I(256, 38));
     skinSelection->setColor(255, 255, 255);

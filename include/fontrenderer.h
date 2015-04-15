@@ -18,6 +18,11 @@ enum class FontListEntry
     BABAS_NEUE_24,
     BABAS_NEUE_32,
     BABAS_NEUE_64,
+    GEO_SANS_LIGHT_12,
+    GEO_SANS_LIGHT_16,
+    GEO_SANS_LIGHT_24,
+    GEO_SANS_LIGHT_32,
+    GEO_SANS_LIGHT_64
 };
 
 struct FontChar
@@ -45,9 +50,9 @@ class FontType
 public:
     int create(FontListEntry font, const FT_Library& library);
     std::shared_ptr<FontChar> getFontChar(size_t index) { return m_fontChars[index]; }
+    int getFontSize() const { return m_fontSize; }
 private:
-    FT_Face m_face;
-
+    int m_fontSize;
     std::vector<std::shared_ptr<FontChar>> m_fontChars;
 };
 

@@ -57,19 +57,20 @@ void FontRenderer::renderText(FontListEntry font, const std::string& text, Vecto
 Vector2F FontRenderer::getTextSize(FontListEntry font, const std::string& text)
 {
     Vector2F textSize(0, 0);
+    std::shared_ptr<FontType> fontType = m_fontTypes[static_cast<int>(font)];
     for (size_t cPos = 0; cPos < text.size(); ++cPos)
     {
         char charAt = text[cPos];
-        std::shared_ptr<FontChar> fontC = m_fontTypes[static_cast<int>(font)]->getFontChar((int)charAt);
+        std::shared_ptr<FontChar> fontC = fontType->getFontChar((int)charAt);
         textSize.setXY(textSize.x() + fontC->getSize().x(), std::max(fontC->getSize().y(), textSize.y()));
     }
-    return Vector2F(textSize.x() / 2.0F, textSize.y() / 2.0F);
+    return Vector2F(textSize.x() / 2.0F, fontType->getFontSize());
 }
 
 int FontType::create(FontListEntry font, const FT_Library& library)
 {
     std::string fileName = "";
-    int fontSize = 0;
+    m_fontSize = 0;
 
     switch (font)
     {
@@ -80,31 +81,44 @@ int FontType::create(FontListEntry font, const FT_Library& library)
     case FontListEntry::BABAS_NEUE_64:
         fileName = "data/fonts/BebasNeue.otf";
         break;
+    case FontListEntry::GEO_SANS_LIGHT_12:
+    case FontListEntry::GEO_SANS_LIGHT_16:
+    case FontListEntry::GEO_SANS_LIGHT_24:
+    case FontListEntry::GEO_SANS_LIGHT_32:
+    case FontListEntry::GEO_SANS_LIGHT_64:
+        fileName = "data/fonts/GeosansLight.ttf";
+        break;
     default:
         std::cerr << "Unknown font entry" << std::endl;
     }
 
     switch (font)
     {
+    case FontListEntry::GEO_SANS_LIGHT_12:
     case FontListEntry::BABAS_NEUE_12:
-        fontSize = 12;
+        m_fontSize = 12;
         break;
+    case FontListEntry::GEO_SANS_LIGHT_16:
     case FontListEntry::BABAS_NEUE_16:
-        fontSize = 16;
+        m_fontSize = 16;
         break;
+    case FontListEntry::GEO_SANS_LIGHT_24:
     case FontListEntry::BABAS_NEUE_24:
-        fontSize = 23;
+        m_fontSize = 23;
         break;
+    case FontListEntry::GEO_SANS_LIGHT_32:
     case FontListEntry::BABAS_NEUE_32:
-        fontSize = 32;
+        m_fontSize = 32;
         break;
+    case FontListEntry::GEO_SANS_LIGHT_64:
     case FontListEntry::BABAS_NEUE_64:
-        fontSize = 64;
+        m_fontSize = 64;
         break;
     }
 
     // Font face describes a given typeface and style
-    int error = FT_New_Face(library, fileName.c_str(), 0, &m_face);
+    FT_Face face;
+    int error = FT_New_Face(library, fileName.c_str(), 0, &face);
 
     if (error == FT_Err_Unknown_File_Format)
     {
@@ -117,11 +131,11 @@ int FontType::create(FontListEntry font, const FT_Library& library)
         return error;
     }
 
-    FT_Set_Char_Size(m_face, fontSize << 6, fontSize << 6, 96, 96);
+    FT_Set_Char_Size(face, m_fontSize << 6, m_fontSize << 6, 96, 96);
 
     for (size_t i = 0; i < 128; ++i)
     {
-        error = FT_Load_Glyph(m_face, FT_Get_Char_Index(m_face, i), FT_LOAD_DEFAULT);
+        error = FT_Load_Glyph(face, FT_Get_Char_Index(face, i), FT_LOAD_DEFAULT);
 
         if (error != FT_Err_Ok)
         {
@@ -130,7 +144,7 @@ int FontType::create(FontListEntry font, const FT_Library& library)
         }
 
         FT_Glyph glyph;
-        error = FT_Get_Glyph(m_face->glyph, &glyph);
+        error = FT_Get_Glyph(face->glyph, &glyph);
 
         if (error != FT_Err_Ok)
         {
@@ -150,10 +164,11 @@ int FontType::create(FontListEntry font, const FT_Library& library)
             bmSize <<= 1;
         }
 
+        int bitDepth = 2;
         size_t width = bmSize;
         size_t height = bmSize;
 
-        GLubyte* expandedData = new GLubyte[2 * width * height];
+        GLubyte* expandedData = new GLubyte[bitDepth * width * height];
 
         GLubyte byte = 0;
         for (size_t j = 0; j < height; ++j)
@@ -161,8 +176,10 @@ int FontType::create(FontListEntry font, const FT_Library& library)
             for (size_t k = 0; k < width; ++k)
             {
                 byte = (k >= bitmap.width || j >= bitmap.rows) ? 0 : bitmap.buffer[k + j * bitmap.width];
-                expandedData[2 * (k + j * width)] = byte;
-                expandedData[2 * (k + j * width) + 1] = byte;
+                for (int b = 0; b < bitDepth; ++b)
+                {
+                    expandedData[bitDepth * (k + j * width) + b] = byte;
+                }
             }
         }
 
@@ -170,7 +187,7 @@ int FontType::create(FontListEntry font, const FT_Library& library)
                             Vector2I(bitmap.width, bitmap.rows),
                             Vector2F((float)bitmap.width / (float)width, (float)bitmap.rows / (float)height),
                             Vector2F(bitmapGlyph->left, bitmapGlyph->top-bitmap.rows),
-                            m_face->glyph->advance.x >> 6));
+                            face->glyph->advance.x >> 6));
 
         fChar->genTexture();
         fChar->bindTexture();
@@ -184,7 +201,7 @@ int FontType::create(FontListEntry font, const FT_Library& library)
         delete[] expandedData;
     }
 
-    FT_Done_Face(m_face);
+    FT_Done_Face(face);
 
     return error;
 }
@@ -194,20 +211,17 @@ void FontChar::draw()
     glPushMatrix();
 
     glScalef(1.0F, -1.0F, 1.0F);
-    glTranslatef(m_trans.x(), m_trans.y(), 0.0F);
+    glTranslatef(m_trans.x(), 0.0F, 0.0F);
 
     glColor3f(1.0F, 1.0F, 1.0F);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_texture);
+
     glBegin(GL_QUADS);
-    glTexCoord2d(0, m_texCoords.y());
-    glVertex2f(0, 0);
-    glTexCoord2d(0, 0);
-    glVertex2f(0, m_charSize.y());
-    glTexCoord2d(m_texCoords.x(), 0);
-    glVertex2f(m_charSize.x(), m_charSize.y());
-    glTexCoord2d(m_texCoords.x(), m_texCoords.y());
-    glVertex2f(m_charSize.x(), 0);
+    glTexCoord2d(0,                 m_texCoords.y());   glVertex2f(0.0F,            0.0F);
+    glTexCoord2d(0,                 0.0F);              glVertex2f(0.0F,            m_charSize.y());
+    glTexCoord2d(m_texCoords.x(),   0.0F);              glVertex2f(m_charSize.x(),  m_charSize.y());
+    glTexCoord2d(m_texCoords.x(),   m_texCoords.y());   glVertex2f(m_charSize.x(),  0.0F);
     glEnd();
 
     glPopMatrix();

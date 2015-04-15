@@ -80,6 +80,11 @@ int main(int argc, char *argv[])
     fontList.push_back(FontListEntry::BABAS_NEUE_24);
     fontList.push_back(FontListEntry::BABAS_NEUE_32);
     fontList.push_back(FontListEntry::BABAS_NEUE_64);
+    fontList.push_back(FontListEntry::GEO_SANS_LIGHT_12);
+    fontList.push_back(FontListEntry::GEO_SANS_LIGHT_16);
+    fontList.push_back(FontListEntry::GEO_SANS_LIGHT_24);
+    fontList.push_back(FontListEntry::GEO_SANS_LIGHT_32);
+    fontList.push_back(FontListEntry::GEO_SANS_LIGHT_64);
     FontRenderer::init(fontList);
 
     m_mainWindow = std::shared_ptr<MainWindow>(new MainWindow(borderSizeX, 0));
