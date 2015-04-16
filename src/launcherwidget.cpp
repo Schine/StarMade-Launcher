@@ -1,5 +1,6 @@
 #include "launcherwidget.h"
 #include <assert.h>
+#include <iostream>
 
 LauncherWidget::LauncherWidget(LauncherWidget* parent)
     : m_position(0, 0),
@@ -77,15 +78,15 @@ void LauncherWidget::update(double delta)
         LauncherWidget* child = m_children[i];
         if (m_firstUpdate)
         {
+            child->init();
             assert(child->getPosition().x() >= getPosition().x());
             assert(child->getPosition().x() + child->getSize().x() <= getPosition().x() + getSize().x());
             assert(child->getPosition().y() >= getPosition().y());
             assert(child->getPosition().y() + child->getSize().y() <= getPosition().y() + getSize().y());
-            m_firstUpdate = false;
-            child->init();
         }
         child->update(delta);
     }
+    m_firstUpdate = false;
 }
 
 void LauncherWidget::mouseMoved(Vector2D newPos)

@@ -3,3 +3,5 @@ lib/freetype-2.5.5/*
 lib/libpng-1.2.37/*
 lib/glfw-3.1.1/*
 lib/glew-1.12.0/*
+lib/curl-7.41.0/*
+lib/zlib-1.2.8/*

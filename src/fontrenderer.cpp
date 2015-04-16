@@ -61,8 +61,14 @@ Vector2F FontRenderer::getTextSize(FontListEntry font, const std::string& text)
     for (size_t cPos = 0; cPos < text.size(); ++cPos)
     {
         char charAt = text[cPos];
-        std::shared_ptr<FontChar> fontC = fontType->getFontChar((int)charAt);
-        textSize.setXY(textSize.x() + fontC->getSize().x(), std::max(fontC->getSize().y(), textSize.y()));
+        if ((int)charAt > 0)
+        {
+            std::shared_ptr<FontChar> fontC = fontType->getFontChar((int)charAt);
+            if (fontC != nullptr)
+            {
+                textSize.setXY(textSize.x() + fontC->getSize().x(), std::max(fontC->getSize().y(), textSize.y()));
+            }
+        }
     }
     return Vector2F(textSize.x(), fontType->getFontSize());
 }

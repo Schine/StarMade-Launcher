@@ -108,11 +108,12 @@
 	<png.h>
 	<iostream>
 
-1429081284 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\launcherwidget.cpp
+1429156778 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\launcherwidget.cpp
 	"launcherwidget.h"
 	<assert.h>
+	<iostream>
 
-1429081466 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
+1429150134 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
 	"mainwindow.h"
 	<GL/glew.h>
 	<windows.h>
@@ -135,7 +136,7 @@
 	"ogl.h"
 	<string>
 
-1429081437 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
+1429160585 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
 	"mainwindow.h"
 	<iostream>
 	<fstream>
@@ -144,6 +145,10 @@
 	<shellapi.h>
 	<thread>
 	<cmath>
+	<sstream>
+	<string>
+	<vector>
+	<curl/curl.h>
 	<GLFW/glfw3.h>
 	"ogl.h"
 	"widgetpane.h"
@@ -197,7 +202,7 @@
 	"widgetpane.h"
 	"fontrenderer.h"
 
-1429080065 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\fontrenderer.cpp
+1429159680 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\fontrenderer.cpp
 	"fontrenderer.h"
 	<iostream>
 
@@ -209,12 +214,12 @@
 	"ogl.h"
 	"vector2.h"
 
-1429081356 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
+1429159696 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
 	"widgettextarea.h"
 	<iostream>
 	<sstream>
 
-1429081314 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgettextarea.h
+1429149721 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgettextarea.h
 	<vector>
 	<string>
 	"widgetpane.h"
