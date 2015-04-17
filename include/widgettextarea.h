@@ -6,6 +6,28 @@
 #include "widgetpane.h"
 #include "fontrenderer.h"
 
+struct TextAreaLink
+{
+    int lineIndex;
+    size_t startLinkIndex;
+    size_t endLinkIndex;
+    std::string link;
+};
+
+struct OnScreenLink
+{
+    Vector2F position;
+    Vector2F size;
+    std::string link;
+};
+
+struct TextLine
+{
+    std::string text;
+    FontListEntry font;
+    Vector3I color;
+};
+
 class WidgetTextArea : public WidgetPane
 {
     public:
@@ -23,9 +45,10 @@ class WidgetTextArea : public WidgetPane
     protected:
     private:
         void initWithTextCommon(std::string line, std::string& linePart);
-        void addText(const std::string& text, FontListEntry font);
-        std::vector<std::string> m_clippedText;
-        std::vector<FontListEntry> m_fonts;
+        void addText(const std::string& text, FontListEntry font, Vector3I color);
+        std::vector<TextLine> m_text;
+        std::vector<TextAreaLink> m_textAreaLinks;
+        std::vector<OnScreenLink> m_onScreenLinks;
         Vector2F m_padding;
         float m_scroll;
         float m_maxScroll;

@@ -30,7 +30,7 @@ int FontRenderer::init(std::vector<FontListEntry> fonts)
     return 0;
 }
 
-void FontRenderer::renderText(FontListEntry font, const std::string& text, Vector2I position)
+void FontRenderer::renderText(FontListEntry font, const std::string& text, Vector2I position, Vector3I color)
 {
     glPushAttrib(GL_ALL_ATTRIB_BITS);
     glEnable(GL_TEXTURE_2D);
@@ -40,6 +40,7 @@ void FontRenderer::renderText(FontListEntry font, const std::string& text, Vecto
     glAlphaFunc(GL_GREATER, 0.0);
     glEnable(GL_ALPHA_TEST);
 
+    glColor3f(color.x() / 255.0F, color.y() / 255.0F, color.z() / 255.0F);
     glPushMatrix();
     glTranslatef((float)position.x(), (float)position.y(), 0.0F);
     for (size_t cPos = 0; cPos < text.size(); ++cPos)
@@ -235,7 +236,6 @@ void FontChar::draw()
     glScalef(1.0F, -1.0F, 1.0F);
     glTranslatef(m_trans.x(), m_trans.y(), 0.0F);
 
-    glColor3f(1.0F, 1.0F, 1.0F);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_texture);
 

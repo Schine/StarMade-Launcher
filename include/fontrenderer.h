@@ -11,6 +11,7 @@
 
 #include "ogl.h"
 #include "vector2.h"
+#include "vector3.h"
 
 enum class FontListEntry
 {
@@ -63,7 +64,7 @@ class FontRenderer
 {
     public:
         static int init(std::vector<FontListEntry> font);
-        static void renderText(FontListEntry font, const std::string& text, Vector2I position);
+        static void renderText(FontListEntry font, const std::string& text, Vector2I position, Vector3I color = Vector3I(255, 255, 255));
         static Vector2F getTextSize(FontListEntry font, const std::string& text);
     protected:
     private:

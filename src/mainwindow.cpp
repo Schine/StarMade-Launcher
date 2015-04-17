@@ -90,7 +90,7 @@ void MainWindow::init()
     launchButton->setColor(255, 255, 255);
     launchButton->setTexture(std::string("data/textures/launch_button.png"));
 
-    WidgetButton* skinSelection = new WidgetButton("Skin Selection", FontListEntry::BABAS_NEUE_12, nullptr, rightBar);
+    WidgetButton* skinSelection = new WidgetButton("Skin Selection", FontListEntry::MARCELLUS_16, nullptr, rightBar);
     skinSelection->setPosition(Vector2I(929, 374));
     skinSelection->setSize(Vector2I(256, 38));
     skinSelection->setColor(255, 255, 255);
@@ -137,7 +137,18 @@ void MainWindow::init()
             size_t findPos = 0;
             replaceAllInLine(line, "&lt;", "<");
             replaceAllInLine(line, "lt;", "<");
+            replaceAllInLine(line, "-&amp;gt;", "->");
+
             replaceAllInLine(line, "&gt;", ">");
+            replaceAllInLine(line, "gt;", ">");
+
+            replaceAllInLine(line, "&amp;#39;", "'");
+            replaceAllInLine(line, "&amp;rsquo;", "'");
+            replaceAllInLine(line, "&rsquo;", "'");
+
+            replaceAllInLine(line, "&amp;quot;", "'");
+            replaceAllInLine(line, "&quot;", "'");
+
             replaceAllInLine(line, "&ldquo;", "\"");
             replaceAllInLine(line, "&amp;ldquo;", "\"");
             replaceAllInLine(line, "ldquo;", "\"");
@@ -190,14 +201,26 @@ void MainWindow::init()
                         if (findPos0 != std::string::npos)
                         {
                             std::string toRemove(line.substr(findPos, findPos0 + 1 - findPos));
-                            if (toRemove.find("<br />") == std::string::npos)
-                            {
-                                line.replace(findPos, findPos0 + 1 - findPos, "");
-                            }
-                            else
+                            if (toRemove.find("<br />") != std::string::npos)
                             {
                                 lastFoundPos0 = findPos0;
                                 lastFoundPos = findPos;
+                            }
+                            else if (toRemove.find("<a ") != std::string::npos)
+                            {
+                                lastFoundPos0 = findPos0;
+                                lastFoundPos = findPos;
+                                size_t findPos1 = toRemove.find("href=");
+                                size_t findPos2 = toRemove.find_first_of("\"", findPos1 + 6);
+                                std::string link(toRemove.substr(findPos1 + 5, findPos2 - 4 - findPos1));
+                                std::string replaceWith("<link " + link + ">");
+                                line.replace(findPos, findPos0 + 1 - findPos, replaceWith);
+                                lastFoundPos0 = findPos + replaceWith.size() - 1;
+                                lastFoundPos = findPos + replaceWith.size() - 1;
+                            }
+                            else
+                            {
+                                line.replace(findPos, findPos0 + 1 - findPos, "");
                             }
                         }
                     }

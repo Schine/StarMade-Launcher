@@ -113,7 +113,7 @@
 	<assert.h>
 	<iostream>
 
-1429150134 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
+1429249038 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
 	"mainwindow.h"
 	<GL/glew.h>
 	<windows.h>
@@ -136,7 +136,7 @@
 	"ogl.h"
 	<string>
 
-1429247569 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
+1429302714 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
 	"mainwindow.h"
 	<iostream>
 	<fstream>
@@ -198,16 +198,16 @@
 	"fontrenderer.h"
 	<iostream>
 
-1429076152 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgetbutton.h
+1429302675 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgetbutton.h
 	<string>
 	"widgetpane.h"
 	"fontrenderer.h"
 
-1429241772 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\fontrenderer.cpp
+1429302497 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\fontrenderer.cpp
 	"fontrenderer.h"
 	<iostream>
 
-1429249037 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\fontrenderer.h
+1429302418 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\fontrenderer.h
 	<vector>
 	<string>
 	<memory>
@@ -215,13 +215,14 @@
 	<ft2build.h>
 	"ogl.h"
 	"vector2.h"
+	"vector3.h"
 
-1429248304 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
+1429302595 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
 	"widgettextarea.h"
 	<iostream>
 	<sstream>
 
-1429248351 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgettextarea.h
+1429302250 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgettextarea.h
 	<vector>
 	<string>
 	"widgetpane.h"

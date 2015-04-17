@@ -17,7 +17,7 @@ private:
 class WidgetButton : public WidgetPane
 {
     public:
-        WidgetButton(const std::string& text, FontListEntry font = FontListEntry::BABAS_NEUE_16, IButtonCallback* callback = nullptr, LauncherWidget* parent = nullptr);
+        WidgetButton(const std::string& text, FontListEntry font = FontListEntry::MARCELLUS_16, IButtonCallback* callback = nullptr, LauncherWidget* parent = nullptr);
         virtual ~WidgetButton();
         virtual void draw() override;
         virtual void init() override;
