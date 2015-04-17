@@ -45,8 +45,18 @@ void FontRenderer::renderText(FontListEntry font, const std::string& text, Vecto
     for (size_t cPos = 0; cPos < text.size(); ++cPos)
     {
         char charAt = text[cPos];
-        std::shared_ptr<FontChar> fontC = m_fontTypes[static_cast<int>(font)]->getFontChar((int)charAt);
-        fontC->draw();
+        if ((int)charAt > 0)
+        {
+            std::shared_ptr<FontType> type = m_fontTypes[static_cast<int>(font)];
+            if (type != nullptr)
+            {
+                if (!type->isGlyphMissing(charAt))
+                {
+                    std::shared_ptr<FontChar> fontC = type->getFontChar((int)charAt);
+                    fontC->draw();
+                }
+            }
+        }
     }
     glPopMatrix();
 
@@ -87,12 +97,12 @@ int FontType::create(FontListEntry font, const FT_Library& library)
     case FontListEntry::BABAS_NEUE_64:
         fileName = "data/fonts/BebasNeue.otf";
         break;
-    case FontListEntry::GEO_SANS_LIGHT_12:
-    case FontListEntry::GEO_SANS_LIGHT_16:
-    case FontListEntry::GEO_SANS_LIGHT_24:
-    case FontListEntry::GEO_SANS_LIGHT_32:
-    case FontListEntry::GEO_SANS_LIGHT_64:
-        fileName = "data/fonts/GeosansLight.ttf";
+    case FontListEntry::MARCELLUS_12:
+    case FontListEntry::MARCELLUS_16:
+    case FontListEntry::MARCELLUS_24:
+    case FontListEntry::MARCELLUS_32:
+    case FontListEntry::MARCELLUS_64:
+        fileName = "data/fonts/Marcellus-Regular.ttf";
         break;
     default:
         std::cerr << "Unknown font entry" << std::endl;
@@ -100,23 +110,23 @@ int FontType::create(FontListEntry font, const FT_Library& library)
 
     switch (font)
     {
-    case FontListEntry::GEO_SANS_LIGHT_12:
+    case FontListEntry::MARCELLUS_12:
     case FontListEntry::BABAS_NEUE_12:
         m_fontSize = 12;
         break;
-    case FontListEntry::GEO_SANS_LIGHT_16:
+    case FontListEntry::MARCELLUS_16:
     case FontListEntry::BABAS_NEUE_16:
         m_fontSize = 16;
         break;
-    case FontListEntry::GEO_SANS_LIGHT_24:
+    case FontListEntry::MARCELLUS_24:
     case FontListEntry::BABAS_NEUE_24:
         m_fontSize = 23;
         break;
-    case FontListEntry::GEO_SANS_LIGHT_32:
+    case FontListEntry::MARCELLUS_32:
     case FontListEntry::BABAS_NEUE_32:
         m_fontSize = 32;
         break;
-    case FontListEntry::GEO_SANS_LIGHT_64:
+    case FontListEntry::MARCELLUS_64:
     case FontListEntry::BABAS_NEUE_64:
         m_fontSize = 64;
         break;
@@ -141,6 +151,12 @@ int FontType::create(FontListEntry font, const FT_Library& library)
 
     for (size_t i = 0; i < 128; ++i)
     {
+        unsigned int charIndex = FT_Get_Char_Index(face, i);
+        if (charIndex == 0)
+        {
+            m_missingGlyphs.push_back(i);
+        }
+
         error = FT_Load_Glyph(face, FT_Get_Char_Index(face, i), FT_LOAD_DEFAULT);
 
         if (error != FT_Err_Ok)
@@ -192,7 +208,7 @@ int FontType::create(FontListEntry font, const FT_Library& library)
         std::shared_ptr<FontChar> fChar = std::shared_ptr<FontChar>(new FontChar(
                             Vector2I(bitmap.width, bitmap.rows),
                             Vector2F((float)bitmap.width / (float)width, (float)bitmap.rows / (float)height),
-                            Vector2F(bitmapGlyph->left, bitmapGlyph->top-bitmap.rows),
+                            Vector2F(bitmapGlyph->left, (face->glyph->metrics.horiBearingY >> 6) - (face->glyph->metrics.height >> 6)),
                             face->glyph->advance.x >> 6));
 
         fChar->genTexture();
@@ -217,7 +233,7 @@ void FontChar::draw()
     glPushMatrix();
 
     glScalef(1.0F, -1.0F, 1.0F);
-    glTranslatef(m_trans.x(), 0.0F, 0.0F);
+    glTranslatef(m_trans.x(), m_trans.y(), 0.0F);
 
     glColor3f(1.0F, 1.0F, 1.0F);
     glEnable(GL_TEXTURE_2D);

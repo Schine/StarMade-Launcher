@@ -19,13 +19,16 @@ class WidgetTextArea : public WidgetPane
         virtual void mouseMoved(Vector2D newPos) override;
         virtual void mouseClicked(Vector2D clickPos, int button, bool press) override;
         virtual void mouseWheelScrolled(double xOffset, double yOffset) override;
+        float getScrollPercentage() { return std::min(std::max(0.0F, (m_scroll + m_padding.y()) / m_maxScroll), 1.0F); }
     protected:
     private:
         void initWithTextCommon(std::string line, std::string& linePart);
+        void addText(const std::string& text, FontListEntry font);
         std::vector<std::string> m_clippedText;
-        FontListEntry m_font;
+        std::vector<FontListEntry> m_fonts;
         Vector2F m_padding;
         float m_scroll;
+        float m_maxScroll;
 };
 
 #endif // WIDGETTEXTAREA_H

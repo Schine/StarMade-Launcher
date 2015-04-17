@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <algorithm>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -18,11 +19,11 @@ enum class FontListEntry
     BABAS_NEUE_24,
     BABAS_NEUE_32,
     BABAS_NEUE_64,
-    GEO_SANS_LIGHT_12,
-    GEO_SANS_LIGHT_16,
-    GEO_SANS_LIGHT_24,
-    GEO_SANS_LIGHT_32,
-    GEO_SANS_LIGHT_64
+    MARCELLUS_12,
+    MARCELLUS_16,
+    MARCELLUS_24,
+    MARCELLUS_32,
+    MARCELLUS_64
 };
 
 struct FontChar
@@ -51,8 +52,10 @@ public:
     int create(FontListEntry font, const FT_Library& library);
     std::shared_ptr<FontChar> getFontChar(size_t index) { return m_fontChars[index]; }
     int getFontSize() const { return m_fontSize; }
+    bool isGlyphMissing(char c) { return std::find(m_missingGlyphs.begin(), m_missingGlyphs.end(), c) != m_missingGlyphs.end(); }
 private:
     int m_fontSize;
+    std::vector<char> m_missingGlyphs;
     std::vector<std::shared_ptr<FontChar>> m_fontChars;
 };
 

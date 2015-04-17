@@ -84,7 +84,7 @@ void MainWindow::init()
     rightBar->setSize(Vector2I(282, 684));
     rightBar->setColor(85, 85, 85);
 
-    WidgetButton* launchButton = new WidgetButton("LAUNCH", FontListEntry::GEO_SANS_LIGHT_32, nullptr, rightBar);
+    WidgetButton* launchButton = new WidgetButton("LAUNCH", FontListEntry::MARCELLUS_32, nullptr, rightBar);
     launchButton->setPosition(Vector2I(929, 649));
     launchButton->setSize(Vector2I(256, 87));
     launchButton->setColor(255, 255, 255);
@@ -128,20 +128,103 @@ void MainWindow::init()
         std::string item;
         using namespace std;
         vector<string> splitLines;
+        bool inDescription = false;
         while (std::getline(ss, item, '\n'))
         {
             std::string line = item;
+            int lastFoundPos = -1;
+            int lastFoundPos0 = -1;
             size_t findPos = 0;
-            // Remove some HTML:
-            while ((findPos = line.find("&lt;")) != std::string::npos)
+            replaceAllInLine(line, "&lt;", "<");
+            replaceAllInLine(line, "lt;", "<");
+            replaceAllInLine(line, "&gt;", ">");
+            replaceAllInLine(line, "&ldquo;", "\"");
+            replaceAllInLine(line, "&amp;ldquo;", "\"");
+            replaceAllInLine(line, "ldquo;", "\"");
+            replaceAllInLine(line, "&rdquo;", "\"");
+            replaceAllInLine(line, "&amp;rdquo;", "\"");
+            replaceAllInLine(line, "rdquo;", "\"");
+
+            //ldquo;
+
+            if (line.find("<pubDate>") != std::string::npos ||
+                line.find("<link>") != std::string::npos ||
+                line.find("<guid>") != std::string::npos)
             {
-                size_t findPos0 = line.find("&gt;");
+                continue;
+            }
+
+            lastFoundPos = -1;
+
+            // Remove some HTML:
+            while ((findPos = line.find("&amp;nbsp;")) != std::string::npos)
+            {
+                line.erase(findPos, 10);
+            }
+            findPos = line.find("<title>");
+            if (findPos != std::string::npos)
+            {
+                size_t findPos0 = line.find("</title>");
                 if (findPos0 != std::string::npos)
                 {
-                    line.erase(findPos, findPos0 - findPos);
+                    std::string title(line.substr(findPos + 7, findPos0 - findPos - 7));
+                    if (title.compare("starmade") != 0)
+                    {
+                        splitLines.push_back("<linet>" + title + "\n");
+                        splitLines.push_back("<linet>\n");
+                    }
                 }
             }
-            splitLines.push_back(line);
+            else
+            {
+                findPos = line.find("<description>");
+                if (!inDescription && findPos != std::string::npos)
+                {
+                    inDescription = true;
+                }
+                if (inDescription)
+                {
+                    while ((findPos = line.find("<", (lastFoundPos >= 0 ? lastFoundPos + 1 : 0))) != std::string::npos)
+                    {
+                        size_t findPos0 = line.find(">", (lastFoundPos0 >= 0 ? lastFoundPos0 + 1 : 0));
+                        if (findPos0 != std::string::npos)
+                        {
+                            std::string toRemove(line.substr(findPos, findPos0 + 1 - findPos));
+                            if (toRemove.find("<br />") == std::string::npos)
+                            {
+                                line.replace(findPos, findPos0 + 1 - findPos, "");
+                            }
+                            else
+                            {
+                                lastFoundPos0 = findPos0;
+                                lastFoundPos = findPos;
+                            }
+                        }
+                    }
+
+                    findPos = line.find("</description>");
+                    if (findPos != std::string::npos)
+                    {
+                        inDescription = false;
+                    }
+                    else
+                    {
+                        replaceAllInLine(line, "</description>", "");
+                        replaceAllInLine(line, "<description>", "");
+                        bool forceLineEnd = line.find("<br />") != std::string::npos;
+
+                        while (forceLineEnd)
+                        {
+                            std::string preLine = line.substr(0, line.find("<br />"));
+                            line = line.substr(line.find("<br />"), line.size() - line.find("<br />") - 7);
+                            splitLines.push_back("<line>" + preLine);
+                            forceLineEnd = line.find("<br />") != std::string::npos;
+                        }
+
+                        splitLines.push_back("<line>" + line);
+                    }
+                }
+            }
         }
         textArea->initWithText(splitLines);
 
@@ -151,6 +234,16 @@ void MainWindow::init()
             output.buffer = NULL;
             output.size = 0;
         }
+    }
+}
+
+void MainWindow::replaceAllInLine(std::string& lineToChange, const std::string& toReplace, const std::string& replaceWith)
+{
+    int lastFoundPos = -1;
+    size_t findPos;
+    while ((findPos = lineToChange.find(toReplace, (lastFoundPos >= 0 ? lastFoundPos + replaceWith.size() : 0))) != std::string::npos)
+    {
+        lineToChange.replace(findPos, toReplace.size(), replaceWith);
     }
 }
 

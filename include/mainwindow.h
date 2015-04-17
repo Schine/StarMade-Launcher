@@ -3,6 +3,7 @@
 
 #include <vector2.h>
 #include <memory>
+#include <string>
 
 class LauncherWidget;
 
@@ -38,6 +39,7 @@ public:
     void setWindowMoveRequest(Vector2I deltaPos) { m_windowMoveRequest = deltaPos; }
     Vector2I getWindowMoveRequest() const { return m_windowMoveRequest; }
 private:
+    void replaceAllInLine(std::string& lineToChange, const std::string& toReplace, const std::string& replaceWith = std::string(""));
     std::shared_ptr<LauncherWidget> m_mainWidget;
     Vector2I m_size;
     Vector2D m_mousePosition;
