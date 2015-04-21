@@ -2,12 +2,17 @@
 #include "fontrenderer.h"
 #include <iostream>
 
-WidgetButton::WidgetButton(const std::string& text, FontListEntry font, IButtonCallback* callback, LauncherWidget* parent)
+WidgetButton::WidgetButton(const std::string& text,
+                        int callbackIndex,
+                        FontListEntry font,
+                        IButtonCallback* callback,
+                        LauncherWidget* parent)
     : WidgetPane(parent),
     m_callback(callback),
     m_isHovered(false),
     m_text(text),
-    m_font(font)
+    m_font(font),
+    m_callbackIndex(callbackIndex)
 {
 }
 
@@ -21,14 +26,6 @@ WidgetButton::~WidgetButton()
 
 void WidgetButton::draw()
 {
-    if (!m_isHovered)
-    {
-        setColor(240, 240, 240);
-    }
-    else
-    {
-        setColor(255, 255, 255);
-    }
     WidgetPane::draw();
     Vector2F textSize = FontRenderer::getTextSize(m_font, m_text);
     FontRenderer::renderText(m_font, m_text, Vector2I(getPosition().x() + getSize().x() / 2 - textSize.x() / 2, getPosition().y() + getSize().y() / 2 + textSize.y() / 2));
@@ -63,4 +60,15 @@ void WidgetButton::mouseMoved(Vector2D newPos)
 void WidgetButton::mouseClicked(Vector2D clickPos, int button, bool press)
 {
     LauncherWidget::mouseClicked(clickPos, button, press);
+
+    if (button == 0 && press && clickPos.x() >= getPosition().x() &&
+        clickPos.x() <= getPosition().x() + getSize().x() &&
+        clickPos.y() >= getPosition().y() &&
+        clickPos.y() <= getPosition().y() + getSize().y())
+    {
+        if (m_callback != nullptr)
+        {
+            m_callback->buttonClicked(this, m_callbackIndex);
+        }
+    }
 }

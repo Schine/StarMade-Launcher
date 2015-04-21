@@ -66,40 +66,63 @@ void MainWindow::init()
     WidgetPane* mainWidget = new WidgetPane();
     mainWidget->setPosition(Vector2I(0, 0));
     mainWidget->setSize(m_size);
-    mainWidget->setColor(66, 66, 66);
+    mainWidget->setColor(0, 0, 0);
     m_mainWidget = std::shared_ptr<WidgetPane>(mainWidget);
 
     WidgetPane* topBar = new WidgetPane(m_mainWidget.get());
     topBar->setPosition(Vector2I(0, 0));
     topBar->setSize(Vector2I(width(), 66));
-    topBar->setColor(39, 39, 39);
+    topBar->setColor(28, 107, 127);
 
+    /**
     WidgetPane* schineLogo = new WidgetPane(m_mainWidget.get());
     schineLogo->setPosition(Vector2I(27, 16));
     schineLogo->setSize(Vector2I(42, 42));
     schineLogo->setTexture(std::string("data/textures/schine_small.png"));
+    */
 
     WidgetPane* rightBar = new WidgetPane(m_mainWidget.get());
-    rightBar->setPosition(Vector2I(918, 66));
-    rightBar->setSize(Vector2I(282, 684));
-    rightBar->setColor(85, 85, 85);
+    rightBar->setPosition(Vector2I(906, 66));
+    rightBar->setSize(Vector2I(294, 684));
+    rightBar->setColor(34, 34, 40);
 
-    WidgetButton* launchButton = new WidgetButton("LAUNCH", FontListEntry::MARCELLUS_32, nullptr, rightBar);
+    WidgetButton* launchButton = new WidgetButton("LAUNCH", -1,
+                                                  FontListEntry::MARCELLUS_32,
+                                                  nullptr, rightBar);
     launchButton->setPosition(Vector2I(929, 649));
     launchButton->setSize(Vector2I(256, 87));
     launchButton->setColor(255, 255, 255);
     launchButton->setTexture(std::string("data/textures/launch_button.png"));
 
-    WidgetButton* skinSelection = new WidgetButton("Skin Selection", FontListEntry::MARCELLUS_16, nullptr, rightBar);
-    skinSelection->setPosition(Vector2I(929, 374));
+    WidgetButton* skinSelection = new WidgetButton("Dedicated Server", -1,
+                                                    FontListEntry::MARCELLUS_16,
+                                                    nullptr, rightBar);
+    skinSelection->setPosition(Vector2I(929, 597));
     skinSelection->setSize(Vector2I(256, 38));
     skinSelection->setColor(255, 255, 255);
     skinSelection->setTexture(std::string("data/textures/button_small.png"));
 
+    WidgetButton* closeButton = new WidgetButton("", 0, FontListEntry::MARCELLUS_16, this, topBar);
+    closeButton->setPosition(Vector2I(1162, 22));
+    closeButton->setSize(Vector2I(22, 24));
+    closeButton->setColor(255, 255, 255);
+    closeButton->setTexture(std::string("data/textures/close_button.png"));
+    closeButton->setTextureCoordinates({ Vector2F(0.0F, 0.0F), Vector2F(0.6875F, 0.75F) });
+
+    WidgetButton* minimizeButton = new WidgetButton("", 1, FontListEntry::MARCELLUS_16, this, topBar);
+    minimizeButton->setPosition(Vector2I(1118, 22));
+    minimizeButton->setSize(Vector2I(22, 24));
+    minimizeButton->setColor(255, 255, 255);
+    minimizeButton->setTexture(std::string("data/textures/close_button.png"));
+    minimizeButton->setTextureCoordinates({ Vector2F(0.0F, 0.75F), Vector2F(0.90625F, 0.1875F) });
+    minimizeButton->setDrawOffset({ Vector2F(0.0F, 17.0F), Vector2F(0.0F, -18.0F) });
+
     WidgetTextArea* textArea = new WidgetTextArea(m_mainWidget.get());
     textArea->setPosition(Vector2I(24, 86));
     textArea->setSize(Vector2I(840, 607));
-    textArea->setColor(55, 55, 55);
+    textArea->setColor(0, 0, 0);
+    Border textAreaBorder({ 1, Vector3I(42, 42, 52) });
+    textArea->setBorder(textAreaBorder);
 
     curl_global_init(CURL_GLOBAL_ALL);
     CURL *curl;
@@ -298,14 +321,7 @@ void MainWindow::mouseClicked(int button, bool press)
 {
     if (press)
     {
-        if (m_mousePosition.x() >= this->width() - CLOSE_BUTTON_OFFSET - CLOSE_BUTTON_SIZE / 2.0F &&
-                m_mousePosition.x() <= this->width() - CLOSE_BUTTON_OFFSET + CLOSE_BUTTON_SIZE / 2.0F &&
-                m_mousePosition.y() >= CLOSE_BUTTON_OFFSET - CLOSE_BUTTON_SIZE / 2.0F &&
-                m_mousePosition.y() < CLOSE_BUTTON_OFFSET + CLOSE_BUTTON_SIZE / 2.0F)
-        {
-            m_closeRequested = true;
-        }
-        else if (m_mousePosition.x() >= this->width() - MINIMIZE_BUTTON_OFFSET_X - CLOSE_BUTTON_SIZE / 2.0F &&
+        if (m_mousePosition.x() >= this->width() - MINIMIZE_BUTTON_OFFSET_X - CLOSE_BUTTON_SIZE / 2.0F &&
                 m_mousePosition.x() <= this->width() - MINIMIZE_BUTTON_OFFSET_X + CLOSE_BUTTON_SIZE / 2.0F &&
                 m_mousePosition.y() >= CLOSE_BUTTON_OFFSET - CLOSE_BUTTON_SIZE / 2.0F &&
                 m_mousePosition.y() < CLOSE_BUTTON_OFFSET + CLOSE_BUTTON_SIZE / 2.0F)
@@ -338,4 +354,20 @@ void MainWindow::mouseMoved(double xPos, double yPos)
 void MainWindow::mouseWheelScrolled(double xOffset, double yOffset)
 {
     m_mainWidget->mouseWheelScrolled(xOffset, yOffset);
+}
+
+void MainWindow::buttonClicked(WidgetButton* button, int callbackIndex)
+{
+    switch (callbackIndex)
+    {
+    case 0:
+        m_closeRequested = true;
+        break;
+    case 1:
+        m_minimizeRequested = true;
+        break;
+    default:
+        std::cerr << "Unknown button index: " << callbackIndex << std::endl;
+        break;
+    }
 }

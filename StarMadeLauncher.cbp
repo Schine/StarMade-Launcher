@@ -39,6 +39,7 @@
 		<Unit filename="include/fontrenderer.h" />
 		<Unit filename="include/gltexture.h" />
 		<Unit filename="include/glutil.h" />
+		<Unit filename="include/ibuttoncallback.h" />
 		<Unit filename="include/launcherwidget.h" />
 		<Unit filename="include/mainwindow.h" />
 		<Unit filename="include/ogl.h" />

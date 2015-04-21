@@ -4,10 +4,11 @@
 #include <vector2.h>
 #include <memory>
 #include <string>
+#include <ibuttoncallback.h>
 
 class LauncherWidget;
 
-class MainWindow
+class MainWindow : public IButtonCallback
 {
 public:
     static const int CLOSE_BUTTON_SIZE = 20;
@@ -38,6 +39,7 @@ public:
     void setMinimizeRequested(bool request) { m_minimizeRequested = request; }
     void setWindowMoveRequest(Vector2I deltaPos) { m_windowMoveRequest = deltaPos; }
     Vector2I getWindowMoveRequest() const { return m_windowMoveRequest; }
+    virtual void buttonClicked(WidgetButton* button, int callbackIndex);
 private:
     void replaceAllInLine(std::string& lineToChange, const std::string& toReplace, const std::string& replaceWith = std::string(""));
     std::shared_ptr<LauncherWidget> m_mainWidget;
