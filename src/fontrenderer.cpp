@@ -105,6 +105,20 @@ int FontType::create(FontListEntry font, const FT_Library& library)
     case FontListEntry::MARCELLUS_64:
         fileName = "data/fonts/Marcellus-Regular.ttf";
         break;
+    case FontListEntry::BLENDER_PRO_12:
+    case FontListEntry::BLENDER_PRO_16:
+    case FontListEntry::BLENDER_PRO_24:
+    case FontListEntry::BLENDER_PRO_32:
+    case FontListEntry::BLENDER_PRO_64:
+        fileName = "data/fonts/BlenderPro-Book.otf";
+        break;
+    case FontListEntry::BLENDER_PRO_BOLD_12:
+    case FontListEntry::BLENDER_PRO_BOLD_16:
+    case FontListEntry::BLENDER_PRO_BOLD_24:
+    case FontListEntry::BLENDER_PRO_BOLD_32:
+    case FontListEntry::BLENDER_PRO_BOLD_64:
+        fileName = "data/fonts/BlenderPro-Heavy.otf";
+        break;
     default:
         std::cerr << "Unknown font entry" << std::endl;
     }
@@ -113,22 +127,32 @@ int FontType::create(FontListEntry font, const FT_Library& library)
     {
     case FontListEntry::MARCELLUS_12:
     case FontListEntry::BABAS_NEUE_12:
+    case FontListEntry::BLENDER_PRO_12:
+    case FontListEntry::BLENDER_PRO_BOLD_12:
         m_fontSize = 12;
         break;
     case FontListEntry::MARCELLUS_16:
     case FontListEntry::BABAS_NEUE_16:
+    case FontListEntry::BLENDER_PRO_16:
+    case FontListEntry::BLENDER_PRO_BOLD_16:
         m_fontSize = 16;
         break;
     case FontListEntry::MARCELLUS_24:
     case FontListEntry::BABAS_NEUE_24:
+    case FontListEntry::BLENDER_PRO_24:
+    case FontListEntry::BLENDER_PRO_BOLD_24:
         m_fontSize = 23;
         break;
     case FontListEntry::MARCELLUS_32:
     case FontListEntry::BABAS_NEUE_32:
+    case FontListEntry::BLENDER_PRO_32:
+    case FontListEntry::BLENDER_PRO_BOLD_32:
         m_fontSize = 32;
         break;
     case FontListEntry::MARCELLUS_64:
     case FontListEntry::BABAS_NEUE_64:
+    case FontListEntry::BLENDER_PRO_64:
+    case FontListEntry::BLENDER_PRO_BOLD_64:
         m_fontSize = 64;
         break;
     }

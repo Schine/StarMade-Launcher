@@ -45,11 +45,13 @@ private:
     std::shared_ptr<LauncherWidget> m_mainWidget;
     Vector2I m_size;
     Vector2D m_mousePosition;
+    Vector2D m_mousePositionLast;
     Vector2D m_mouseLastClickedPosition;
     bool m_closeRequested;
     bool m_minimizeRequested;
     Vector2I m_windowMoveRequest;
     Vector2I m_borderSize;
+    bool m_windowGrabbed;
 };
 
 #endif // MAINWINDOW_H

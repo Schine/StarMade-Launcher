@@ -49,6 +49,8 @@ public:
     void setBorder(const Border& border) { m_border = border; }
     void setTextureCoordinates(const TextureCoordinates& texCoords) { m_texCoords = texCoords; }
     void setDrawOffset(const DrawOffset& drawOffset) { m_drawOffset = drawOffset; }
+    Border getBorder() const { return m_border; }
+    Vector3F getColor() const { return m_color; }
 private:
     Vector3F m_color;
     std::shared_ptr<GLTexture> m_texture;

@@ -89,11 +89,11 @@ void LauncherWidget::update(double delta)
     m_firstUpdate = false;
 }
 
-void LauncherWidget::mouseMoved(Vector2D newPos)
+void LauncherWidget::mouseMoved(Vector2D newPos, Vector2D deltaPos)
 {
     for (size_t i = 0; i < m_children.size(); ++i)
     {
-        m_children[i]->mouseMoved(newPos);
+        m_children[i]->mouseMoved(newPos, deltaPos);
     }
 }
 

@@ -18,8 +18,9 @@ class WidgetButton : public WidgetPane
         virtual void draw() override;
         virtual void init() override;
         virtual void update(double delta) override;
-        virtual void mouseMoved(Vector2D newPos) override;
+        virtual void mouseMoved(Vector2D newPos, Vector2D deltaPos) override;
         virtual void mouseClicked(Vector2D clickPos, int button, bool press) override;
+        void setHoverColor(const Vector3I& color) { m_hoverColor = color; }
     protected:
     private:
         IButtonCallback* m_callback;
@@ -27,6 +28,7 @@ class WidgetButton : public WidgetPane
         std::string m_text;
         FontListEntry m_font;
         int m_callbackIndex;
+        Vector3I m_hoverColor;
 };
 
 #endif // WIDGETBUTTON_H

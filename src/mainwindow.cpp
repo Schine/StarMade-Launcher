@@ -46,11 +46,13 @@ static size_t writeMemoryCallback(void *ptr, size_t size, size_t nmemb, void *da
 MainWindow::MainWindow(int borderSizeX, int borderSizeY)
     : m_size(0, 0),
     m_mousePosition(0, 0),
+    m_mousePositionLast(0, 0),
     m_mouseLastClickedPosition(0, 0),
     m_closeRequested(false),
     m_minimizeRequested(false),
     m_windowMoveRequest(0, 0),
-    m_borderSize(borderSizeX, borderSizeY)
+    m_borderSize(borderSizeX, borderSizeY),
+    m_windowGrabbed(false)
 {
 }
 
@@ -71,8 +73,10 @@ void MainWindow::init()
 
     WidgetPane* topBar = new WidgetPane(m_mainWidget.get());
     topBar->setPosition(Vector2I(0, 0));
-    topBar->setSize(Vector2I(width(), 66));
+    topBar->setSize(Vector2I(width(), 74));
     topBar->setColor(28, 107, 127);
+    Border topBarBorder({ 5, Vector3I(11, 56, 72), BorderMode::BOTTOM });
+    topBar->setBorder(topBarBorder);
 
     /**
     WidgetPane* schineLogo = new WidgetPane(m_mainWidget.get());
@@ -82,12 +86,12 @@ void MainWindow::init()
     */
 
     WidgetPane* rightBar = new WidgetPane(m_mainWidget.get());
-    rightBar->setPosition(Vector2I(906, 66));
-    rightBar->setSize(Vector2I(294, 684));
+    rightBar->setPosition(Vector2I(906, 74));
+    rightBar->setSize(Vector2I(294, 676));
     rightBar->setColor(34, 34, 40);
 
     WidgetButton* launchButton = new WidgetButton("LAUNCH", -1,
-                                                  FontListEntry::MARCELLUS_32,
+                                                  FontListEntry::BLENDER_PRO_BOLD_32,
                                                   nullptr, rightBar);
     launchButton->setPosition(Vector2I(929, 649));
     launchButton->setSize(Vector2I(256, 87));
@@ -95,21 +99,21 @@ void MainWindow::init()
     launchButton->setTexture(std::string("data/textures/launch_button.png"));
 
     WidgetButton* skinSelection = new WidgetButton("Dedicated Server", -1,
-                                                    FontListEntry::MARCELLUS_16,
+                                                    FontListEntry::BLENDER_PRO_12,
                                                     nullptr, rightBar);
     skinSelection->setPosition(Vector2I(929, 597));
     skinSelection->setSize(Vector2I(256, 38));
     skinSelection->setColor(255, 255, 255);
     skinSelection->setTexture(std::string("data/textures/button_small.png"));
 
-    WidgetButton* closeButton = new WidgetButton("", 0, FontListEntry::MARCELLUS_16, this, topBar);
+    WidgetButton* closeButton = new WidgetButton("", 0, FontListEntry::BLENDER_PRO_16, this, topBar);
     closeButton->setPosition(Vector2I(1162, 22));
     closeButton->setSize(Vector2I(22, 24));
     closeButton->setColor(255, 255, 255);
     closeButton->setTexture(std::string("data/textures/close_button.png"));
     closeButton->setTextureCoordinates({ Vector2F(0.0F, 0.0F), Vector2F(0.6875F, 0.75F) });
 
-    WidgetButton* minimizeButton = new WidgetButton("", 1, FontListEntry::MARCELLUS_16, this, topBar);
+    WidgetButton* minimizeButton = new WidgetButton("", 1, FontListEntry::BLENDER_PRO_16, this, topBar);
     minimizeButton->setPosition(Vector2I(1118, 22));
     minimizeButton->setSize(Vector2I(22, 24));
     minimizeButton->setColor(255, 255, 255);
@@ -117,12 +121,49 @@ void MainWindow::init()
     minimizeButton->setTextureCoordinates({ Vector2F(0.0F, 0.75F), Vector2F(0.90625F, 0.1875F) });
     minimizeButton->setDrawOffset({ Vector2F(0.0F, 17.0F), Vector2F(0.0F, -18.0F) });
 
+    const int TOP_BAR_BUTTON_WIDTH = 1000;
+    for (int i = 0; i < 6; ++i)
+    {
+        std::string text;
+
+        switch  (i)
+        {
+        case 0:
+            text = "News";
+            break;
+        case 1:
+            text = "Update";
+            break;
+        case 2:
+            text = "Options";
+            break;
+        case 3:
+            text = "Tools";
+            break;
+        case 4:
+            text = "Community";
+            break;
+        case 5:
+            text = "HELP";
+            break;
+        }
+
+        WidgetButton* topBarButton = new WidgetButton(text, i + 2,
+                                                        FontListEntry::BLENDER_PRO_BOLD_24,
+                                                        this, topBar);
+        topBarButton->setPosition(Vector2I((TOP_BAR_BUTTON_WIDTH / 6) * i, 0));
+        topBarButton->setSize(Vector2I(TOP_BAR_BUTTON_WIDTH / 6, 69));
+        topBarButton->setColor(28, 107, 127);
+        topBarButton->setHoverColor(Vector3I(41, 116, 135));
+    }
+
     WidgetTextArea* textArea = new WidgetTextArea(m_mainWidget.get());
-    textArea->setPosition(Vector2I(24, 86));
-    textArea->setSize(Vector2I(840, 607));
+    textArea->setPosition(Vector2I(5, 79));
+    textArea->setSize(Vector2I(871, 601));
     textArea->setColor(0, 0, 0);
     Border textAreaBorder({ 1, Vector3I(42, 42, 52) });
     textArea->setBorder(textAreaBorder);
+    textArea->setScrollBar(7, 14, Vector3I(20, 20, 27), Vector3I(61, 61, 71));
 
     curl_global_init(CURL_GLOBAL_ALL);
     CURL *curl;
@@ -204,8 +245,8 @@ void MainWindow::init()
                     std::string title(line.substr(findPos + 7, findPos0 - findPos - 7));
                     if (title.compare("starmade") != 0)
                     {
-                        splitLines.push_back("<linet>" + title + "\n");
-                        splitLines.push_back("<linet>\n");
+                        splitLines.push_back("<linet>" + title);
+                        splitLines.push_back("<linet>");
                     }
                 }
             }
@@ -326,17 +367,18 @@ void MainWindow::mouseClicked(int button, bool press)
                 m_mousePosition.y() >= CLOSE_BUTTON_OFFSET - CLOSE_BUTTON_SIZE / 2.0F &&
                 m_mousePosition.y() < CLOSE_BUTTON_OFFSET + CLOSE_BUTTON_SIZE / 2.0F)
         {
-            m_mouseLastClickedPosition.setXY(-1, -1);
+            m_windowGrabbed = false;
             setMinimizeRequested(true);
         }
         else
         {
             m_mouseLastClickedPosition.setXY(m_mousePosition.x(), m_mousePosition.y());
+            m_windowGrabbed = true;
         }
     }
     else
     {
-        m_mouseLastClickedPosition.setXY(-1, -1);
+        m_windowGrabbed = false;
     }
     m_mainWidget->mouseClicked(m_mousePosition, button, press);
 }
@@ -344,11 +386,14 @@ void MainWindow::mouseClicked(int button, bool press)
 void MainWindow::mouseMoved(double xPos, double yPos)
 {
     m_mousePosition.setXY(xPos, yPos);
-    if (m_mouseLastClickedPosition.y() > 0 && m_mouseLastClickedPosition.y() < this->height() * 0.05)
+    double dX = m_mousePosition.x() - m_mousePositionLast.x();
+    double dY = m_mousePosition.y() - m_mousePositionLast.y();
+    if (m_windowGrabbed && m_mouseLastClickedPosition.y() > 0 && m_mouseLastClickedPosition.y() < this->height() * 0.1)
     {
         m_windowMoveRequest.setXY(xPos - m_mouseLastClickedPosition.x() + m_borderSize.x(), yPos - m_mouseLastClickedPosition.y() + 30);
     }
-    m_mainWidget->mouseMoved(m_mousePosition);
+    m_mainWidget->mouseMoved(m_mousePosition, Vector2D(dX, dY));
+    m_mousePositionLast.setXY(xPos, yPos);
 }
 
 void MainWindow::mouseWheelScrolled(double xOffset, double yOffset)

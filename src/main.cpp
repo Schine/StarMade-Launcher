@@ -94,6 +94,16 @@ int main(int argc, char *argv[])
     fontList.push_back(FontListEntry::MARCELLUS_24);
     fontList.push_back(FontListEntry::MARCELLUS_32);
     fontList.push_back(FontListEntry::MARCELLUS_64);
+    fontList.push_back(FontListEntry::BLENDER_PRO_12);
+    fontList.push_back(FontListEntry::BLENDER_PRO_16);
+    fontList.push_back(FontListEntry::BLENDER_PRO_24);
+    fontList.push_back(FontListEntry::BLENDER_PRO_32);
+    fontList.push_back(FontListEntry::BLENDER_PRO_64);
+    fontList.push_back(FontListEntry::BLENDER_PRO_BOLD_12);
+    fontList.push_back(FontListEntry::BLENDER_PRO_BOLD_16);
+    fontList.push_back(FontListEntry::BLENDER_PRO_BOLD_24);
+    fontList.push_back(FontListEntry::BLENDER_PRO_BOLD_32);
+    fontList.push_back(FontListEntry::BLENDER_PRO_BOLD_64);
     FontRenderer::init(fontList);
 
     m_mainWindow = std::shared_ptr<MainWindow>(new MainWindow(borderSizeX, 0));

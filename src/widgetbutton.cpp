@@ -12,7 +12,8 @@ WidgetButton::WidgetButton(const std::string& text,
     m_isHovered(false),
     m_text(text),
     m_font(font),
-    m_callbackIndex(callbackIndex)
+    m_callbackIndex(callbackIndex),
+    m_hoverColor(Vector3I(-1, -1, -1))
 {
 }
 
@@ -26,7 +27,17 @@ WidgetButton::~WidgetButton()
 
 void WidgetButton::draw()
 {
-    WidgetPane::draw();
+    if (m_isHovered && m_hoverColor.x() + m_hoverColor.y() + m_hoverColor.z() >= 0)
+    {
+        Vector3F mainColor = getColor();
+        setColor(m_hoverColor.x(), m_hoverColor.y(), m_hoverColor.z());
+        WidgetPane::draw();
+        setColor(mainColor.x(), mainColor.y(), mainColor.z());
+    }
+    else
+    {
+        WidgetPane::draw();
+    }
     Vector2F textSize = FontRenderer::getTextSize(m_font, m_text);
     FontRenderer::renderText(m_font, m_text, Vector2I(getPosition().x() + getSize().x() / 2 - textSize.x() / 2, getPosition().y() + getSize().y() / 2 + textSize.y() / 2));
 }
@@ -40,9 +51,9 @@ void WidgetButton::update(double delta)
 {
 }
 
-void WidgetButton::mouseMoved(Vector2D newPos)
+void WidgetButton::mouseMoved(Vector2D newPos, Vector2D deltaPos)
 {
-    LauncherWidget::mouseMoved(newPos);
+    LauncherWidget::mouseMoved(newPos, deltaPos);
 
     if (newPos.x() >= getPosition().x() &&
         newPos.x() <= getPosition().x() + getSize().x() &&
