@@ -136,7 +136,7 @@
 	"ogl.h"
 	<string>
 
-1429656045 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
+1429775904 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
 	"mainwindow.h"
 	<iostream>
 	<fstream>
@@ -150,11 +150,16 @@
 	<vector>
 	<curl/curl.h>
 	<GLFW/glfw3.h>
+	<rapidjson/document.h>
+	<rapidjson/writer.h>
+	<rapidjson/stringbuffer.h>
 	"ogl.h"
 	"widgetpane.h"
 	"widgetbutton.h"
 	"fontrenderer.h"
 	"widgettextarea.h"
+	"oauthcontroller.h"
+	"connectionutil.h"
 
 1428877615 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\gltexture.h
 	<string>
@@ -219,7 +224,7 @@
 	"vector2.h"
 	"vector3.h"
 
-1429656008 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
+1429656073 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
 	"widgettextarea.h"
 	<iostream>
 	<sstream>
@@ -231,4 +236,42 @@
 	"fontrenderer.h"
 
 1429582709 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\ibuttoncallback.h
+
+1429775177 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\oauthcontroller.cpp
+	"oauthcontroller.h"
+	<curl/curl.h>
+	<iostream>
+	<rapidjson/document.h>
+	<rapidjson/writer.h>
+	<rapidjson/stringbuffer.h>
+	"platformutil.h"
+	"connectionutil.h"
+
+1429775167 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\oauthcontroller.h
+	<string>
+
+1429768755 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\platformutil.cpp
+	"platformutil.h"
+	<stdarg.h>
+	<stdio.h>
+	<iostream>
+	<thread>
+	"ogl.h"
+
+1429766227 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\platformutil.h
+
+1429769111 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\messagebox.cpp
+	"messagebox.h"
+
+1429769100 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\messagebox.h
+	<string>
+
+1429773456 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\connectionutil.cpp
+	"connectionutil.h"
+	<stdlib.h>
+	<cstring>
+
+1429773464 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\connectionutil.h
+	<cstddef>
+	<curl/curl.h>
 

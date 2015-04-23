@@ -42,6 +42,7 @@
 		<Unit filename="include/ibuttoncallback.h" />
 		<Unit filename="include/launcherwidget.h" />
 		<Unit filename="include/mainwindow.h" />
+		<Unit filename="include/oauthcontroller.h" />
 		<Unit filename="include/ogl.h" />
 		<Unit filename="include/vector2.h" />
 		<Unit filename="include/vector3.h" />
@@ -54,6 +55,7 @@
 		<Unit filename="src/launcherwidget.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/mainwindow.cpp" />
+		<Unit filename="src/oauthcontroller.cpp" />
 		<Unit filename="src/vector2.cpp" />
 		<Unit filename="src/vector3.cpp" />
 		<Unit filename="src/widgetbutton.cpp" />

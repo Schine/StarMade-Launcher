@@ -5,3 +5,6 @@ lib/glfw-3.1.1/*
 lib/glew-1.12.0/*
 lib/curl-7.41.0/*
 lib/zlib-1.2.8/*
+lib/rapidjson-master/*
+lib/openssl-0.9.8zc/*
+lib/libssh2-1.4.3/*
