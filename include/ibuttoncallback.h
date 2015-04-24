@@ -6,7 +6,7 @@ class WidgetButton;
 class IButtonCallback
 {
 public:
-    virtual void buttonClicked(WidgetButton* button, int callbackIndex) = 0;
+    virtual void buttonClicked(int callbackIndex) = 0;
 private:
 };
 

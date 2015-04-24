@@ -13,7 +13,8 @@ WidgetButton::WidgetButton(const std::string& text,
     m_text(text),
     m_font(font),
     m_callbackIndex(callbackIndex),
-    m_hoverColor(Vector3I(-1, -1, -1))
+    m_hoverColor(Vector3I(-1, -1, -1)),
+    m_clickableInBackground(false)
 {
 }
 
@@ -68,18 +69,19 @@ void WidgetButton::mouseMoved(Vector2D newPos, Vector2D deltaPos)
     }
 }
 
-void WidgetButton::mouseClicked(Vector2D clickPos, int button, bool press)
+void WidgetButton::mouseClicked(Vector2D clickPos, int button, bool press, bool inBackground)
 {
-    LauncherWidget::mouseClicked(clickPos, button, press);
+    LauncherWidget::mouseClicked(clickPos, button, press, inBackground);
 
-    if (button == 0 && press && clickPos.x() >= getPosition().x() &&
+    if ((!inBackground || m_clickableInBackground) && button == 0 && press &&
+        clickPos.x() >= getPosition().x() &&
         clickPos.x() <= getPosition().x() + getSize().x() &&
         clickPos.y() >= getPosition().y() &&
         clickPos.y() <= getPosition().y() + getSize().y())
     {
         if (m_callback != nullptr)
         {
-            m_callback->buttonClicked(this, m_callbackIndex);
+            m_callback->buttonClicked(m_callbackIndex);
         }
     }
 }

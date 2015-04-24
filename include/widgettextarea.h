@@ -39,7 +39,7 @@ class WidgetTextArea : public WidgetPane
         virtual void init() override;
         virtual void update(double delta) override;
         virtual void mouseMoved(Vector2D newPos, Vector2D deltaPos) override;
-        virtual void mouseClicked(Vector2D clickPos, int button, bool press) override;
+        virtual void mouseClicked(Vector2D clickPos, int button, bool press, bool inBackground) override;
         virtual void mouseWheelScrolled(double xOffset, double yOffset) override;
         float getScrollPercentage() { return std::min(std::max(0.0F, (m_scroll + m_padding.y()) / m_maxScroll), 1.0F); }
         void setScrollBar(int offsetX, int sizeX, Vector3I barColor, Vector3I sliderColor);

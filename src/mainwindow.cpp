@@ -12,6 +12,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <curl/curl.h>
 #include <GLFW/glfw3.h>
 #include <rapidjson/document.h>
@@ -24,6 +25,22 @@
 #include "widgettextarea.h"
 #include "oauthcontroller.h"
 #include "connectionutil.h"
+#include "messagebox.h"
+
+std::shared_ptr<MainWindow> MainWindow::m_instance;
+
+void MainWindow::newInstance(int borderSizeX, int borderSizeY)
+{
+    if (m_instance == nullptr)
+    {
+        m_instance = std::shared_ptr<MainWindow>(new MainWindow(borderSizeX, borderSizeY));
+    }
+}
+
+std::shared_ptr<MainWindow> MainWindow::getInstance()
+{
+    return m_instance;
+}
 
 MainWindow::MainWindow(int borderSizeX, int borderSizeY)
     : m_size(0, 0),
@@ -94,6 +111,7 @@ void MainWindow::init()
     closeButton->setColor(255, 255, 255);
     closeButton->setTexture(std::string("data/textures/close_button.png"));
     closeButton->setTextureCoordinates({ Vector2F(0.0F, 0.0F), Vector2F(0.6875F, 0.75F) });
+    closeButton->setClickableInBackground(true);
 
     WidgetButton* minimizeButton = new WidgetButton("", 1, FontListEntry::BLENDER_PRO_16, this, topBar);
     minimizeButton->setPosition(Vector2I(1118, 22));
@@ -102,6 +120,7 @@ void MainWindow::init()
     minimizeButton->setTexture(std::string("data/textures/close_button.png"));
     minimizeButton->setTextureCoordinates({ Vector2F(0.0F, 0.75F), Vector2F(0.90625F, 0.1875F) });
     minimizeButton->setDrawOffset({ Vector2F(0.0F, 17.0F), Vector2F(0.0F, -18.0F) });
+    minimizeButton->setClickableInBackground(true);
 
     const int TOP_BAR_BUTTON_WIDTH = 1000;
     for (int i = 0; i < 6; ++i)
@@ -321,6 +340,12 @@ void MainWindow::replaceAllInLine(std::string& lineToChange, const std::string& 
 void MainWindow::update(double deltaTime)
 {
     m_mainWidget->update(deltaTime);
+
+    if (shouldDisplayMessageBox())
+    {
+        std::shared_ptr<LauncherMessageBox>& messageBox = m_messageBoxes[0];
+        messageBox->update(deltaTime);
+    }
 }
 
 void MainWindow::render()
@@ -329,6 +354,29 @@ void MainWindow::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     this->m_mainWidget->draw();
+    if (shouldDisplayMessageBox())
+    {
+        glPushAttrib(GL_ALL_ATTRIB_BITS);
+        glDisable(GL_TEXTURE_2D);
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glAlphaFunc(GL_GREATER, 0.0);
+        glEnable(GL_ALPHA_TEST);
+
+        std::shared_ptr<LauncherMessageBox>& messageBox = m_messageBoxes[0];
+        glBegin(GL_QUADS);
+        glColor4f(0.0F, 0.0F, 0.0F, (float)std::min(0.5, (glfwGetTime() - messageBox->getTimeOpened()) / 3.0));
+        glVertex2f(0, 0);
+        glVertex2f(m_size.x(), 0);
+        glVertex2f(m_size.x(), m_size.y());
+        glVertex2f(0, m_size.y());
+        glEnd();
+
+        messageBox->render();
+
+        glPopAttrib();
+    }
 }
 
 void MainWindow::resize(int w, int h)
@@ -344,6 +392,12 @@ void MainWindow::resize(int w, int h)
 
 void MainWindow::mouseClicked(int button, bool press)
 {
+    if (shouldDisplayMessageBox())
+    {
+        std::shared_ptr<LauncherMessageBox>& messageBox = m_messageBoxes[0];
+        messageBox->mouseClicked(m_mousePosition, button, press);
+    }
+
     if (press)
     {
         if (m_mousePosition.x() >= this->width() - MINIMIZE_BUTTON_OFFSET_X - CLOSE_BUTTON_SIZE / 2.0F &&
@@ -364,7 +418,7 @@ void MainWindow::mouseClicked(int button, bool press)
     {
         m_windowGrabbed = false;
     }
-    m_mainWidget->mouseClicked(m_mousePosition, button, press);
+    m_mainWidget->mouseClicked(m_mousePosition, button, press, shouldDisplayMessageBox());
 }
 
 void MainWindow::mouseMoved(double xPos, double yPos)
@@ -376,16 +430,51 @@ void MainWindow::mouseMoved(double xPos, double yPos)
     {
         m_windowMoveRequest.setXY(xPos - m_mouseLastClickedPosition.x() + m_borderSize.x(), yPos - m_mouseLastClickedPosition.y() + 30);
     }
-    m_mainWidget->mouseMoved(m_mousePosition, Vector2D(dX, dY));
+
+    if (shouldDisplayMessageBox())
+    {
+        std::shared_ptr<LauncherMessageBox>& messageBox = m_messageBoxes[0];
+        messageBox->mouseMoved(m_mousePosition, Vector2D(dX, dY));
+    }
+    else
+    {
+        m_mainWidget->mouseMoved(m_mousePosition, Vector2D(dX, dY));
+    }
+
     m_mousePositionLast.setXY(xPos, yPos);
 }
 
 void MainWindow::mouseWheelScrolled(double xOffset, double yOffset)
 {
-    m_mainWidget->mouseWheelScrolled(xOffset, yOffset);
+    if (shouldDisplayMessageBox())
+    {
+
+    }
+    else
+    {
+        m_mainWidget->mouseWheelScrolled(xOffset, yOffset);
+    }
 }
 
-void MainWindow::buttonClicked(WidgetButton* button, int callbackIndex)
+void MainWindow::keyPressed(int key, int action, int mods)
+{
+    if (shouldDisplayMessageBox())
+    {
+        std::shared_ptr<LauncherMessageBox>& messageBox = m_messageBoxes[0];
+        messageBox->keyPressed(key, action, mods);
+    }
+}
+
+void MainWindow::charTyped(unsigned int codePoint, int mods)
+{
+    if (shouldDisplayMessageBox())
+    {
+        std::shared_ptr<LauncherMessageBox>& messageBox = m_messageBoxes[0];
+        messageBox->charTyped(codePoint, mods);
+    }
+}
+
+void MainWindow::buttonClicked(int callbackIndex)
 {
     switch (callbackIndex)
     {

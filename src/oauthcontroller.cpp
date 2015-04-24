@@ -1,11 +1,15 @@
 #include "oauthcontroller.h"
 #include <curl/curl.h>
 #include <iostream>
+#include <string>
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/stringbuffer.h>
+#include <glfw/glfw3.h>
 #include "platformutil.h"
 #include "connectionutil.h"
+#include "mainwindow.h"
+#include "messagebox.h"
 
 OAuthController::OAuthController()
 {
@@ -56,6 +60,13 @@ std::string OAuthController::loginRequest(const std::string& username, const std
 
         if (res != CURLE_OK)
         {
+            MainWindow::getInstance()->addMessageBox(std::shared_ptr<LauncherMessageBox>(new LauncherMessageBox("Error",
+                                                                                                                "Connection error! curl(" + std::to_string(res) + ")",
+                                                                                                                Vector2I(200, 100),
+                                                                                                                { new MessageBoxButton(0, "OK") },
+                                                                                                                { },
+                                                                                                                glfwGetTime(),
+                                                                                                                new OAuthController())));
             PlatformUtil::messageBox("Connection error! curl(%i)", res);
         }
 
@@ -64,7 +75,14 @@ std::string OAuthController::loginRequest(const std::string& username, const std
 
         if (http_code == 401)
         {
-            PlatformUtil::messageBox("Invalid credentials!", res);
+            MainWindow::getInstance()->addMessageBox(std::shared_ptr<LauncherMessageBox>(new LauncherMessageBox("Error",
+                                                                                                                "Invalid Credentials",
+                                                                                                                Vector2I(500, 200),
+                                                                                                                { new MessageBoxButton(0, "OK"),
+                                                                                                                  new MessageBoxButton(1, "Cancel") },
+                                                                                                                { new MessageBoxTextWidget(2, Vector2I(400, 30), Vector2I(0, 0), true) },
+                                                                                                                glfwGetTime(),
+                                                                                                                new OAuthController())));
             return "";
         }
 
@@ -87,5 +105,13 @@ std::string OAuthController::loginRequest(const std::string& username, const std
         }
 
         return 0;
+    }
+}
+
+void OAuthController::buttonClicked(int callbackIndex)
+{
+    if (callbackIndex < 2)
+    {
+        MainWindow::getInstance()->removeCurrentMessageBox();
     }
 }

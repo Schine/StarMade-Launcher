@@ -6,10 +6,10 @@
 #include "ogl.h"
 
 #ifdef _WIN32
-DWORD WINAPI hello(void* data)
+DWORD WINAPI showMessageBoxWin32(void* data)
 {
     std::string dataC = *((std::string*)data);
-    MessageBox(NULL, dataC.c_str(), "Message", MB_OK | MB_ICONQUESTION | MB_SYSTEMMODAL);
+    MessageBox(NULL, dataC.c_str(), "StarMade Launcher", MB_OK | MB_ICONQUESTION | MB_SYSTEMMODAL);
 }
 #endif
 
@@ -23,7 +23,7 @@ void PlatformUtil::messageBox(const char* str, ...)
     static std::string test(buff);
 
     #ifdef _WIN32
-    HANDLE thread = CreateThread(NULL, 0, hello, &test, 0, NULL);
+    HANDLE thread = CreateThread(NULL, 0, showMessageBoxWin32, &test, 0, NULL);
     #endif
 
     va_end(args);

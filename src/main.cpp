@@ -12,29 +12,43 @@
 #include <iostream>
 #include "fontrenderer.h"
 
-std::shared_ptr<MainWindow> m_mainWindow;
-
 void scrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
-    if (m_mainWindow != nullptr)
+    if (MainWindow::getInstance() != nullptr)
     {
-        m_mainWindow->mouseWheelScrolled(xOffset, yOffset);
+        MainWindow::getInstance()->mouseWheelScrolled(xOffset, yOffset);
     }
 }
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (m_mainWindow != nullptr)
+    if (MainWindow::getInstance() != nullptr)
     {
-        m_mainWindow->mouseClicked(button, action == GLFW_PRESS);
+        MainWindow::getInstance()->mouseClicked(button, action == GLFW_PRESS);
     }
 }
 
 void mousePositionCallback(GLFWwindow* window, double xPos, double yPos)
 {
-    if (m_mainWindow != nullptr)
+    if (MainWindow::getInstance() != nullptr)
     {
-        m_mainWindow->mouseMoved(xPos, yPos);
+        MainWindow::getInstance()->mouseMoved(xPos, yPos);
+    }
+}
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (MainWindow::getInstance() != nullptr)
+    {
+        MainWindow::getInstance()->keyPressed(key, action, mods);
+    }
+}
+
+void charTypedCallback(GLFWwindow* window, unsigned int codePoint, int mods)
+{
+    if (MainWindow::getInstance() != nullptr)
+    {
+        MainWindow::getInstance()->charTyped(codePoint, mods);
     }
 }
 
@@ -53,6 +67,8 @@ int main(int argc, char *argv[])
     glfwSetMouseButtonCallback(window, &mouseButtonCallback);
     glfwSetCursorPosCallback(window, &mousePositionCallback);
     glfwSetScrollCallback(window, &scrollCallback);
+    glfwSetKeyCallback(window, &keyCallback);
+    glfwSetCharModsCallback(window, &charTypedCallback);
 
     int borderSizeX = 0;
 
@@ -106,32 +122,32 @@ int main(int argc, char *argv[])
     fontList.push_back(FontListEntry::BLENDER_PRO_BOLD_64);
     FontRenderer::init(fontList);
 
-    m_mainWindow = std::shared_ptr<MainWindow>(new MainWindow(borderSizeX, 0));
-    m_mainWindow->resize(windowSizeX, windowSizeY);
-    m_mainWindow->init();
+    MainWindow::newInstance(borderSizeX, 0);
+    MainWindow::getInstance()->resize(windowSizeX, windowSizeY);
+    MainWindow::getInstance()->init();
     //w.checkJavaVersion(3);
 
     double lastTime = glfwGetTime();
-    while (!glfwWindowShouldClose(window) && !m_mainWindow->isCloseRequested())
+    while (!glfwWindowShouldClose(window) && !MainWindow::getInstance()->isCloseRequested())
     {
-        m_mainWindow->update(glfwGetTime() - lastTime);
-        m_mainWindow->render();
+        MainWindow::getInstance()->update(glfwGetTime() - lastTime);
+        MainWindow::getInstance()->render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
         lastTime = glfwGetTime();
-        if (m_mainWindow->isMinimizeRequested())
+        if (MainWindow::getInstance()->isMinimizeRequested())
         {
             glfwIconifyWindow(window);
-            m_mainWindow->setMinimizeRequested(false);
+            MainWindow::getInstance()->setMinimizeRequested(false);
         }
-        Vector2I moveVec = m_mainWindow->getWindowMoveRequest();
+        Vector2I moveVec = MainWindow::getInstance()->getWindowMoveRequest();
         if (moveVec.x() != 0 && moveVec.y() != 0)
         {
             int posX, posY;
             glfwGetWindowPos(window, &posX, &posY);
             glfwSetWindowPos(window, posX + moveVec.x(), posY + moveVec.y());
-            m_mainWindow->setWindowMoveRequest(Vector2I(0, 0));
+            MainWindow::getInstance()->setWindowMoveRequest(Vector2I(0, 0));
         }
     }
 

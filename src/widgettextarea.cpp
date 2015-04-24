@@ -237,9 +237,9 @@ void WidgetTextArea::mouseMoved(Vector2D newPos, Vector2D deltaPos)
     }
 }
 
-void WidgetTextArea::mouseClicked(Vector2D clickPos, int button, bool press)
+void WidgetTextArea::mouseClicked(Vector2D clickPos, int button, bool press, bool inBackground)
 {
-    LauncherWidget::mouseClicked(clickPos, button, press);
+    LauncherWidget::mouseClicked(clickPos, button, press, inBackground);
 
     for (int i = 0; i < m_onScreenLinks.size(); ++i)
     {

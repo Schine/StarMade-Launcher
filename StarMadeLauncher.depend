@@ -108,12 +108,12 @@
 	<png.h>
 	<iostream>
 
-1429653237 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\launcherwidget.cpp
+1429815030 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\launcherwidget.cpp
 	"launcherwidget.h"
 	<assert.h>
 	<iostream>
 
-1429652093 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
+1429861794 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\main.cpp
 	"mainwindow.h"
 	<GL/glew.h>
 	<windows.h>
@@ -136,7 +136,7 @@
 	"ogl.h"
 	<string>
 
-1429775904 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
+1429862963 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\mainwindow.cpp
 	"mainwindow.h"
 	<iostream>
 	<fstream>
@@ -148,6 +148,7 @@
 	<sstream>
 	<string>
 	<vector>
+	<algorithm>
 	<curl/curl.h>
 	<GLFW/glfw3.h>
 	<rapidjson/document.h>
@@ -160,6 +161,7 @@
 	"widgettextarea.h"
 	"oauthcontroller.h"
 	"connectionutil.h"
+	"messagebox.h"
 
 1428877615 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\gltexture.h
 	<string>
@@ -180,16 +182,17 @@
 	<GL/glu.h>
 	<GL/glut.h>
 
-1429653228 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\launcherwidget.h
+1429815017 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\launcherwidget.h
 	<memory>
 	"vector2.h"
 	<vector>
 
-1429654135 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\mainwindow.h
-	<vector2.h>
+1429861523 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\mainwindow.h
 	<memory>
+	<vector>
 	<string>
 	<ibuttoncallback.h>
+	"vector2.h"
 
 1429655587 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgetpane.h
 	"launcherwidget.h"
@@ -199,12 +202,12 @@
 
 1428819632 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\vector3.h
 
-1429655680 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgetbutton.cpp
+1429822847 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgetbutton.cpp
 	"widgetbutton.h"
 	"fontrenderer.h"
 	<iostream>
 
-1429655323 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgetbutton.h
+1429814988 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgetbutton.h
 	<string>
 	"widgetpane.h"
 	"fontrenderer.h"
@@ -224,33 +227,38 @@
 	"vector2.h"
 	"vector3.h"
 
-1429656073 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
+1429815108 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\widgettextarea.cpp
 	"widgettextarea.h"
 	<iostream>
 	<sstream>
 
-1429653204 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgettextarea.h
+1429815035 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\widgettextarea.h
 	<vector>
 	<string>
 	"widgetpane.h"
 	"fontrenderer.h"
 
-1429582709 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\ibuttoncallback.h
+1429822988 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\ibuttoncallback.h
 
-1429775177 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\oauthcontroller.cpp
+1429863809 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\oauthcontroller.cpp
 	"oauthcontroller.h"
 	<curl/curl.h>
 	<iostream>
+	<string>
 	<rapidjson/document.h>
 	<rapidjson/writer.h>
 	<rapidjson/stringbuffer.h>
+	<glfw/glfw3.h>
 	"platformutil.h"
 	"connectionutil.h"
+	"mainwindow.h"
+	"messagebox.h"
 
-1429775167 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\oauthcontroller.h
+1429823703 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\oauthcontroller.h
 	<string>
+	"ibuttoncallback.h"
 
-1429768755 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\platformutil.cpp
+1429812232 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\platformutil.cpp
 	"platformutil.h"
 	<stdarg.h>
 	<stdio.h>
@@ -260,11 +268,22 @@
 
 1429766227 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\platformutil.h
 
-1429769111 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\messagebox.cpp
+1429863833 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\messagebox.cpp
 	"messagebox.h"
+	<iostream>
+	"mainwindow.h"
+	"ogl.h"
+	"fontrenderer.h"
 
-1429769100 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\messagebox.h
+1429864417 c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\include\messagebox.h
 	<string>
+	<vector>
+	<initializer_list>
+	<iostream>
+	<glfw/glfw3.h>
+	"vector2.h"
+	"ibuttoncallback.h"
+	"mainwindow.h"
 
 1429773456 source:c:\users\mitch\dropbox\development\env\c++\projects\starmadelauncher\starmadelauncher\src\connectionutil.cpp
 	"connectionutil.h"

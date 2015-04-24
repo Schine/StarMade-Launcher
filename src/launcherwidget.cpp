@@ -105,11 +105,11 @@ void LauncherWidget::mouseWheelScrolled(double xOffset, double yOffset)
     }
 }
 
-void LauncherWidget::mouseClicked(Vector2D clickPos, int button, bool press)
+void LauncherWidget::mouseClicked(Vector2D clickPos, int button, bool press, bool inBackground)
 {
     for (size_t i = 0; i < m_children.size(); ++i)
     {
-        m_children[i]->mouseClicked(clickPos, button, press);
+        m_children[i]->mouseClicked(clickPos, button, press, inBackground);
     }
 }
 

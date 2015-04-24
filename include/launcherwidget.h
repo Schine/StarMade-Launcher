@@ -27,7 +27,7 @@ public:
     void setPosition(Vector2I position) { m_position = position; }
     void setSize(Vector2I size) { m_size = size; }
     virtual void mouseMoved(Vector2D newPos, Vector2D deltaPos);
-    virtual void mouseClicked(Vector2D clickPos, int button, bool press);
+    virtual void mouseClicked(Vector2D clickPos, int button, bool press, bool inBackground);
     virtual void keyTyped(char keyTyped, bool repeat);
     virtual void mouseWheelScrolled(double xOffset, double yOffset);
 private:
