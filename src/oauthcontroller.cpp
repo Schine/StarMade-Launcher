@@ -11,6 +11,9 @@
 #include "mainwindow.h"
 #include "messagebox.h"
 
+const char* OAuthController::STATUS_CONNECTION_ERROR = "%err_conn%";
+const char* OAuthController::STATUS_CREDENTIALS_INVALID = "%err_cred%";
+
 OAuthController::OAuthController()
 {
     //ctor
@@ -20,7 +23,6 @@ OAuthController::~OAuthController()
 {
     //dtor
 }
-
 
 /**
   * Make a login request
@@ -37,81 +39,77 @@ std::string OAuthController::loginRequest(const std::string& username, const std
     curl = curl_easy_init();
     if (curl)
     {
-        char* grant_type = curl_easy_escape(curl, "grant_type", 0);
-        char* grant_type_value = curl_easy_escape(curl, "password", 0);
-        char* user_name = curl_easy_escape(curl, "username", 0);
-        char* user_name_value = curl_easy_escape(curl, username.c_str(), 0);
-        char* password_encoded = curl_easy_escape(curl, "password", 0);
-        char* password_encoded_value = curl_easy_escape(curl, password.c_str(), 0);
-        char* scope = curl_easy_escape(curl, "scope", 0);
-        char* scope_value = "public+read_citizen_info+client";
-        std::string fullPostFields(std::string(grant_type) + "=" + std::string(grant_type_value) + "&" +
-                              std::string(user_name) + "=" + std::string(user_name_value) + "&" +
-                              std::string(password_encoded) + "=" + std::string(password_encoded_value) + "&" +
-                              std::string(scope) + "=" + std::string(scope_value));
-
-        ConnectionUtil::setWriteOptions(curl, output);
-        curl_easy_setopt(curl, CURLOPT_URL, tokenServerUrl.c_str());
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, fullPostFields.c_str());
-        curl_easy_setopt(curl, CURLOPT_CAINFO, "ca-bundle.crt");
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2);
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK)
         {
-            MainWindow::getInstance()->addMessageBox(std::shared_ptr<LauncherMessageBox>(new LauncherMessageBox("Error",
-                                                                                                                "Connection error! curl(" + std::to_string(res) + ")",
-                                                                                                                Vector2I(200, 100),
-                                                                                                                { new MessageBoxButton(0, "OK") },
-                                                                                                                { },
-                                                                                                                glfwGetTime(),
-                                                                                                                new OAuthController())));
-            PlatformUtil::messageBox("Connection error! curl(%i)", res);
+            OwnedCurlString grant_type = curl_easy_escape(curl, "grant_type", 0);
+            OwnedCurlString grant_type_value = curl_easy_escape(curl, "password", 0);
+            OwnedCurlString user_name = curl_easy_escape(curl, "username", 0);
+            OwnedCurlString user_name_value = curl_easy_escape(curl, username.c_str(), 0);
+            OwnedCurlString password_encoded = curl_easy_escape(curl, "password", 0);
+            OwnedCurlString password_encoded_value = curl_easy_escape(curl, password.c_str(), 0);
+            OwnedCurlString scope = curl_easy_escape(curl, "scope", 0);
+            std::string fullPostFields(grant_type.asString() + "=" + grant_type_value.asString() + "&" +
+                                  user_name.asString() + "=" + user_name_value.asString() + "&" +
+                                  password_encoded.asString() + "=" + password_encoded_value.asString() + "&" +
+                                  scope.asString() + "=" + "public+read_citizen_info+client");
+
+            ConnectionUtil::setWriteOptions(curl, output);
+            curl_easy_setopt(curl, CURLOPT_URL, tokenServerUrl.c_str());
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, fullPostFields.c_str());
+            ConnectionUtil::setClientCertificates(curl);
+            res = curl_easy_perform(curl);
+
+            if (res != CURLE_OK)
+            {
+                return STATUS_CONNECTION_ERROR;
+            }
+
+            long http_code = 0;
+            curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
+
+            if (http_code == 401)
+            {
+                return STATUS_CREDENTIALS_INVALID;
+            }
         }
-
-        long http_code = 0;
-        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
-
-        if (http_code == 401)
-        {
-            MainWindow::getInstance()->addMessageBox(std::shared_ptr<LauncherMessageBox>(new LauncherMessageBox("Error",
-                                                                                                                "Invalid Credentials",
-                                                                                                                Vector2I(500, 200),
-                                                                                                                { new MessageBoxButton(0, "OK"),
-                                                                                                                  new MessageBoxButton(1, "Cancel") },
-                                                                                                                { new MessageBoxTextWidget(2, Vector2I(400, 30), Vector2I(0, 0), true) },
-                                                                                                                glfwGetTime(),
-                                                                                                                new OAuthController())));
-            return "";
-        }
-
-        curl_free(grant_type);
-        curl_free(user_name);
-        curl_free(user_name_value);
-        curl_free(password_encoded);
-        curl_free(password_encoded_value);
-        curl_free(scope);
 
         curl_easy_cleanup(curl);
 
-        if (output.buffer != nullptr)
-        {
-            rapidjson::Document d;
-            d.Parse(output.buffer);
-
-            rapidjson::Value& s = d["access_token"];
-            return s.GetString();
-        }
-
-        return 0;
+        JSONDocPtr doc = getResponseJSON(output);
+        return (*doc)["access_token"].GetString();
     }
+
+    return STATUS_CONNECTION_ERROR;
 }
 
 void OAuthController::buttonClicked(int callbackIndex)
 {
-    if (callbackIndex < 2)
+}
+
+JSONDocPtr OAuthController::getResponseJSON(const ConnectionUtil::BufferStruct& output)
+{
+    if (output.buffer != nullptr)
     {
-        MainWindow::getInstance()->removeCurrentMessageBox();
+        JSONDocPtr d(new JSONDoc());
+        d->Parse(output.buffer);
+        return d;
     }
+
+    return nullptr;
+}
+
+TokenRequestResult OAuthController::checkTokenValidity(const std::string& token)
+{
+    if (token.compare(STATUS_CONNECTION_ERROR) == 0)
+    {
+        return TokenRequestResult::CONNECTION_ERROR;
+    }
+    if (token.compare(STATUS_CREDENTIALS_INVALID) == 0)
+    {
+        return TokenRequestResult::INVALID_CREDENTIALS;
+    }
+    if (token.empty())
+    {
+        return TokenRequestResult::UNKOWN_ERROR;
+    }
+    return TokenRequestResult::OK;
 }

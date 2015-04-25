@@ -4,18 +4,15 @@
 #include "ogl.h"
 #include "fontrenderer.h"
 
-LauncherMessageBox::LauncherMessageBox(const std::string& title,
-                   const std::string& message,
-                   const Vector2I& size,
+LauncherMessageBox::LauncherMessageBox(const Vector2I& size,
                    std::initializer_list<MessageBoxButton*> messageBoxes,
                    std::initializer_list<MessageBoxTextWidget*> textBoxes,
+                   std::initializer_list<MessageBoxLabelWidget*> labels,
                    double timeOpened,
                    IButtonCallback* callback)
-    : m_title(title),
-    m_message(message),
-    m_size(size),
-    m_timeOpened(timeOpened),
-    m_callback(callback)
+    : m_size(size),
+    m_callback(callback),
+    m_timeOpened(timeOpened)
 {
     for (const auto& elem : messageBoxes)
     {
@@ -26,11 +23,29 @@ LauncherMessageBox::LauncherMessageBox(const std::string& title,
     {
         m_textBoxes.push_back(elem);
     }
+
+    for (const auto& elem : labels)
+    {
+        m_labels.push_back(elem);
+    }
 }
 
 LauncherMessageBox::~LauncherMessageBox()
 {
-    //dtor
+    for (auto elem : m_buttons)
+    {
+        delete elem;
+    }
+
+    for (auto elem : m_textBoxes)
+    {
+        delete elem;
+    }
+
+    for (auto elem : m_labels)
+    {
+        delete elem;
+    }
 }
 
 void LauncherMessageBox::render()
@@ -80,16 +95,16 @@ void LauncherMessageBox::render()
     glVertex2f(halfWidth - m_size.x() / 2, halfHeight + m_size.y() / 2);
     glEnd();
 
-    for (int i = 0; i < m_buttons.size(); ++i)
+    for (size_t i = 0; i < m_buttons.size(); ++i)
     {
         const auto& button = m_buttons[i];
-        int buttonSize = (m_size.x() - 60) / m_buttons.size();
-        int buttonPos = ((buttonSize) + 60 / m_buttons.size()) * i + 30 / m_buttons.size();
+        int buttonWidth = button->size.x() - button->padding;
+        int buttonPos = ((m_size.x() / button->numInlineButtons) / 2) - (buttonWidth / 2) + ((m_size.x() / button->numInlineButtons) * button->indexInLine);
 
         int posX0 = halfWidth - m_size.x() / 2 + buttonPos;
-        int posX1 = posX0 + buttonSize;
-        int posY0 = halfHeight + m_size.y() / 2 - 45;
-        int posY1 = posY0 + 30;
+        int posX1 = posX0 + buttonWidth;
+        int posY0 = halfHeight + m_size.y() / 2 - button->size.y() / 2 + button->positionInBox.y();
+        int posY1 = posY0 + button->size.y();
 
         glColor3f(97 / 255.0F,
                   97 / 255.0F,
@@ -118,9 +133,18 @@ void LauncherMessageBox::render()
         FontRenderer::renderText(font, button->text, Vector2I((posX0 + posX1) / 2 - textSize.x() / 2, (posY0 + posY1) / 2 + 6));
     }
 
-    for (int i = 0; i < m_textBoxes.size(); ++i)
+    for (size_t i = 0; i < m_textBoxes.size(); ++i)
     {
         const auto& textBox = m_textBoxes[i];
+        std::string newString = textBox->text;
+        if (textBox->hideCharacters)
+        {
+            newString = "";
+            for (size_t j = 0; j < textBox->text.size(); ++j)
+            {
+                newString += "*";
+            }
+        }
 
         int posX0 = halfWidth - textBox->size.x() / 2;
         int posX1 = posX0 + textBox->size.x();
@@ -150,8 +174,23 @@ void LauncherMessageBox::render()
         glEnd();
 
         FontListEntry font = FontListEntry::BLENDER_PRO_16;
-        Vector2F textSize = FontRenderer::getTextSize(font, textBox->text);
-        FontRenderer::renderText(font, textBox->text + (textBox->showSelector ? "|" : ""), Vector2I((posX0 + posX1) / 2 - textSize.x() / 2, (posY0 + posY1) / 2 + 6));
+        Vector2F textSize = FontRenderer::getTextSize(font, newString);
+        FontRenderer::renderText(font, newString + (textBox->showSelector ? "|" : ""), Vector2I((posX0 + posX1) / 2 - textSize.x() / 2, (posY0 + posY1) / 2 + 6));
+    }
+
+    for (size_t i = 0; i < m_labels.size(); ++i)
+    {
+        const auto& label = m_labels[i];
+
+        FontListEntry font = FontListEntry::BLENDER_PRO_16;
+        Vector2F textSize = FontRenderer::getTextSize(font, label->text);
+
+        int posX0 = halfWidth - textSize.x() / 2;
+        int posX1 = posX0 + textSize.x();
+        int posY0 = halfHeight + label->positionInBox.y();
+        int posY1 = posY0 + textSize.y();
+
+        FontRenderer::renderText(font, label->text, Vector2I((posX0 + posX1) / 2 - textSize.x() / 2, (posY0 + posY1) / 2 + 6));
     }
 }
 
@@ -160,16 +199,16 @@ void LauncherMessageBox::mouseClicked(Vector2D clickPos, int mouseButton, bool p
     const int halfWidth = MainWindow::getInstance()->width() / 2;
     const int halfHeight = MainWindow::getInstance()->height() / 2;
 
-    for (int i = 0; i < m_buttons.size(); ++i)
+    for (size_t i = 0; i < m_buttons.size(); ++i)
     {
         const auto& button = m_buttons[i];
-        int buttonSize = (m_size.x() - 60) / m_buttons.size();
-        int buttonPos = ((buttonSize) + 60 / m_buttons.size()) * i + 30 / m_buttons.size();
+        int buttonWidth = button->size.x() - button->padding;
+        int buttonPos = ((m_size.x() / button->numInlineButtons) / 2) - (buttonWidth / 2) + ((m_size.x() / button->numInlineButtons) * button->indexInLine);
 
         int posX0 = halfWidth - m_size.x() / 2 + buttonPos;
-        int posX1 = posX0 + buttonSize;
-        int posY0 = halfHeight + m_size.y() / 2 - 45;
-        int posY1 = posY0 + 30;
+        int posX1 = posX0 + buttonWidth;
+        int posY0 = halfHeight + m_size.y() / 2 - button->size.y() / 2 + button->positionInBox.y();
+        int posY1 = posY0 + button->size.y();
 
         if (mouseButton == 0 && press &&
             clickPos.x() >= posX0 &&
@@ -184,29 +223,9 @@ void LauncherMessageBox::mouseClicked(Vector2D clickPos, int mouseButton, bool p
         }
     }
 
-    for (int i = 0; i < m_textBoxes.size(); ++i)
+    for (size_t i = 0; i < m_textBoxes.size(); ++i)
     {
         auto& textBox = m_textBoxes[i];
-        int buttonSize = (m_size.x() - 60) / m_buttons.size();
-        int buttonPos = ((buttonSize) + 60 / m_buttons.size()) * i + 30 / m_buttons.size();
-
-        int posX0 = halfWidth - textBox->size.x() / 2;
-        int posX1 = posX0 + textBox->size.x();
-        int posY0 = halfHeight + textBox->positionInBox.y();
-        int posY1 = posY0 + textBox->size.y();
-
-        if (mouseButton == 0 && press &&
-            clickPos.x() >= posX0 &&
-            clickPos.x() <= posX1 &&
-            clickPos.y() >= posY0 &&
-            clickPos.y() <= posY1)
-        {
-            if (m_callback != nullptr)
-            {
-                m_callback->buttonClicked(textBox->index);
-            }
-        }
-
         textBox->mouseClicked(clickPos, mouseButton, press);
     }
 }
@@ -216,16 +235,16 @@ void LauncherMessageBox::mouseMoved(Vector2D newPos, Vector2D deltaPos)
     const int halfWidth = MainWindow::getInstance()->width() / 2;
     const int halfHeight = MainWindow::getInstance()->height() / 2;
 
-    for (int i = 0; i < m_buttons.size(); ++i)
+    for (size_t i = 0; i < m_buttons.size(); ++i)
     {
         auto& button = m_buttons[i];
-        int buttonSize = (m_size.x() - 60) / m_buttons.size();
-        int buttonPos = ((buttonSize) + 60 / m_buttons.size()) * i + 30 / m_buttons.size();
+        int buttonWidth = button->size.x() - button->padding;
+        int buttonPos = ((m_size.x() / button->numInlineButtons) / 2) - (buttonWidth / 2) + ((m_size.x() / button->numInlineButtons) * button->indexInLine);
 
         int posX0 = halfWidth - m_size.x() / 2 + buttonPos;
-        int posX1 = posX0 + buttonSize;
-        int posY0 = halfHeight + m_size.y() / 2 - 45;
-        int posY1 = posY0 + 30;
+        int posX1 = posX0 + buttonWidth;
+        int posY0 = halfHeight + m_size.y() / 2 - button->size.y() / 2 + button->positionInBox.y();
+        int posY1 = posY0 + button->size.y();
 
         button->hovered = newPos.x() >= posX0 &&
                             newPos.x() <= posX1 &&
@@ -236,16 +255,40 @@ void LauncherMessageBox::mouseMoved(Vector2D newPos, Vector2D deltaPos)
 
 void LauncherMessageBox::keyPressed(int key, int action, int mods)
 {
-    for (int i = 0; i < m_textBoxes.size(); ++i)
+    int setBoxFocused = -1;
+    bool setNextBoxFocused = false;
+    for (size_t i = 0; i < m_textBoxes.size(); ++i)
     {
         auto& textBox = m_textBoxes[i];
+        if (!setNextBoxFocused && key == GLFW_KEY_TAB && m_textBoxes.size() > 1 && action == GLFW_PRESS)
+        {
+            if (textBox->focused)
+            {
+                textBox->focused = false;
+                setNextBoxFocused = true;
+                setBoxFocused = i + ((mods & GLFW_MOD_SHIFT) ? -1 : 1);
+            }
+        }
         textBox->keyPressed(key, action, mods);
+    }
+    if (setNextBoxFocused)
+    {
+        int textBoxToFocus = setBoxFocused;
+        if (textBoxToFocus >= static_cast<int>(m_textBoxes.size()))
+        {
+            textBoxToFocus = 0;
+        }
+        if (setBoxFocused < 0)
+        {
+            textBoxToFocus = m_textBoxes.size() - 1;
+        }
+        m_textBoxes[textBoxToFocus]->focused = true;
     }
 }
 
 void LauncherMessageBox::charTyped(unsigned int codePoint, int mods)
 {
-    for (int i = 0; i < m_textBoxes.size(); ++i)
+    for (size_t i = 0; i < m_textBoxes.size(); ++i)
     {
         auto& textBox = m_textBoxes[i];
         textBox->charTyped(codePoint, mods);
@@ -254,11 +297,50 @@ void LauncherMessageBox::charTyped(unsigned int codePoint, int mods)
 
 void LauncherMessageBox::update(double deltaTime)
 {
-    for (int i = 0; i < m_textBoxes.size(); ++i)
+    for (size_t i = 0; i < m_textBoxes.size(); ++i)
     {
         auto& textBox = m_textBoxes[i];
         textBox->update(deltaTime);
     }
+}
+
+MessageBoxButton* LauncherMessageBox::getButtonByID(int id)
+{
+    for (size_t i = 0; i < m_buttons.size(); ++i)
+    {
+        auto button = m_buttons[i];
+        if (button->index == id)
+        {
+            return button;
+        }
+    }
+    return nullptr;
+}
+
+MessageBoxTextWidget* LauncherMessageBox::getTextBoxByID(int id)
+{
+    for (size_t i = 0; i < m_textBoxes.size(); ++i)
+    {
+        auto button = m_textBoxes[i];
+        if (button->index == id)
+        {
+            return button;
+        }
+    }
+    return nullptr;
+}
+
+MessageBoxLabelWidget* LauncherMessageBox::getLabelByID(int id)
+{
+    for (size_t i = 0; i < m_labels.size(); ++i)
+    {
+        auto button = m_labels[i];
+        if (button->index == id)
+        {
+            return button;
+        }
+    }
+    return nullptr;
 }
 
 void MessageBoxTextWidget::mouseClicked(Vector2D clickPos, int mouseButton, bool press)
@@ -291,15 +373,21 @@ void MessageBoxTextWidget::mouseMoved(Vector2D newPos, Vector2D deltaPos)
 
 void MessageBoxTextWidget::keyPressed(int key, int action, int mods)
 {
-    if (key == GLFW_KEY_BACKSPACE && action != GLFW_RELEASE)
+    if (focused)
     {
-        text = text.substr(0, text.size() - 1);
+        if (key == GLFW_KEY_BACKSPACE && action != GLFW_RELEASE)
+        {
+            text = text.substr(0, text.size() - 1);
+        }
     }
 }
 
 void MessageBoxTextWidget::charTyped(unsigned int codePoint, int mods)
 {
-    text += (char)codePoint;
+    if (focused)
+    {
+        text += (char)codePoint;
+    }
 }
 
 void MessageBoxTextWidget::update(double deltaTime)

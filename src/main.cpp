@@ -7,10 +7,10 @@
 #define GLFW_EXPOSE_NATIVE_WGL
 #endif
 #include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
 #include <memory>
 #include <iostream>
 #include "fontrenderer.h"
+#include "platformutil.h"
 
 void scrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
@@ -70,32 +70,8 @@ int main(int argc, char *argv[])
     glfwSetKeyCallback(window, &keyCallback);
     glfwSetCharModsCallback(window, &charTypedCallback);
 
-    int borderSizeX = 0;
-
-    // Remove window "Decoration" on windows
-    // http://stackoverflow.com/questions/2398746/removing-window-border
-#ifdef _WIN32
-    HWND hwnd = glfwGetWin32Window(window);
-
-    RECT windowRect;
-    GetWindowRect(hwnd, &windowRect);
-
-    RECT clientRect;
-    GetClientRect(hwnd, &clientRect);
-
-    borderSizeX = ((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left)) / 2;
-
-    LONG lStyle = GetWindowLong(hwnd, GWL_STYLE);
-    lStyle &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZE | WS_MAXIMIZE | WS_SYSMENU);
-    SetWindowLong(hwnd, GWL_STYLE, lStyle);
-
-    LONG lExStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-    lExStyle &= ~(WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
-    SetWindowLong(hwnd, GWL_EXSTYLE, lExStyle);
-
-    SetWindowPos(hwnd, NULL, 0,0,windowSizeX,windowSizeY, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER);
-#endif // _WIN32
-
+    int borderSize = 0;
+    PlatformUtil::removeWindowBorder(window, borderSize, windowSizeX, windowSizeY);
 
     glfwMakeContextCurrent(window);
 
@@ -122,7 +98,7 @@ int main(int argc, char *argv[])
     fontList.push_back(FontListEntry::BLENDER_PRO_BOLD_64);
     FontRenderer::init(fontList);
 
-    MainWindow::newInstance(borderSizeX, 0);
+    MainWindow::newInstance(borderSize);
     MainWindow::getInstance()->resize(windowSizeX, windowSizeY);
     MainWindow::getInstance()->init();
     //w.checkJavaVersion(3);

@@ -39,8 +39,23 @@ void WidgetButton::draw()
     {
         WidgetPane::draw();
     }
-    Vector2F textSize = FontRenderer::getTextSize(m_font, m_text);
-    FontRenderer::renderText(m_font, m_text, Vector2I(getPosition().x() + getSize().x() / 2 - textSize.x() / 2, getPosition().y() + getSize().y() / 2 + textSize.y() / 2));
+    std::string displayText = m_text;
+    std::string ellipsis = "...";
+    Vector2F textSize = FontRenderer::getTextSize(m_font, displayText);
+    Vector2F ellipsisTextSize = FontRenderer::getTextSize(m_font, ellipsis);
+    bool tooLong = textSize.x() > getSize().x();
+    while (tooLong && textSize.x() + ellipsisTextSize.x() > getSize().x())
+    {
+        displayText = displayText.substr(0, displayText.size() - 1);
+        textSize = FontRenderer::getTextSize(m_font, displayText);
+        tooLong = true;
+    }
+    if (tooLong)
+    {
+        displayText += ellipsis;
+        textSize = FontRenderer::getTextSize(m_font, displayText);
+    }
+    FontRenderer::renderText(m_font, displayText, Vector2I(getPosition().x() + getSize().x() / 2 - textSize.x() / 2, getPosition().y() + getSize().y() / 2 + textSize.y() / 2));
 }
 
 void WidgetButton::init()

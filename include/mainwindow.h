@@ -4,13 +4,16 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include <ibuttoncallback.h>
+#include "ibuttoncallback.h"
+#include "itextboxcallback.h"
 #include "vector2.h"
 
 class LauncherWidget;
 class LauncherMessageBox;
+class OAuthController;
+class WidgetButton;
 
-class MainWindow : public IButtonCallback
+class MainWindow : public IButtonCallback, ITextBoxCallback
 {
 public:
     static const int CLOSE_BUTTON_SIZE = 20;
@@ -24,10 +27,10 @@ public:
     static const int LAUNCH_BUTTON_HEIGHT = 90;
     static const int LAUNCH_BUTTON_BORDER_SIZE = 5;
 
-    static void newInstance(int borderSizeX, int borderSizeY);
+    static void newInstance(int borderSize);
     static std::shared_ptr<MainWindow> getInstance();
 
-    explicit MainWindow(int borderSizeX, int borderSizeY);
+    explicit MainWindow(int borderSize);
     ~MainWindow();
 
     void init();
@@ -47,10 +50,14 @@ public:
     void setWindowMoveRequest(Vector2I deltaPos) { m_windowMoveRequest = deltaPos; }
     Vector2I getWindowMoveRequest() const { return m_windowMoveRequest; }
     virtual void buttonClicked(int callbackIndex) override;
+    virtual void textChanged(int callbackIndex, const std::string& newString) override;
     bool shouldDisplayMessageBox() const { return !m_messageBoxes.empty(); }
     void addMessageBox(std::shared_ptr<LauncherMessageBox> messageBox) { m_messageBoxes.push_back(messageBox); }
     void removeCurrentMessageBox() { m_messageBoxes.erase(m_messageBoxes.begin()); }
+    std::shared_ptr<LauncherMessageBox> getCurrentMessageBox() { return m_messageBoxes[0]; }
+    WidgetButton* getUserNameButton() { return m_usernameButton; }
 private:
+    void updateAccountWidgets(const std::string& newUsername);
     void replaceAllInLine(std::string& lineToChange, const std::string& toReplace, const std::string& replaceWith = std::string(""));
     static std::shared_ptr<MainWindow> m_instance;
     std::shared_ptr<LauncherWidget> m_mainWidget;
@@ -61,9 +68,37 @@ private:
     bool m_closeRequested;
     bool m_minimizeRequested;
     Vector2I m_windowMoveRequest;
-    Vector2I m_borderSize;
+    int m_borderSize;
     bool m_windowGrabbed;
     std::vector<std::shared_ptr<LauncherMessageBox>> m_messageBoxes;
+    std::shared_ptr<OAuthController> m_oauthController;
+    static const int BUTTON_LAUNCH = 0;
+    static const int BUTTON_DEDICATED_SERVER = 1;
+    static const int BUTTON_NEWS = 2;
+    static const int BUTTON_UPDATE = 3;
+    static const int BUTTON_OPTIONS = 4;
+    static const int BUTTON_TOOLS = 5;
+    static const int BUTTON_COMMUNITY = 6;
+    static const int BUTTON_HELP = 7;
+    static const int BUTTON_USERNAME = 8;
+    static const int BUTTON_MINIMIZE = 9;
+    static const int BUTTON_CLOSE = 10;
+    static const int BUTTON_USERNAME_OK = 11;
+    static const int BUTTON_USERNAME_CANCEL = 12;
+    static const int BUTTON_UPLINK = 13;
+    static const int LABEL_USERNAME = 14;
+    static const int TEXT_BOX_USERNAME = 15;
+    static const int BUTTON_UPLINK_OK = 16;
+    static const int BUTTON_UPLINK_CANCEL = 17;
+    static const int BUTTON_UPLINK_RESET_CREDENTIALS = 18;
+    static const int BUTTON_UPLINK_NEW_ACCOUNT = 19;
+    static const int TEXT_BOX_UPLINK_USERNAME = 20;
+    static const int TEXT_BOX_UPLINK_PASSWORD = 21;
+    static const int LABEL_UPLINK_USERNAME = 22;
+    static const int LABEL_UPLINK_PASSWORD = 23;
+    static const int LABEL_UPLINK_STATUS = 24;
+    WidgetButton* m_usernameButton;
+    WidgetButton* m_accountActivatedIndicator;
 };
 
 #endif // MAINWINDOW_H

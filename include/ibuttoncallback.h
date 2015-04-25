@@ -1,8 +1,6 @@
 #ifndef IBUTTONCALLBACK_H
 #define IBUTTONCALLBACK_H
 
-class WidgetButton;
-
 class IButtonCallback
 {
 public:

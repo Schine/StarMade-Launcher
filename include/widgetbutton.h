@@ -22,6 +22,8 @@ class WidgetButton : public WidgetPane
         virtual void mouseClicked(Vector2D clickPos, int button, bool press, bool inBackground) override;
         void setHoverColor(const Vector3I& color) { m_hoverColor = color; }
         void setClickableInBackground(bool clickable) { m_clickableInBackground = clickable; }
+        void setText(const std::string& newText) { m_text = newText; }
+        void setFont(FontListEntry newFont) { m_font = newFont; }
     protected:
     private:
         IButtonCallback* m_callback;

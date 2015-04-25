@@ -3,6 +3,27 @@
 
 #include <cstddef>
 #include <curl/curl.h>
+#include <string>
+#include <iostream>
+
+/**
+ * RAII class for curl string ownership
+*/
+class OwnedCurlString
+{
+public:
+    OwnedCurlString(char* str)
+        : cString(str) {}
+    ~OwnedCurlString()
+    {
+        curl_free(cString);
+        cString = nullptr;
+    }
+    std::string asString() const { return std::string(cString); }
+    char* asCString() const { return cString; }
+private:
+    char* cString;
+};
 
 class ConnectionUtil
 {
@@ -20,6 +41,7 @@ class ConnectionUtil
         };
 
         static void setWriteOptions(CURL *curl, BufferStruct& output);
+        static void setClientCertificates(CURL *curl);
     protected:
     private:
 };

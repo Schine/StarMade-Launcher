@@ -24,3 +24,10 @@ void ConnectionUtil::setWriteOptions(CURL *curl, BufferStruct& output)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &ConnectionUtil::writeMemoryCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&output);
 }
+
+void ConnectionUtil::setClientCertificates(CURL *curl)
+{
+    curl_easy_setopt(curl, CURLOPT_CAINFO, "ca-bundle.crt");
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, true);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2);
+}

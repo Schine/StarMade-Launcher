@@ -95,9 +95,8 @@ void MainWindow::init()
                                                   nullptr, rightBar);
     launchButton->setPosition(Vector2I(929, 649));
     launchButton->setSize(Vector2I(256, 87));
-    launchButton->setColor(245, 245, 245);
+    launchButton->setColor(255, 255, 255);
     launchButton->setTexture(std::string("data/textures/launch_button.png"));
-    launchButton->setHoverColor(Vector3I(255, 255, 255));
 
     WidgetButton* skinSelection = new WidgetButton("Dedicated Server", BUTTON_DEDICATED_SERVER,
                                                     FontListEntry::BLENDER_PRO_12,
@@ -527,28 +526,20 @@ void MainWindow::buttonClicked(int callbackIndex)
                                     this)));
         break;
     case BUTTON_UPLINK:
-        {
-            MainWindow::getInstance()->addMessageBox(std::shared_ptr<LauncherMessageBox>(
-                         new LauncherMessageBox(Vector2I(700, 290),
-                                                { new MessageBoxButton(BUTTON_UPLINK_NEW_ACCOUNT, Vector2I(700, 30), Vector2I(0, -25 - 60 - 20), true,  "New Account", 1, 0, 40),
-                                                  new MessageBoxButton(BUTTON_UPLINK_RESET_CREDENTIALS, Vector2I(700, 30), Vector2I(0, -25 - 30 - 10), true,  "Reset Credentials", 1, 0, 40),
-                                                  new MessageBoxButton(BUTTON_UPLINK_OK, Vector2I(700 / 2, 30), Vector2I(0, -25), true,  "OK", 2, 0, 40),
-                                                  new MessageBoxButton(BUTTON_UPLINK_CANCEL, Vector2I(700 / 2, 30), Vector2I(0, -25), true,  "Cancel", 2, 1, 40) },
-                                                { new MessageBoxTextWidget(TEXT_BOX_UPLINK_USERNAME, Vector2I(400, 30), Vector2I(0, -75), true, false),
-                                                  new MessageBoxTextWidget(TEXT_BOX_UPLINK_PASSWORD, Vector2I(400, 30), Vector2I(0, -20), true, true) },
-                                                { new MessageBoxLabelWidget(LABEL_UPLINK_STATUS, Vector2I(0, 0), Vector2I(0, -125), true, ""),
-                                                  new MessageBoxLabelWidget(LABEL_UPLINK_USERNAME, Vector2I(0, 0), Vector2I(0, -93), true, "Username"),
-                                                  new MessageBoxLabelWidget(LABEL_UPLINK_PASSWORD, Vector2I(0, 0), Vector2I(0, -38), true, "Password") },
-                                                getCurrentMessageBox()->getTimeOpened(),
-                                                this)));
-            std::shared_ptr<LauncherMessageBox> messageBox = getCurrentMessageBox();
-            MessageBoxTextWidget* usernameBox = messageBox->getTextBoxByID(TEXT_BOX_USERNAME);
-            std::string username = usernameBox->text;
-            removeCurrentMessageBox();
-            messageBox = getCurrentMessageBox();
-            usernameBox = messageBox->getTextBoxByID(TEXT_BOX_UPLINK_USERNAME);
-            usernameBox->setText(username);
-        }
+        MainWindow::getInstance()->addMessageBox(std::shared_ptr<LauncherMessageBox>(
+                     new LauncherMessageBox(Vector2I(700, 290),
+                                            { new MessageBoxButton(BUTTON_UPLINK_NEW_ACCOUNT, Vector2I(700, 30), Vector2I(0, -25 - 60 - 20), true,  "New Account", 1, 0, 40),
+                                              new MessageBoxButton(BUTTON_UPLINK_RESET_CREDENTIALS, Vector2I(700, 30), Vector2I(0, -25 - 30 - 10), true,  "Reset Credentials", 1, 0, 40),
+                                              new MessageBoxButton(BUTTON_UPLINK_OK, Vector2I(700 / 2, 30), Vector2I(0, -25), true,  "OK", 2, 0, 40),
+                                              new MessageBoxButton(BUTTON_UPLINK_CANCEL, Vector2I(700 / 2, 30), Vector2I(0, -25), true,  "Cancel", 2, 1, 40) },
+                                            { new MessageBoxTextWidget(TEXT_BOX_UPLINK_USERNAME, Vector2I(400, 30), Vector2I(0, -75), true, false),
+                                              new MessageBoxTextWidget(TEXT_BOX_UPLINK_PASSWORD, Vector2I(400, 30), Vector2I(0, -20), true, true) },
+                                            { new MessageBoxLabelWidget(LABEL_UPLINK_STATUS, Vector2I(0, 0), Vector2I(0, -125), true, ""),
+                                              new MessageBoxLabelWidget(LABEL_UPLINK_USERNAME, Vector2I(0, 0), Vector2I(0, -93), true, "Username"),
+                                              new MessageBoxLabelWidget(LABEL_UPLINK_PASSWORD, Vector2I(0, 0), Vector2I(0, -38), true, "Password") },
+                                            getCurrentMessageBox()->getTimeOpened(),
+                                            this)));
+        removeCurrentMessageBox();
         break;
     case BUTTON_UPLINK_NEW_ACCOUNT:
         PlatformUtil::openWebPage("https://registry.star-made.org/users/password/new");
@@ -572,7 +563,6 @@ void MainWindow::buttonClicked(int callbackIndex)
             if (tokenResult == TokenRequestResult::OK)
             {
                 std::cout << token << std::endl;
-                updateAccountWidgets(username);
                 removeCurrentMessageBox();
             }
             else
@@ -598,7 +588,7 @@ void MainWindow::buttonClicked(int callbackIndex)
             std::shared_ptr<LauncherMessageBox> cMessageBox = getCurrentMessageBox();
             MessageBoxTextWidget* usernameBox = cMessageBox->getTextBoxByID(TEXT_BOX_USERNAME);
             std::string usernameText = usernameBox->text;
-            updateAccountWidgets(usernameText);
+
 
             removeCurrentMessageBox();
         }
@@ -612,18 +602,18 @@ void MainWindow::buttonClicked(int callbackIndex)
 void MainWindow::updateAccountWidgets(const std::string& newUsername)
 {
     FontListEntry usernameFont = FontListEntry::BLENDER_PRO_BOLD_24;
-    Vector2F textSize = FontRenderer::getTextSize(usernameFont, newUsername);
+    Vector2F textSize = FontRenderer::getTextSize(usernameFont, usernameText);
     if (textSize.x() > 240.0F)
     {
         usernameFont = FontListEntry::BLENDER_PRO_BOLD_16;
-        textSize = FontRenderer::getTextSize(usernameFont, newUsername);
+        textSize = FontRenderer::getTextSize(usernameFont, usernameText);
         if (textSize.x() > 240.0F)
         {
             usernameFont = FontListEntry::BLENDER_PRO_BOLD_12;
-            textSize = FontRenderer::getTextSize(usernameFont, newUsername);
+            textSize = FontRenderer::getTextSize(usernameFont, usernameText);
         }
     }
-    m_usernameButton->setText(newUsername);
+    m_usernameButton->setText(usernameText);
     m_usernameButton->setFont(usernameFont);
     m_usernameButton->setPosition(Vector2I(919, 100));
     m_usernameButton->setSize(Vector2I(static_cast<int>(std::min(textSize.x() + 8, 240.0F)), textSize.y() + 16));
