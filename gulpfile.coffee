@@ -112,6 +112,7 @@ gulp.task 'package', ['coffee', 'less', 'download-electron'], (callback) ->
 
   return
 
+gulp.task 'run', ['download-electron', 'package'], ->
   if process.platform == 'darwin'
     app = paths.dist.app.executable.mac
   else

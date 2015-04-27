@@ -1,3 +1,5 @@
+'use strict'
+
 app = require('app')
 path = require('path')
 BrowserWindow = require('browser-window')
