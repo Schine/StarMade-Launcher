@@ -11,6 +11,7 @@
     "grunt-download-electron": "^2.0.1",
     "gulp": "^3.8.11",
     "gulp-coffee": "^2.3.1",
+    "gulp-less": "^3.0.3",
     "gulp-load-plugins": "^0.10.0",
     "gulp-sourcemaps": "^1.5.2",
     "mkdirp": "^0.5.0",

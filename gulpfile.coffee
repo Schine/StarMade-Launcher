@@ -11,6 +11,11 @@ spawn = require('child_process').spawn
 standaloneGruntRunner = require('standalone-grunt-runner')
 
 paths =
+  build:
+    dir: 'build'
+    styles:
+      dir:
+        'build/styles'
   cache:
     electron:
       dir: 'cache/electron'
@@ -34,6 +39,8 @@ paths =
     glob: 'src/**/*.coffee'
   static:
     dir: 'static'
+    styles:
+      main: 'static/styles/main.less'
 
 
 pkg = require(paths.package)
@@ -66,7 +73,12 @@ gulp.task 'download-electron', (callback) ->
 
   return
 
-gulp.task 'package', ['coffee', 'download-electron'], (callback) ->
+gulp.task 'less', ->
+  gulp.src paths.static.styles.main
+    .pipe plugins.less()
+    .pipe gulp.dest paths.build.styles.dir
+
+gulp.task 'package', ['coffee', 'less', 'download-electron'], (callback) ->
   ncp paths.dep.electron.dir, paths.dist.dir, (err) ->
     return callback(err) if err
 
@@ -86,13 +98,20 @@ gulp.task 'package', ['coffee', 'download-electron'], (callback) ->
           ncp paths.lib.dir, path.join(resourcesDir, 'lib'), (err) ->
             cb(err)
         (cb) ->
-          ncp paths.static.dir, path.join(resourcesDir, 'static'), (err) ->
+          ncp paths.static.dir, path.join(resourcesDir, 'static'),
+            filter: (file) ->
+              # Skip the styles folder
+              return false if file.match new RegExp("/#{paths.static.styles.dir}$")
+              true
+          , (err) ->
+            cb(err)
+        (cb) ->
+          ncp paths.build.styles.dir, path.join(resourcesDir, 'static/styles'), (err) ->
             cb(err)
       ], callback
 
   return
 
-gulp.task 'run', ['coffee', 'download-electron', 'package'], ->
   if process.platform == 'darwin'
     app = paths.dist.app.executable.mac
   else
