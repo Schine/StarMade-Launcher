@@ -103,7 +103,7 @@ gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron'], (callback)
         .pipe gulp.dest resourcesDir
 
       gulp.src paths.static.entry
-        .pipe gulp.dest resourcesDir
+        .pipe gulp.dest path.join(resourcesDir, 'static')
 
       async.series [
         (cb) ->
