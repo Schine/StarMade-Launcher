@@ -19,5 +19,8 @@
     "mkdirp": "^0.5.0",
     "ncp": "^0.5.1",
     "standalone-grunt-runner": "0.0.1"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4"
   }
 }
