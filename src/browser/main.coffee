@@ -13,8 +13,9 @@ app.on 'window-all-closed', ->
 
 app.on 'ready', ->
   mainWindow = new BrowserWindow
-    width: 800
-    height: 600
+    frame: false
+    width: 1200
+    height: 750
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
 
