@@ -39,6 +39,9 @@ paths =
     glob: 'src/**/*.coffee'
   static:
     dir: 'static'
+    entry: 'static/index.js'
+    jade:
+      glob: 'static/**/*.jade'
     styles:
       main: 'static/styles/main.less'
 
@@ -73,12 +76,18 @@ gulp.task 'download-electron', (callback) ->
 
   return
 
+gulp.task 'jade', ->
+  gulp.src paths.static.jade.glob
+    .pipe plugins.jade
+      pretty: true
+    .pipe gulp.dest paths.build.dir
+
 gulp.task 'less', ->
   gulp.src paths.static.styles.main
     .pipe plugins.less()
     .pipe gulp.dest paths.build.styles.dir
 
-gulp.task 'package', ['coffee', 'less', 'download-electron'], (callback) ->
+gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron'], (callback) ->
   ncp paths.dep.electron.dir, paths.dist.dir, (err) ->
     return callback(err) if err
 
@@ -93,21 +102,20 @@ gulp.task 'package', ['coffee', 'less', 'download-electron'], (callback) ->
       gulp.src paths.package
         .pipe gulp.dest resourcesDir
 
+      gulp.src paths.static.entry
+        .pipe gulp.dest resourcesDir
+
       async.series [
         (cb) ->
-          ncp paths.lib.dir, path.join(resourcesDir, 'lib'), (err) ->
-            cb(err)
+          mkdirp path.join(resourcesDir, 'lib'), (err) ->
+            return cb(err) if err
+            ncp paths.lib.dir, path.join(resourcesDir, 'lib'), (err) ->
+              cb(err)
         (cb) ->
-          ncp paths.static.dir, path.join(resourcesDir, 'static'),
-            filter: (file) ->
-              # Skip the styles folder
-              return false if file.match new RegExp("/#{paths.static.styles.dir}$")
-              true
-          , (err) ->
-            cb(err)
-        (cb) ->
-          ncp paths.build.styles.dir, path.join(resourcesDir, 'static/styles'), (err) ->
-            cb(err)
+          mkdirp path.join(resourcesDir, 'static'), (err) ->
+            return cb(err) if err
+            ncp paths.build.dir, path.join(resourcesDir, 'static'), (err) ->
+              cb(err)
       ], callback
 
   return
