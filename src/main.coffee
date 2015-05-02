@@ -15,12 +15,15 @@ app.config ($stateProvider, $urlRouterProvider) ->
       controller: 'NewsCtrl'
       url: '/'
       templateUrl: 'templates/news.html'
+    .state 'community',
+      templateUrl: 'templates/community.html'
 
 # Controllers
 require('./controllers/news')
 
 # Directives
 require('./directives/closeButton')
+require('./directives/externalLink')
 require('./directives/minimizeButton')
 require('./directives/newsBody')
 

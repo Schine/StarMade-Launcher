@@ -15,6 +15,7 @@ body {
 }
 
 a {
+  cursor: pointer;
 	color: #FFF;
 	text-decoration: none;
 	-o-transition: .3s;
@@ -69,8 +70,6 @@ code {
   -webkit-app-region: drag;
 
   ul {
-    -webkit-app-region: no-drag;
-
     font-size: 24px;
     margin: 0;
     padding: 0;
@@ -90,6 +89,7 @@ code {
 
       a {
         cursor: default;
+        -webkit-app-region: no-drag;
       }
     }
   }

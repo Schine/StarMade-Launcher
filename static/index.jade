@@ -8,11 +8,13 @@ html(ng-app='launcher')
   body
     .top
       ul
-        li News
+        li
+          a(ui-sref='news') News
         li Update
         li Options
         li Tools
-        li Community
+        li
+          a(ui-sref='community') Community
         li Help
       ul.window-controls
         li
