@@ -9,8 +9,7 @@ staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
 mainWindow = null
 
 app.on 'window-all-closed', ->
-  if process.platform != 'darwin'
-    app.quit()
+  app.quit()
 
 app.on 'ready', ->
   mainWindow = new BrowserWindow
