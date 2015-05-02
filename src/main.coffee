@@ -1,11 +1,23 @@
 'use strict'
 
-ipc = require('ipc')
-$ = require('jquery')
+angular = require('angular')
 
-$ ->
-  $('.window-controls .minimize a').click ->
-    ipc.send 'minimize-window'
+app = angular.module 'launcher', [
+  require('angular-ui-router')
+]
 
-  $('.window-controls .close a').click ->
-    window.close()
+app.config ($stateProvider, $urlRouterProvider) ->
+  $urlRouterProvider.otherwise '/'
+
+  $stateProvider
+    .state 'main',
+      url: '/'
+      templateUrl: 'templates/main.html'
+
+# Controllers
+
+# Directives
+require('./directives/closeButton')
+require('./directives/minimizeButton')
+
+# Services

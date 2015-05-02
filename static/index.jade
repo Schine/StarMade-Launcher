@@ -1,5 +1,5 @@
 doctype html
-html
+html(ng-app='launcher')
   head
     title Launcher
     link(rel='stylesheet' href='styles/main.css')
@@ -14,7 +14,8 @@ html
         li Community
         li Help
       ul.window-controls
-        li.minimize
-          a _
-        li.close 
-          a X
+        li
+          minimize-button _
+        li 
+          close-button X
+    .content(ui-view)
