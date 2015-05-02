@@ -1,0 +1,12 @@
+ul.news(ng-repeat='entry in news')
+  li
+    .date
+      | {{entry.created_at | date : 'MMM'}}
+      div {{entry.created_at | date : 'd'}}
+    h2.title {{entry.title}}
+    .meta
+      | Posted by 
+      strong {{entry.author}}
+      |  about 
+      span(am-time-ago='entry.created_at')
+    news-body(ng-bind-html='entry.body')
