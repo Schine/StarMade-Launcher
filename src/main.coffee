@@ -19,6 +19,7 @@ app.config ($stateProvider, $urlRouterProvider) ->
       templateUrl: 'templates/community.html'
 
 # Controllers
+require('./controllers/auth')
 require('./controllers/news')
 
 # Directives
@@ -28,3 +29,4 @@ require('./directives/minimizeButton')
 require('./directives/newsBody')
 
 # Services
+require('./services/api')

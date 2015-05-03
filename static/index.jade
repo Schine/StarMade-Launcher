@@ -16,6 +16,9 @@ html(ng-app='launcher')
         li
           a(ui-sref='community') Community
         li Help
+        // This following link is temporary
+        li(ng-controller='AuthCtrl')
+          a(ng-click='startAuth()') Uplink
       ul.window-controls
         li
           minimize-button _
