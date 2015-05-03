@@ -11,6 +11,9 @@ app.config ($stateProvider, $urlRouterProvider) ->
   $urlRouterProvider.otherwise '/'
 
   $stateProvider
+    .state 'authToken',
+      url: '/access_token=:response'
+      controller: 'AuthTokenCtrl'
     .state 'news',
       controller: 'NewsCtrl'
       url: '/'
@@ -29,4 +32,5 @@ require('./directives/minimizeButton')
 require('./directives/newsBody')
 
 # Services
+require('./services/accessToken')
 require('./services/api')

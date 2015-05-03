@@ -1,5 +1,7 @@
 'use strict'
 
+angular = require('angular')
+
 app = angular.module 'launcher'
 
 app.constant 'apiConfig',
@@ -34,6 +36,6 @@ app.service 'api', ($http, apiConfig) ->
     @put 'me.json', data
 
   @isAuthenticated = ->
-    #!!$localStorage.token
+    console.warn 'api.isAuthenticated is not implemented'
 
   return
