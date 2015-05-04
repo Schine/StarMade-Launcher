@@ -20,10 +20,14 @@ app.config ($stateProvider, $urlRouterProvider) ->
       templateUrl: 'templates/news.html'
     .state 'community',
       templateUrl: 'templates/community.html'
+    .state 'update',
+      controller: 'UpdateCtrl'
+      templateUrl: 'templates/update.html'
 
 # Controllers
 require('./controllers/auth')
 require('./controllers/news')
+require('./controllers/update')
 
 # Directives
 require('./directives/closeButton')
@@ -32,5 +36,7 @@ require('./directives/minimizeButton')
 require('./directives/newsBody')
 
 # Services
+require('./services/Version')
 require('./services/accessToken')
 require('./services/api')
+require('./services/updater')
