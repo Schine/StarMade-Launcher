@@ -35,6 +35,9 @@ app.run ($rootScope, accessToken, api) ->
         if status = 401
           accessToken.delete()
 
+  unless localStorage.getItem('branch')?
+    localStorage.setItem 'branch', 'release'
+
 # Controllers
 require('./controllers/auth')
 require('./controllers/news')

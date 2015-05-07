@@ -12,11 +12,9 @@ app.service 'updater', ($q, $http, Version) ->
     release: "#{BASE_URL}/releasebuildindex"
     archive: "#{BASE_URL}/archivebuildindex"
 
-  @branch = 'release'
-
-  @getVersions = ->
-    $q (resolve, reject) =>
-      $http.get BRANCH_INDEXES[@branch]
+  @getVersions = (branch) ->
+    $q (resolve, reject) ->
+      $http.get BRANCH_INDEXES[branch]
         .success (data) ->
           versions = []
 

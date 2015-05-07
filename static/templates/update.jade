@@ -1,1 +1,12 @@
-p {{versions}}
+form
+  select(ng-model='branch')
+    option(value='pre') PRE
+    option(value='dev') DEV
+    option(value='release') RELEASE
+    option(value='archive') ARCHIVE
+  
+  select(ng-model='selectedVersion')
+    option(ng-repeat="version in versions | orderBy:'-build'" value='{{$index}}') {{version.build}} v{{version.version}} ({{branch | uppercase}})
+    
+
+p(ng-if='!versions') There are no versions on this branch.
