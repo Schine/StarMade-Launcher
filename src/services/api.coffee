@@ -36,6 +36,6 @@ app.service 'api', ($http, apiConfig) ->
     @put 'me.json', data
 
   @isAuthenticated = ->
-    console.warn 'api.isAuthenticated is not implemented'
+    !!localStorage.getItem 'accessToken'
 
   return
