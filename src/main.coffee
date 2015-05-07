@@ -7,7 +7,7 @@ app = angular.module 'launcher', [
   require('angular-ui-router')
 ]
 
-app.config ($stateProvider, $urlRouterProvider) ->
+app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $urlRouterProvider.otherwise '/'
 
   $stateProvider
@@ -24,6 +24,17 @@ app.config ($stateProvider, $urlRouterProvider) ->
       controller: 'UpdateCtrl'
       templateUrl: 'templates/update.html'
 
+  $httpProvider.interceptors.push 'tokenInterceptor'
+
+app.run ($rootScope, accessToken, api) ->
+  if api.isAuthenticated()
+    api.getCurrentUser()
+      .success (data) ->
+        $rootScope.currentUser = data
+      .error (data, status) ->
+        if status = 401
+          accessToken.delete()
+
 # Controllers
 require('./controllers/auth')
 require('./controllers/news')
@@ -39,4 +50,5 @@ require('./directives/newsBody')
 require('./services/Version')
 require('./services/accessToken')
 require('./services/api')
+require('./services/tokenInterceptor')
 require('./services/updater')

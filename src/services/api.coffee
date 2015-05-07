@@ -29,11 +29,11 @@ app.service 'api', ($http, apiConfig) ->
     $http.put "https://#{apiConfig.baseUrl}/api/v1/#{relativeUrl}", data, config
 
   @getCurrentUser = ->
-    @get 'me.json'
+    @get 'users/me.json'
 
   @updateCurrentUser = (data) ->
     delete data.admin
-    @put 'me.json', data
+    @put 'users/me.json', data
 
   @isAuthenticated = ->
     !!localStorage.getItem 'accessToken'
