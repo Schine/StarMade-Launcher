@@ -62,47 +62,54 @@ code {
   padding: 0 2px;
 }
 
-.top {
-  background-color: #1C6B7F;
-  border-bottom: 6px solid #0B3848;
-  color: #FFFFFF;
-  overflow: hidden; // clearfix
-  -webkit-app-region: drag;
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-  ul {
-    font-size: 24px;
-    margin: 0;
-    padding: 0;
+  .top {
+    background-color: #1C6B7F;
+    border-bottom: 6px solid #0B3848;
+    color: #FFFFFF;
+    height: 74px;
+    overflow: hidden; // clearfix
+    -webkit-app-region: drag;
 
-    &.window-controls {
-      float: right;
+    ul {
+      font-size: 24px;
+      margin: 0;
+      padding: 0;
+
+      &.window-controls {
+        float: right;
+
+        li {
+          padding: 20px 16px;
+        }
+      }
 
       li {
-        padding: 20px 16px;
-      }
-    }
+        float: left;
+        list-style: none;
+        padding: 20px 36px;
 
-    li {
-      float: left;
-      list-style: none;
-      padding: 20px 36px;
-
-      a {
-        cursor: default;
-        -webkit-app-region: no-drag;
+        a {
+          cursor: default;
+          -webkit-app-region: no-drag;
+        }
       }
     }
   }
-}
 
-.content {
-  height: calc(~'100% - 74px');
-  padding: 8px;
-  overflow: auto;
-  width: 100%;
+  .content {
+    height: calc(~'100% - 74px');
+    padding: 8px;
+    overflow: auto;
+    width: 100%;
 
-  img {
-    max-width: 100%;
+    img {
+      max-width: 100%;
+    }
   }
 }
 

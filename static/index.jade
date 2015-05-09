@@ -6,24 +6,25 @@ html(ng-app='launcher')
     link(rel='stylesheet' href='styles/main.css')
     script(src='index.js')
   body
-    .top
-      ul(ng-show='acceptedEula' class='ng-hide')
-        li
-          a(ui-sref='news') News
-        li
-          a(ui-sref='update') Update
-        li Options
-        li Tools
-        li
-          a(ui-sref='community') Community
-        li
-          external-link(href='http://help.star-made.org/') Help
-        // This following link is temporary
-        li(ng-controller='AuthCtrl')
-          a(ng-click='startAuth()') Uplink
-      ul.window-controls
-        li
-          minimize-button _
-        li 
-          close-button X
-    .content(ui-view)
+    .container
+      .top
+        ul(ng-show='acceptedEula' class='ng-hide')
+          li
+            a(ui-sref='news') News
+          li
+            a(ui-sref='update') Update
+          li Options
+          li Tools
+          li
+            a(ui-sref='community') Community
+          li
+            external-link(href='http://help.star-made.org/') Help
+          // This following link is temporary
+          li(ng-controller='AuthCtrl')
+            a(ng-click='startAuth()') Uplink
+        ul.window-controls
+          li
+            minimize-button _
+          li 
+            close-button X
+      .content(ui-view)
