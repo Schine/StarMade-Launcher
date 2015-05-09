@@ -6,7 +6,7 @@ form
     option(value='archive') ARCHIVE
   
   select(ng-model='selectedVersion')
-    option(ng-repeat="version in versions | orderBy:'-build'" value='{{$index}}') {{version.build}} v{{version.version}} ({{branch | uppercase}})
+    option(ng-repeat="version in versions" value='{{$index}}') {{version.build}} v{{version.version}} ({{branch | uppercase}})
       
   input(ng-model='installDir')
   

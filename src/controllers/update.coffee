@@ -7,14 +7,14 @@ electronApp = remote.require('app')
 
 app = angular.module 'launcher'
 
-app.controller 'UpdateCtrl', ($scope, paths, updater) ->
+app.controller 'UpdateCtrl', ($filter, $scope, paths, updater) ->
   $scope.versions = []
 
   $scope.$watch 'branch', (newVal) ->
     localStorage.setItem 'branch', newVal
     updater.getVersions newVal
       .then (versions) ->
-        $scope.versions = versions
+        $scope.versions = $filter('orderBy')(versions, '-build')
         $scope.selectedVersion = 0
       , ->
         $scope.versions = null
