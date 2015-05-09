@@ -102,7 +102,7 @@ code {
   }
 
   .content {
-    height: calc(~'100% - 74px');
+    height: calc(~'100% - 148px');
     padding: 8px;
     overflow: auto;
     width: 100%;
@@ -110,6 +110,16 @@ code {
     img {
       max-width: 100%;
     }
+
+    &.no-footer {
+      height: calc(~'100% - 74px');
+    }
+  }
+
+  .footer {
+    height: 74px;
+    padding: 8px;
+    width: 100%;
   }
 }
 

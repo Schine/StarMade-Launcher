@@ -27,4 +27,8 @@ html(ng-app='launcher')
             minimize-button _
           li 
             close-button X
-      .content(ui-view)
+      .content(ui-view ng-class="{'no-footer': !acceptedEula}")
+      .footer(ng-show='acceptedEula' class='ng-hide')
+        div(ng-controller='UpdateCtrl')
+          form
+            button(ng-controller='LaunchCtrl' ng-click='launch()') Launch
