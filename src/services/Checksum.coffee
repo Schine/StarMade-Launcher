@@ -53,6 +53,7 @@ app.factory 'Checksum', ($q, paths) ->
               .get sourceFilePath
               .on 'data', (chunk) ->
                 # TODO: Pass the received chunk size to the GUI
+                return
               .on 'end', ->
                 resolve()
                 callback null
