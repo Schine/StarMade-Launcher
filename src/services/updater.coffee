@@ -1,6 +1,8 @@
 'use strict'
 
+_ = require('underscore')
 angular = require('angular')
+async = require('async')
 
 app = angular.module 'launcher'
 
@@ -11,6 +13,43 @@ app.service 'updater', ($q, $http, Checksum, Version) ->
     dev: "#{BASE_URL}/devbuildindex"
     release: "#{BASE_URL}/releasebuildindex"
     archive: "#{BASE_URL}/archivebuildindex"
+
+  @update = (version, installDir) ->
+    console.log 'Getting checksums'
+    @getChecksums(version.path)
+      .then (checksums) ->
+        filesToDownload = []
+        download = _.after checksums.length, ->
+          q = async.queue (checksum, callback) ->
+            checksum.download installDir
+              .then ->
+                callback null
+              , (err) ->
+                callback err
+          , 5
+
+          q.drain = ->
+            console.log 'All files downloaded'
+
+          filesToDownload.forEach (checksum) ->
+            q.push checksum, (err) ->
+              console.error err if err
+
+        console.log 'Determining files to download...'
+        totalSize = 0
+        checksums.forEach (checksum) ->
+          totalSize += checksum.size
+
+        p = 1.0 / checksums.length
+        g = 0.0
+
+        checksums.forEach (checksum) ->
+          checksum.checkLocal installDir
+            .then (needsDownloading) ->
+              filesToDownload.push(checksum) if needsDownloading
+              g++
+              console.log "Determining files to download... #{g * p * 100.0}%  selected #{filesToDownload.length}/#{checksums.length} (#{totalSize / 1024 / 1024} MB)"
+              download()
 
   @getChecksums = (path) ->
     $q (resolve, reject) ->
@@ -44,7 +83,7 @@ app.service 'updater', ($q, $http, Checksum, Version) ->
 
             relativePath = line.trim()
 
-            checksums.push new Checksum(size, checksum, relativePath)
+            checksums.push new Checksum(size, checksum, relativePath, "#{BASE_URL}/#{path}")
 
           resolve checksums
         .error (data) ->

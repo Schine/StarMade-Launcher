@@ -26,7 +26,5 @@ app.controller 'UpdateCtrl', ($scope, paths, updater) ->
   $scope.branch = localStorage.getItem('branch') || 'release'
   $scope.installDir = localStorage.getItem('installDir') || paths.gameData
 
-  $scope.getChecksums = (index) ->
-    updater.getChecksums($scope.versions[$scope.selectedVersion].path)
-      .then (checksums) ->
-        console.log checksums
+  $scope.update = ->
+    updater.update($scope.versions[$scope.selectedVersion], $scope.installDir)
