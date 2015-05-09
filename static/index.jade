@@ -7,7 +7,7 @@ html(ng-app='launcher')
     script(src='index.js')
   body
     .top
-      ul
+      ul(ng-show='acceptedEula' class='ng-hide')
         li
           a(ui-sref='news') News
         li

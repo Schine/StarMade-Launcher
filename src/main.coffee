@@ -17,9 +17,11 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
     .state 'authToken',
       url: '/access_token=:response'
       controller: 'AuthTokenCtrl'
+    .state 'eula',
+      controller: 'EulaCtrl'
+      templateUrl: 'templates/eula.html'
     .state 'news',
       controller: 'NewsCtrl'
-      url: '/'
       templateUrl: 'templates/news.html'
     .state 'community',
       templateUrl: 'templates/community.html'
@@ -33,7 +35,7 @@ app.constant 'paths',
   gameData: "#{electronApp.getPath('appData')}/StarMade/Game"
   launcherData: "#{electronApp.getPath('userData')}"
 
-app.run ($rootScope, accessToken, api, paths) ->
+app.run ($rootScope, $state, accessToken, api, paths) ->
   if api.isAuthenticated()
     api.getCurrentUser()
       .success (data) ->
@@ -48,8 +50,16 @@ app.run ($rootScope, accessToken, api, paths) ->
   unless localStorage.getItem('installDir')?
     localStorage.setItem 'installDir', paths.gameData
 
+  $rootScope.acceptedEula = localStorage.getItem 'acceptedEula'
+
+  if $rootScope.acceptedEula
+    $state.go 'news'
+  else
+    $state.go 'eula'
+
 # Controllers
 require('./controllers/auth')
+require('./controllers/eula')
 require('./controllers/launch')
 require('./controllers/news')
 require('./controllers/update')

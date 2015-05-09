@@ -91,6 +91,9 @@ app.service 'updater', ($q, $http, Checksum, Version) ->
           # other errors are reported
           reject data, status, headers, config
 
+  @getEula = ->
+    $http.get "#{BASE_URL}/smeula.txt"
+
   @getVersions = (branch) ->
     $q (resolve, reject) ->
       $http.get BRANCH_INDEXES[branch]
