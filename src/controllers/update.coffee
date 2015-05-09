@@ -18,3 +18,8 @@ app.controller 'UpdateCtrl', ($scope, updater) ->
         $scope.selectedVersion = null
 
   $scope.branch = localStorage.getItem 'branch'
+
+  $scope.getChecksums = (index) ->
+    updater.getChecksums($scope.versions[$scope.selectedVersion].path)
+      .then (checksums) ->
+        console.log checksums

@@ -50,6 +50,7 @@ require('./directives/minimizeButton')
 require('./directives/newsBody')
 
 # Services
+require('./services/Checksum')
 require('./services/Version')
 require('./services/accessToken')
 require('./services/api')
