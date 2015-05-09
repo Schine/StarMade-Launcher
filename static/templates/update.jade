@@ -11,5 +11,6 @@ form
   input(ng-model='installDir')
   
   button(ng-click='update()') Update
+  button(ng-controller='LaunchCtrl' ng-click='launch()') Launch
 
 p(ng-if='!versions') There are no versions on this branch.

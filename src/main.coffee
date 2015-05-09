@@ -50,6 +50,7 @@ app.run ($rootScope, accessToken, api, paths) ->
 
 # Controllers
 require('./controllers/auth')
+require('./controllers/launch')
 require('./controllers/news')
 require('./controllers/update')
 
