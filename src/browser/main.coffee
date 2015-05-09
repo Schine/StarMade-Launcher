@@ -53,18 +53,3 @@ ipc.on 'start-auth', (event, authorizeUrl) ->
 
   authWindow.on 'closed', ->
     authWindow = null
-
-ipc.on 'minimize-window', ->
-  mainWindow.minimize()
-
-ipc.on 'third-party-warning', (event, href) ->
-  dialog.showMessageBox
-    type: 'info'
-    buttons: [
-      'OK'
-      'Cancel'
-    ]
-    title: 'Third Party Website'
-    message: 'You are about to visit a third party website. Schine GmbH does not take any responsibility for any content on third party sites.'
-    (response) ->
-      shell.openExternal href if response == 0

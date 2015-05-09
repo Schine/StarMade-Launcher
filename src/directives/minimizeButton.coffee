@@ -1,7 +1,7 @@
 'use strict'
 
 angular = require('angular')
-ipc = require('ipc')
+remote = require('remote')
 
 app = angular.module 'launcher'
 
@@ -12,4 +12,4 @@ app.directive 'minimizeButton', ->
   transclude: true
   link: (scope) ->
     scope.minimize = ->
-      ipc.send 'minimize-window'
+      remote.getCurrentWindow().minimize()
