@@ -1,10 +1,13 @@
 'use strict'
 
 angular = require('angular')
+remote = require('remote')
+
+electronApp = remote.require('app')
 
 app = angular.module 'launcher'
 
-app.controller 'UpdateCtrl', ($scope, updater) ->
+app.controller 'UpdateCtrl', ($scope, paths, updater) ->
   $scope.versions = []
 
   $scope.$watch 'branch', (newVal) ->
@@ -17,7 +20,11 @@ app.controller 'UpdateCtrl', ($scope, updater) ->
         $scope.versions = null
         $scope.selectedVersion = null
 
-  $scope.branch = localStorage.getItem 'branch'
+  $scope.$watch 'installDir', (newVal) ->
+    localStorage.setItem 'installDir', newVal
+
+  $scope.branch = localStorage.getItem('branch') || 'release'
+  $scope.installDir = localStorage.getItem('installDir') || paths.gameData
 
   $scope.getChecksums = (index) ->
     updater.getChecksums($scope.versions[$scope.selectedVersion].path)

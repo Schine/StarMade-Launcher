@@ -1,6 +1,9 @@
 'use strict'
 
 angular = require('angular')
+remote = require('remote')
+
+electronApp = remote.require('app')
 
 app = angular.module 'launcher', [
   require('angular-moment')
@@ -26,7 +29,11 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
 
   $httpProvider.interceptors.push 'tokenInterceptor'
 
-app.run ($rootScope, accessToken, api) ->
+app.constant 'paths',
+  gameData: "#{electronApp.getPath('appData')}/StarMade/Game"
+  launcherData: "#{electronApp.getPath('userData')}"
+
+app.run ($rootScope, accessToken, api, paths) ->
   if api.isAuthenticated()
     api.getCurrentUser()
       .success (data) ->
@@ -37,6 +44,9 @@ app.run ($rootScope, accessToken, api) ->
 
   unless localStorage.getItem('branch')?
     localStorage.setItem 'branch', 'release'
+
+  unless localStorage.getItem('installDir')?
+    localStorage.setItem 'installDir', paths.gameData
 
 # Controllers
 require('./controllers/auth')

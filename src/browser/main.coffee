@@ -12,6 +12,8 @@ staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
 authWindow = null
 mainWindow = null
 
+app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
+
 app.on 'window-all-closed', ->
   app.quit()
 
