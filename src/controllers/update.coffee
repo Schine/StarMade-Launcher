@@ -7,8 +7,9 @@ electronApp = remote.require('app')
 
 app = angular.module 'launcher'
 
-app.controller 'UpdateCtrl', ($filter, $scope, paths, updater) ->
+app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) ->
   $scope.versions = []
+  $scope.updaterProgress = updaterProgress
 
   $scope.$watch 'branch', (newVal) ->
     localStorage.setItem 'branch', newVal

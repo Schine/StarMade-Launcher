@@ -6,7 +6,7 @@ async = require('async')
 
 app = angular.module 'launcher'
 
-app.service 'updater', ($q, $http, Checksum, Version) ->
+app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
   BASE_URL = 'http://files.star-made.org'
   BRANCH_INDEXES =
     pre: "#{BASE_URL}/prebuildindex"
@@ -15,11 +15,24 @@ app.service 'updater', ($q, $http, Checksum, Version) ->
     archive: "#{BASE_URL}/archivebuildindex"
 
   @update = (version, installDir) ->
-    console.log 'Getting checksums'
+    updaterProgress.curValue = 0
+    updaterProgress.inProgress = true
+    updaterProgress.text = 'Getting checksums'
+
     @getChecksums(version.path)
       .then (checksums) ->
         filesToDownload = []
+
         download = _.after checksums.length, ->
+          downloadSize = 0
+          filesToDownload.forEach (checksum) ->
+            downloadSize += checksum.size
+
+          updaterProgress.curValue = 0
+          updaterProgress.maxValue = downloadSize
+          updaterProgress.filesCount = filesToDownload.length
+          updaterProgress.updateText()
+
           q = async.queue (checksum, callback) ->
             checksum.download installDir
               .then ->
@@ -29,26 +42,27 @@ app.service 'updater', ($q, $http, Checksum, Version) ->
           , 5
 
           q.drain = ->
-            console.log 'All files downloaded'
+            updaterProgress.text = 'All files downloaded'
+            updaterProgress.inProgress = false
 
           filesToDownload.forEach (checksum) ->
             q.push checksum, (err) ->
               console.error err if err
 
-        console.log 'Determining files to download...'
+        updaterProgress.text = 'Determining files to download...'
+        updaterProgress.curValue = 0
+        updaterProgress.maxValue = checksums.length
+
         totalSize = 0
         checksums.forEach (checksum) ->
           totalSize += checksum.size
-
-        p = 1.0 / checksums.length
-        g = 0.0
 
         checksums.forEach (checksum) ->
           checksum.checkLocal installDir
             .then (needsDownloading) ->
               filesToDownload.push(checksum) if needsDownloading
-              g++
-              console.log "Determining files to download... #{g * p * 100.0}%  selected #{filesToDownload.length}/#{checksums.length} (#{totalSize / 1024 / 1024} MB)"
+              updaterProgress.text = "Determining files to download... #{updaterProgress.calculatePercentage()}%  selected #{filesToDownload.length}/#{checksums.length} (#{updaterProgress.toMegabytes(totalSize)} MB)"
+              updaterProgress.curValue++
               download()
 
   @getChecksums = (path) ->

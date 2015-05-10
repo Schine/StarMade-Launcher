@@ -30,5 +30,7 @@ html(ng-app='launcher')
       .content(ui-view ng-class="{'no-footer': !acceptedEula}")
       .footer(ng-show='acceptedEula' class='ng-hide')
         div(ng-controller='UpdateCtrl')
+          progress-bar(cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}') {{updaterProgress.text}}
           form
+            button(ng-click='update()') Update
             button(ng-controller='LaunchCtrl' ng-click='launch()') Launch

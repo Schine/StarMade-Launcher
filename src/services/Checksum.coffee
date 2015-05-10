@@ -9,7 +9,7 @@ request = require('request')
 
 app = angular.module 'launcher'
 
-app.factory 'Checksum', ($q, paths) ->
+app.factory 'Checksum', ($q, paths, updaterProgress) ->
   class Checksum
     constructor: (@size, @checksum, @relativePath, @buildPath) ->
 
@@ -42,19 +42,29 @@ app.factory 'Checksum', ($q, paths) ->
 
       console.log "Downloading #{sourceFilePath} -> #{dest}"
 
-      $q (resolve, reject) ->
+      $q (resolve, reject) =>
         async.series [
           (callback) ->
             destBits = dest.split '/'
             destFolder = dest.replace destBits[destBits.length - 1], ''
             mkdirp destFolder, callback
-          (callback) ->
+          (callback) =>
+            bytesReceived = 0
             request
               .get sourceFilePath
+              .on 'error', (err) =>
+                updaterProgress.curValue += @size - bytesReceived
+                updaterProgress.filesDone += 1
+                updaterProgress.updateText()
+                reject err
+                callback err
               .on 'data', (chunk) ->
-                # TODO: Pass the received chunk size to the GUI
-                return
+                bytesReceived += chunk.length
+                updaterProgress.curValue += chunk.length
+                updaterProgress.updateText()
               .on 'end', ->
+                updaterProgress.filesDone += 1
+                updaterProgress.updateText()
                 resolve()
                 callback null
               .pipe fs.createWriteStream dest

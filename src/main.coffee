@@ -69,6 +69,7 @@ require('./directives/closeButton')
 require('./directives/externalLink')
 require('./directives/minimizeButton')
 require('./directives/newsBody')
+require('./directives/progressBar')
 
 # Services
 require('./services/Checksum')
@@ -77,3 +78,4 @@ require('./services/accessToken')
 require('./services/api')
 require('./services/tokenInterceptor')
 require('./services/updater')
+require('./services/updaterProgress')
