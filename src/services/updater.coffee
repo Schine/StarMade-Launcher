@@ -26,6 +26,7 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
         download = _.after checksums.length, ->
           if filesToDownload.length == 0
             updaterProgress.text = 'Up to date'
+            updaterProgress.inProgress = false
             return
 
           downloadSize = 0

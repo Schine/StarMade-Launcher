@@ -32,5 +32,7 @@ html(ng-app='launcher')
         div(ng-controller='UpdateCtrl')
           progress-bar(cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}') {{updaterProgress.text}}
           form
-            button(ng-click='update()') Update
-            button(ng-controller='LaunchCtrl' ng-click='launch()') Launch
+            button(ng-click='update()' ng-disabled='versions.length == 0 || updaterProgress.inProgress') Update
+            button(ng-controller='LaunchCtrl' ng-click='launch()' ng-disabled='updaterProgress.inProgress') Launch
+            span(ng-if='versions.length > 0') Using v{{versions[selectedVersion].version}}
+            span(ng-if='versions.length == 0') Getting versions...
