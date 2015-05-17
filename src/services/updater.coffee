@@ -24,6 +24,10 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
         filesToDownload = []
 
         download = _.after checksums.length, ->
+          if filesToDownload.length == 0
+            updaterProgress.text = 'Up to date'
+            return
+
           downloadSize = 0
           filesToDownload.forEach (checksum) ->
             downloadSize += checksum.size
