@@ -19,9 +19,6 @@ html(ng-app='launcher')
             a(ui-sref='community') Community
           li
             external-link(href='http://help.star-made.org/') Help
-          // This following link is temporary
-          li(ng-controller='AuthCtrl')
-            a(ng-click='startAuth()') Uplink
         ul.window-controls
           li
             minimize-button _
@@ -32,6 +29,7 @@ html(ng-app='launcher')
         div(ng-controller='UpdateCtrl')
           progress-bar(cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}') {{updaterProgress.text}}
           form
+            a.player(ng-controller='PlayerCtrl' ui-sref='player' ng-bind='playerName')
             button(ng-click='update()' ng-disabled='versions.length == 0 || updaterProgress.inProgress') Update
             button(ng-controller='LaunchCtrl' ng-click='launch()' ng-disabled='updaterProgress.inProgress') Launch
             span(ng-if='versions.length > 0') Using v{{versions[selectedVersion].version}}

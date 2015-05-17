@@ -25,6 +25,9 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
       templateUrl: 'templates/news.html'
     .state 'community',
       templateUrl: 'templates/community.html'
+    .state 'player',
+      controller: 'PlayerCtrl'
+      templateUrl: 'templates/player.html'
     .state 'update',
       controller: 'UpdateCtrl'
       templateUrl: 'templates/update.html'
@@ -39,7 +42,7 @@ app.run ($rootScope, $state, accessToken, api, paths) ->
   if api.isAuthenticated()
     api.getCurrentUser()
       .success (data) ->
-        $rootScope.currentUser = data
+        $rootScope.currentUser = data.user
       .error (data, status) ->
         if status = 401
           accessToken.delete()
@@ -62,6 +65,7 @@ require('./controllers/auth')
 require('./controllers/eula')
 require('./controllers/launch')
 require('./controllers/news')
+require('./controllers/player')
 require('./controllers/update')
 
 # Directives
