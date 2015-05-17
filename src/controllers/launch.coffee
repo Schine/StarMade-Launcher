@@ -2,6 +2,7 @@
 
 angular = require('angular')
 os = require('os')
+path = require('path')
 remote = require('remote')
 spawn = require('child_process').spawn
 
@@ -13,7 +14,7 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
   earlyGenMemory = 128
 
   maxMemory32 = 512
-  minMemory32 = 516
+  minMemory32 = 256
   earlyGenMemory32 = 64
 
   serverMaxMemory = 1024
@@ -23,15 +24,14 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
   port = 4242
 
   $scope.launch = ->
-    installDir = $scope.$parent.installDir
-    starmadeJar = "#{installDir}/StarMade.jar"
+    installDir = path.resolve $scope.$parent.installDir
+    starmadeJar = path.resolve "#{installDir}/StarMade.jar"
     javaExec = 'java'
 
-    if os.platform == 'win32'
-      javaExec = 'javaw'
-
+    # TODO: Find a way to detect the arch that isn't based on the current
+    # process
     if os.arch() == 'x64'
-      spawn javaExec, [
+      child = spawn javaExec, [
         '-Djava.net.preferIPv4Stack=true'
         "-Xmn#{earlyGenMemory}M"
         "-Xms#{minMemory}M"
@@ -42,9 +42,10 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
         '-force'
         "-port:#{port}"
       ],
+        detached: true
         cwd: installDir
     else
-      spawn javaExec, [
+      child = spawn javaExec, [
         '-Djava.net.preferIPv4Stack=true'
         "-Xmn#{earlyGenMemory32}M"
         "-Xms#{minMemory32}M"
@@ -55,6 +56,7 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
         '-force'
         "-port:#{port}"
       ],
+        detached: true
         cwd: installDir
 
     remote.require('app').quit()
