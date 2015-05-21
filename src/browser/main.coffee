@@ -23,33 +23,35 @@ app.on 'ready', ->
   mainWindow = new BrowserWindow
     frame: false
     resizable: false
+    show: false
     width: 1200
     height: 750
 
-  entry = "file://#{staticDir}/index.html"
-
-  protocol.registerProtocol 'starmade', (request) ->
-    if request.url.indexOf('starmade://auth/callback') != -1
-      if authWindow
-        authWindow.close()
-
-      mainWindow.loadUrl "#{entry}#{request.url.substr(24)}"
-    return new protocol.RequestFileJob(entry)
-
-  mainWindow.loadUrl entry
+  mainWindow.loadUrl "file://#{staticDir}/index.html"
 
   mainWindow.openDevTools()
 
   mainWindow.on 'closed', ->
     mainWindow = null
 
-ipc.on 'start-auth', (event, authorizeUrl) ->
+ipc.on 'start-auth', ->
   authWindow = new BrowserWindow
-    'node-integration': false
-    width: 600
-    height: 700
+    frame: false
+    resizable: false
+    width: 400
+    height: 500
 
-  authWindow.loadUrl authorizeUrl
+  mainWindow.hide()
+
+  authWindow.loadUrl "file://#{staticDir}/auth.html"
 
   authWindow.on 'closed', ->
     authWindow = null
+
+ipc.on 'finish-auth', (event, args) ->
+  if authWindow?
+    authWindow.close()
+  else
+    console.warn 'finish-auth was triggered when authWindow is null!'
+
+  mainWindow.webContents.send 'finish-auth', args

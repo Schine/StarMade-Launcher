@@ -1,6 +1,8 @@
 'use strict'
 
 angular = require('angular')
+ipc = require('ipc')
+path = require('path')
 remote = require('remote')
 
 electronApp = remote.require('app')
@@ -39,13 +41,35 @@ app.constant 'paths',
   launcherData: "#{electronApp.getPath('userData')}"
 
 app.run ($rootScope, $state, accessToken, api, paths) ->
+  $rootScope.startAuth = ->
+    ipc.send 'start-auth'
+
+  ipc.on 'finish-auth', (args) ->
+    $rootScope.$apply (scope) ->
+      if args.playerName?
+        scope.playerName = args.playerName
+      else
+        accessToken.set args.access_token
+        api.getCurrentUser()
+          .success (data) ->
+            scope.currentUser = data.user
+            scope.playerName = scope.currentUser.username
+
+      localStorage.setItem 'playerName', scope.playerName
+
+      remote.getCurrentWindow().show()
+
   if api.isAuthenticated()
     api.getCurrentUser()
       .success (data) ->
         $rootScope.currentUser = data.user
+        remote.getCurrentWindow().show()
       .error (data, status) ->
-        if status = 401
+        if status == 401
           accessToken.delete()
+        $rootScope.startAuth()
+  else
+    $rootScope.startAuth()
 
   unless localStorage.getItem('branch')?
     localStorage.setItem 'branch', 'release'
@@ -61,11 +85,9 @@ app.run ($rootScope, $state, accessToken, api, paths) ->
     $state.go 'eula'
 
 # Controllers
-require('./controllers/auth')
 require('./controllers/eula')
 require('./controllers/launch')
 require('./controllers/news')
-require('./controllers/player')
 require('./controllers/update')
 
 # Directives

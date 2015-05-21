@@ -39,7 +39,7 @@ paths =
     glob: 'src/**/*.coffee'
   static:
     dir: 'static'
-    entry: 'static/index.js'
+    entries: 'static/*.js'
     jade:
       glob: 'static/**/*.jade'
     styles:
@@ -102,7 +102,7 @@ gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron'], (callback)
       gulp.src paths.package
         .pipe gulp.dest resourcesDir
 
-      gulp.src paths.static.entry
+      gulp.src paths.static.entries
         .pipe gulp.dest path.join(resourcesDir, 'static')
 
       async.series [
