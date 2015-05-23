@@ -1,0 +1,231 @@
+body.auth {
+  background-color: #0F0F13;
+  cursor: default;
+  font-size: 12px;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+
+  img.logo {
+    -webkit-app-region: drag;
+  }
+
+  ul.tabs {
+    list-style: none;
+    margin: 0;
+    overflow: hidden; // clearfix
+    padding: 0;
+
+    li {
+      float: left;
+      padding: 5px 0 9px;
+      width: 127px;
+
+      a {
+        color: #A1A6AC;
+        cursor: pointer;
+      }
+
+      &.uplinkTab a,
+      &.uplinkTab span {
+        display: block;
+        padding-left: 20px;
+      }
+
+      &.guestTab a,
+      &.guestTab span {
+        display: block;
+        padding-right: 20px;
+        text-align: right;
+      }
+    }
+  }
+
+  form {
+    background-repeat: no-repeat;
+    height: 256px;
+    margin-top: -2px;
+    overflow: hidden; // clearfix
+
+    &#uplink {
+      background-image: url(../images/auth/tab_left.png);
+
+      #status {
+        margin-top: 2px;
+      }
+
+      a#uplinkSubmit {
+        background-image: url(../images/auth/login_btn.png);
+        background-repeat: no-repeat;
+        float: left;
+        left: -2px;
+        height: 137px;
+        position: absolute;
+        top: 267px;
+        width: 255px;
+        z-index: 0;
+
+        &:hover {
+          background-image: url(../images/auth/login_over.png)
+        }
+      }
+
+      div#uplinkSubmitCover {
+        height: 37px;
+        left: 0;
+        position: absolute;
+        top: 323px;
+        width: 17px;
+        z-index: 1;
+      }
+
+      div.options {
+        font-size: 11px;
+        left: 86px;
+        padding-left: 7px;
+        position: absolute;
+        top: 322px;
+        z-index: 2;
+
+        label#rememberMeLabel {
+          cursor: pointer;
+          display: block;
+          float: left;
+          padding: 3px 0 0;
+        }
+
+        a#rememberMe {
+          background-color: #1B1D29;
+          border: 2px solid #2E303C;
+          color: #FFFFFF;
+          cursor: pointer;
+          display: block;
+          font-size: 11px;
+          float: left;
+          height: 18px;
+          margin-left: 4px;
+          padding-left: 1px;
+          text-align: center;
+          width: 18px;
+        }
+
+        ul {
+          list-style: none;
+          margin: 5px 0 0;
+          padding: 0;
+
+          li {
+            float: left;
+
+            a {
+              color: #309CA9;
+              text-decoration: underline;
+              margin-right: 4px;
+
+              &:last-child {
+                margin-right: 0;
+              }
+
+              &:hover {
+                color: #24EFF2;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &#guest {
+      background-image: url(../images/auth/tab_right.png);
+
+      div.fields {
+        height: 143px;
+      }
+
+      p {
+        font-size: 11px;
+        text-align: center;
+      }
+
+      a#guestSubmit {
+        background-image: url(../images/auth/playguest_btn.png);
+        background-repeat: no-repeat;
+        float: left;
+        left: 0;
+        height: 146px;
+        position: absolute;
+        top: 258px;
+        width: 255px;
+        z-index: 0;
+
+        &:hover {
+          background-image: url(../images/auth/playguest_over.png)
+        }
+      }
+
+      div#guestSubmitLeftCover {
+        height: 37px;
+        left: 0;
+        position: absolute;
+        top: 327px;
+        width: 52px;
+        z-index: 1;
+      }
+
+      div#guestSubmitRightCover {
+        height: 37px;
+        right: 0;
+        position: absolute;
+        top: 327px;
+        width: 58px;
+        z-index: 1;
+      }
+    }
+
+    div.fields {
+      height: 138px;
+      left: 16px;
+      position: absolute;
+      top: 184px;
+      width: 223px;
+      z-index: 1;
+
+      label {
+        display: block;
+        padding: 4px 0;
+      }
+
+      input:not([type='checkbox']) {
+        background-color: #1B1D29;
+        border: 2px solid #2E303C;
+        color: #FFFFFF;
+        margin-bottom: 8px;
+        padding: 4px 8px;
+        width: 100%;
+      }
+    }
+  }
+
+  footer {
+    bottom: 4px;
+    color: #666666;
+    font-size: 10px;
+    padding: 13px 16px 16px;
+    position: absolute;
+    width: 255px;
+    z-index: 1;
+
+    span {
+      float: left;
+    }
+
+    a {
+      color: #666666;
+      float: right;
+
+      &:hover {
+        color: #FFFFFF;
+      }
+    }
+  }
+}

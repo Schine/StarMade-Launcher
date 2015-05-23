@@ -2,32 +2,55 @@ doctype html
 html
   head
     title StarMade
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,700')
     link(rel='stylesheet' href='styles/main.css')
     script(src='auth.js')
-  body
-    h1 StarMade
-    ul
-      li Login and Play
-      li Play as Guest
+  body.auth
+    img.logo(src='images/auth/header.png' alt='StarMade')
     form#uplink
-      label(for='username') Username
-      input(type='text' name='username' id='username')
-      br
-      label(for='password') Password
-      input(type='password' name='password' id='password')
-      label
-        input(type='checkbox' name='rememberMe' id='rememberMe')
-        |  Remember this account
-      ul
-        li
-          a.external(href='https://registry.star-made.org/users/password/new') Forgotten Password
-          a.external(href='https://registry.star-made.org/users/sign_up') Register
-      div#error
-      button(type='submit') Login
-    form#guest  
-      label(for='playerName') Player Name
-      input(type='text' name='playerName' id='playerName')
-      button(type='submit') Play as Guest
+      ul.tabs
+        li.uplinkTab
+          span Login and Play
+        li.guestTab
+          a#guestLink Play as Guest
+      .fields
+        label(for='username') Username
+        input(type='text' name='username' id='username')
+        br
+        label(for='password') Password
+        input(type='password' name='password' id='password')
+        #status
+      a#uplinkSubmit
+        span.hidden
+          button(type='submit') Login
+      #uplinkSubmitCover
+      .options
+        label#rememberMeLabel
+          | Remember this account 
+        a#rememberMe &nbsp;
+        .clearfix
+        ul
+          li
+            a.external(href='https://registry.star-made.org/users/password/new') Forgotten Password
+            a.external(href='https://registry.star-made.org/users/sign_up') Register
+    form#guest(style='display: none;')
+      ul.tabs
+        li.uplinkTab
+          a#uplinkLink Login and Play
+        li.guestTab
+          span Play as Guest
+      .fields
+        label(for='playerName') Player Name
+        input(type='text' name='playerName' id='playerName')
+        p
+          | Playing as a guest will let you play in local games and on
+          | guest-enabled multiplayer servers without having to login. However
+          | some options will be disabled.
+      a#guestSubmit
+        span.hidden
+          button(type='submit') Play as Guest
+      #guestSubmitLeftCover
+      #guestSubmitRightCover
     footer
       a.external(href='http://star-made.org/terms_and_conditions') Terms of Service
       span &copy; Schine GmbH

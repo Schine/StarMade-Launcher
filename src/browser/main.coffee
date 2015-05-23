@@ -55,12 +55,13 @@ ipc.on 'start-auth', ->
   authWindow = new BrowserWindow
     frame: false
     resizable: false
-    width: 400
-    height: 500
+    width: 255
+    height: 404
 
   mainWindow.hide()
 
   authWindow.loadUrl "file://#{staticDir}/auth.html"
+  authWindow.openDevTools()
 
   authWindow.on 'closed', ->
     authWindow = null
