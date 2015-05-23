@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title Getting Started
+    script(src='getting_started.js')
+  body
+    div#step1
+      h1 Welcome to StarMade
+      p
+        | Welcome to your journey into the StarMade universe. As it is your first
+        | time running StarMade, we'll help you through a couple things to get
+        | started.
+      button#next Next
+    div#step2(style='display: none;')
+      h1 Have you got a Registry account?
+      p
+        | For the best playing experience we recommend you create a free
+        | account with our Citizen Registry. Doing so enables you to manage
+        | your settings and skins, and if you have purchased the game also
+        | allows you to link your game to your Steam account if you have one.
+      p
+        | You can still paly the game locally without having an account, and if
+        | you wish you can create a Registry account later at 
+        a.external(href="https://registry.star-made.org/") https://registry.star-made.org/
+      button#login Login
+      button#createAccount Create Account
+      button#skip Skip

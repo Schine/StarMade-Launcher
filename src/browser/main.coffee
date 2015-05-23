@@ -11,15 +11,11 @@ staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
 
 authWindow = null
 mainWindow = null
+gettingStartedWindow = null
 
 app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
 
-app.on 'window-all-closed', ->
-  app.quit()
-
-app.on 'ready', ->
-  protocol = require('protocol')
-
+openMainWindow = ->
   mainWindow = new BrowserWindow
     frame: false
     resizable: false
@@ -33,6 +29,27 @@ app.on 'ready', ->
 
   mainWindow.on 'closed', ->
     mainWindow = null
+
+app.on 'window-all-closed', ->
+  app.quit()
+
+app.on 'ready', ->
+  protocol = require('protocol')
+
+  gettingStartedWindow = new BrowserWindow
+    resizable: false
+    show: false
+    width: 800
+    height: 600
+
+  gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html"
+  gettingStartedWindow.openDevTools()
+
+  gettingStartedWindow.on 'close', ->
+    openMainWindow()
+
+  gettingStartedWindow.on 'closed', ->
+    gettingStartedWindow = null
 
 ipc.on 'start-auth', ->
   authWindow = new BrowserWindow

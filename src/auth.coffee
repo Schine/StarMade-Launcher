@@ -4,23 +4,19 @@ REGISTRY_TOKEN_URL = 'https://registry.star-made.org/oauth/token'
 
 ipc = require('ipc')
 request = require('request')
-shell = require('shell')
 
-externalLinks = document.getElementsByClassName 'external'
+util = require('./util')
+
 uplinkForm = document.getElementById 'uplink'
 guestForm = document.getElementById 'guest'
+
+util.setupExternalLinks()
 
 if localStorage.getItem('playerName')?
   # Set username and player name to last used player name
   playerName = localStorage.getItem 'playerName'
   document.getElementById('username').value = playerName
   document.getElementById('playerName').value = playerName
-
-Array.prototype.forEach.call externalLinks, (link) ->
-  link.addEventListener 'click', (event) ->
-    event.preventDefault()
-
-    shell.openExternal this.href
 
 uplinkForm.addEventListener 'submit', (event) ->
   event.preventDefault()
