@@ -13,6 +13,7 @@ standaloneGruntRunner = require('standalone-grunt-runner')
 paths =
   build:
     dir: 'build'
+    glob: 'build/**/*'
     styles:
       dir:
         'build/styles'
@@ -33,6 +34,7 @@ paths =
         others: 'dist/resources/app'
   lib:
     dir: 'lib'
+    glob: 'lib/**/*'
   package: './package.json'
   src:
     dir: 'src'
@@ -40,6 +42,8 @@ paths =
   static:
     dir: 'static'
     entries: 'static/*.js'
+    images:
+      glob: 'static/images/**/*'
     jade:
       glob: 'static/**/*.jade'
     styles:
@@ -102,21 +106,19 @@ gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron'], (callback)
       gulp.src paths.package
         .pipe gulp.dest resourcesDir
 
+      gulp.src paths.lib.glob
+        .pipe gulp.dest path.join(resourcesDir, 'lib')
+
       gulp.src paths.static.entries
         .pipe gulp.dest path.join(resourcesDir, 'static')
 
-      async.series [
-        (cb) ->
-          mkdirp path.join(resourcesDir, 'lib'), (err) ->
-            return cb(err) if err
-            ncp paths.lib.dir, path.join(resourcesDir, 'lib'), (err) ->
-              cb(err)
-        (cb) ->
-          mkdirp path.join(resourcesDir, 'static'), (err) ->
-            return cb(err) if err
-            ncp paths.build.dir, path.join(resourcesDir, 'static'), (err) ->
-              cb(err)
-      ], callback
+      gulp.src paths.build.glob
+        .pipe gulp.dest path.join(resourcesDir, 'static')
+
+      gulp.src paths.static.images.glob
+        .pipe gulp.dest path.join(resourcesDir, 'static', 'images')
+
+      callback()
 
   return
 
