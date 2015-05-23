@@ -5,13 +5,13 @@ shell = require('shell')
 
 util = require('./util')
 
-if localStorage.getItem('got_started')?
+if localStorage.getItem('gotStarted')?
   window.close()
   return
 else
   remote.getCurrentWindow().show()
 
-localStorage.setItem 'got_started', true
+localStorage.setItem 'gotStarted', true
 
 util.setupExternalLinks()
 
