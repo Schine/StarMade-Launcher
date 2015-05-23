@@ -48,14 +48,14 @@ app.run ($rootScope, $state, accessToken, api, paths) ->
     $rootScope.$apply (scope) ->
       if args.playerName?
         scope.playerName = args.playerName
+        localStorage.setItem 'playerName', scope.playerName
       else
         accessToken.set args.access_token
         api.getCurrentUser()
           .success (data) ->
             scope.currentUser = data.user
             scope.playerName = scope.currentUser.username
-
-      localStorage.setItem 'playerName', scope.playerName
+            localStorage.setItem 'playerName', scope.playerName
 
       remote.getCurrentWindow().show()
 
