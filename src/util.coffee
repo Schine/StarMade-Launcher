@@ -10,3 +10,9 @@ exports.setupExternalLinks = ->
       event.preventDefault()
 
       shell.openExternal this.href
+
+exports.parseBoolean = (str) ->
+  if str == 'true'
+    true
+  else
+    false

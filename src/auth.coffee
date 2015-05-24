@@ -27,6 +27,9 @@ if localStorage.getItem('playerName')?
   document.getElementById('username').value = playerName
   document.getElementById('playerName').value = playerName
 
+rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
+rememberMeBox.innerHTML = '&#10003;' if rememberMe
+
 uplinkLink.addEventListener 'click', (event) ->
   event.preventDefault()
 
@@ -64,6 +67,7 @@ uplinkSubmit.addEventListener 'click', doLogin
 
 toggleRememberMe = ->
   rememberMe = !rememberMe
+  localStorage.setItem 'rememberMe', rememberMe
   if rememberMe
     rememberMeBox.innerHTML = '&#10003;'
   else

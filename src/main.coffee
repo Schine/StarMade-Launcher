@@ -7,6 +7,8 @@ remote = require('remote')
 
 electronApp = remote.require('app')
 
+util = require('./util')
+
 app = angular.module 'launcher', [
   require('angular-moment')
   require('angular-ui-router')
@@ -40,7 +42,9 @@ app.constant 'paths',
   gameData: "#{electronApp.getPath('appData')}/StarMade/Game"
   launcherData: "#{electronApp.getPath('userData')}"
 
-app.run ($rootScope, $state, accessToken, api, paths) ->
+app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
+  rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
+
   $rootScope.startAuth = ->
     ipc.send 'start-auth'
 
@@ -51,6 +55,7 @@ app.run ($rootScope, $state, accessToken, api, paths) ->
         localStorage.setItem 'playerName', scope.playerName
       else
         accessToken.set args.access_token
+        refreshToken.set args.refresh_token
         api.getCurrentUser()
           .success (data) ->
             scope.currentUser = data.user
@@ -59,15 +64,40 @@ app.run ($rootScope, $state, accessToken, api, paths) ->
 
       remote.getCurrentWindow().show()
 
+  $rootScope.$on '$locationChangeStart', ->
+    # Remove authentication information unless we are told to remember it
+    unless rememberMe
+      accessToken.delete()
+      refreshToken.delete()
+
   if api.isAuthenticated()
-    api.getCurrentUser()
-      .success (data) ->
-        $rootScope.currentUser = data.user
-        remote.getCurrentWindow().show()
-      .error (data, status) ->
-        if status == 401
-          accessToken.delete()
-        $rootScope.startAuth()
+    if !rememberMe || !refreshToken?
+      accessToken.delete()
+      refreshToken.delete()
+      $rootScope.startAuth()
+    else
+      getCurrentUser = ->
+        api.getCurrentUser()
+          .success (data) ->
+            $rootScope.currentUser = data.user
+            $rootScope.playerName = $rootScope.currentUser.username
+            remote.getCurrentWindow().show()
+          .error (data, status) ->
+            if status == 401
+              refreshToken.refresh()
+                .then (data) ->
+                  accessToken.set data.access_token
+                  refreshToken.set data.refresh_token
+
+                  # Try again
+                  getCurrentUser()
+                , ->
+                  accessToken.delete()
+                  refreshToken.delete()
+                  $rootScope.startAuth()
+            else
+              $rootScope.startAuth()
+      getCurrentUser()
   else
     $rootScope.startAuth()
 
@@ -102,6 +132,7 @@ require('./services/Checksum')
 require('./services/Version')
 require('./services/accessToken')
 require('./services/api')
+require('./services/refreshToken')
 require('./services/tokenInterceptor')
 require('./services/updater')
 require('./services/updaterProgress')
