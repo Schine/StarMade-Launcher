@@ -1,6 +1,9 @@
 'use strict'
 
+STEAMWORKS_SDK_URL = 'https://partner.steamgames.com/downloads/steamworks_sdk_133b.zip'
+
 async = require('async')
+fs = require('fs')
 mkdirp = require('mkdirp')
 ncp = require('ncp')
 gulp = require('gulp')
@@ -21,8 +24,15 @@ paths =
     electron:
       dir: 'cache/electron'
   dep:
+    dir: 'dep'
     electron:
       dir: 'dep/electron'
+    greenworks:
+      dir: 'dep/greenworks'
+      deps:
+        dir: 'dep/greenworks/deps'
+        steamworksSdk:
+          dir: 'dep/greenworks/deps/steamworks_sdk'
   dist:
     dir: 'dist',
     app:
@@ -48,7 +58,14 @@ paths =
       glob: 'static/**/*.jade'
     styles:
       main: 'static/styles/main.less'
+  steamAppid: 'steam_appid.txt'
 
+redistributables =
+  win32: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/steam_api.dll"
+  win64: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/win64/steam_api64.dll"
+  osx32: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/osx32/libsteam_api.dylib"
+  linux32: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/linux32/libsteam_api.so"
+  linux64: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/linux64/libsteam_api.so"
 
 pkg = require(paths.package)
 electronVersion = pkg.electronVersion
@@ -80,6 +97,60 @@ gulp.task 'download-electron', (callback) ->
 
   return
 
+gulp.task 'greenworks', ['greenworks-npm', 'greenworks-build']
+
+gulp.task 'greenworks-npm', ['greenworks-steamworks-sdk'], (callback) ->
+  npm = 'npm'
+  npm += '.cmd' if process.platform == 'win32'
+
+  ps = spawn npm, ['install'],
+    cwd: paths.dep.greenworks.dir
+    stdio: 'inherit'
+
+  ps.on 'close', ->
+    callback()
+
+  return
+
+# greenworks-npm will build, but not for Electron
+gulp.task 'greenworks-build', ['greenworks-steamworks-sdk', 'greenworks-npm'], (callback) ->
+  nodeGyp = 'node-gyp'
+  nodeGyp += '.cmd' if process.platform == 'win32'
+
+  arch = process.auth
+
+  # grunt-download-electron will download the 32-bit version of Electron
+  # if on Windows
+  arch = 'ia32' if process.platform == 'win32'
+
+  ps = spawn nodeGyp, [
+    'rebuild'
+    "--target=#{electronVersion}"
+    "--arch=#{arch}"
+    '--dist-url=https://gh-contractor-zcbenz.s3.amazonaws.com/atom-shell/dist'
+  ],
+    cwd: paths.dep.greenworks.dir
+    stdio: 'inherit'
+
+  ps.on 'close', ->
+    callback()
+
+  return
+
+gulp.task 'greenworks-steamworks-sdk-download', ->
+  return if fs.existsSync paths.dep.greenworks.deps.steamworksSdk.dir
+
+  plugins.download(STEAMWORKS_SDK_URL)
+    .pipe plugins.unzip()
+    .pipe gulp.dest paths.dep.greenworks.deps.dir
+
+# Hacky way to rename the extracted folder from the Steamworks SDK zip file
+gulp.task 'greenworks-steamworks-sdk', ['greenworks-steamworks-sdk-download'], (callback) ->
+  return callback() if fs.existsSync paths.dep.greenworks.deps.steamworksSdk.dir
+
+  fs.rename path.join(paths.dep.greenworks.deps.dir, 'sdk'), paths.dep.greenworks.deps.steamworksSdk.dir, (err) ->
+    callback(err)
+
 gulp.task 'jade', ->
   gulp.src paths.static.jade.glob
     .pipe plugins.jade
@@ -91,7 +162,7 @@ gulp.task 'less', ->
     .pipe plugins.less()
     .pipe gulp.dest paths.build.styles.dir
 
-gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron'], (callback) ->
+gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron', 'greenworks'], (callback) ->
   ncp paths.dep.electron.dir, paths.dist.dir, (err) ->
     return callback(err) if err
 
@@ -117,6 +188,12 @@ gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron'], (callback)
 
       gulp.src paths.static.images.glob
         .pipe gulp.dest path.join(resourcesDir, 'static', 'images')
+
+      gulp.src redistributables.win32
+        .pipe gulp.dest paths.dist.dir
+
+      gulp.src paths.steamAppid
+        .pipe gulp.dest paths.dist.dir
 
       callback()
 

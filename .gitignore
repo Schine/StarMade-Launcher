@@ -1,6 +1,7 @@
 build/
 cache/
-dep/
+dep/electron
 dist/
 lib/
 node_modules/
+npm-debug.log

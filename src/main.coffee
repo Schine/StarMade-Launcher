@@ -7,7 +7,10 @@ remote = require('remote')
 
 electronApp = remote.require('app')
 
+steam = require('./steam')
 util = require('./util')
+
+steam.init()
 
 app = angular.module 'launcher', [
   require('angular-moment')

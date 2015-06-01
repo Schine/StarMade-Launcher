@@ -1,0 +1,3 @@
+[submodule "dep/greenworks"]
+	path = dep/greenworks
+	url = https://github.com/Schine/greenworks.git
