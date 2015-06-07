@@ -25,7 +25,7 @@ openMainWindow = ->
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
 
-  mainWindow.openDevTools()
+  #mainWindow.openDevTools()
 
   mainWindow.on 'closed', ->
     mainWindow = null
@@ -43,7 +43,7 @@ app.on 'ready', ->
     height: 600
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html"
-  gettingStartedWindow.openDevTools()
+  #gettingStartedWindow.openDevTools()
 
   gettingStartedWindow.on 'close', ->
     openMainWindow()
@@ -61,7 +61,7 @@ ipc.on 'start-auth', ->
   mainWindow.hide()
 
   authWindow.loadUrl "file://#{staticDir}/auth.html"
-  authWindow.openDevTools()
+  #authWindow.openDevTools()
 
   authWindow.on 'closed', ->
     authWindow = null
