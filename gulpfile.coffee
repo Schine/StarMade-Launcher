@@ -10,6 +10,7 @@ gulp = require('gulp')
 gutil = require('gulp-util')
 path = require('path')
 plugins = require('gulp-load-plugins')()
+rimraf = require('rimraf')
 spawn = require('child_process').spawn
 standaloneGruntRunner = require('standalone-grunt-runner')
 
@@ -71,6 +72,25 @@ pkg = require(paths.package)
 electronVersion = pkg.electronVersion
 
 gulp.task 'default', ['run']
+
+gulp.task 'asar', ['package-launcher', 'package-greenworks', 'package-modules'], ->
+  if process.platform == 'darwin'
+    resourcesDir = paths.dist.app.resources.mac
+  else
+    resourcesDir = paths.dist.app.resources.others
+
+  gulp.src "#{resourcesDir}/**/*"
+    .pipe plugins.asar 'app.asar'
+    .pipe gulp.dest path.join(resourcesDir, '..')
+
+gulp.task 'remove-resources-dir', ['asar'], (callback) ->
+  if process.platform == 'darwin'
+    resourcesDir = paths.dist.app.resources.mac
+  else
+    resourcesDir = paths.dist.app.resources.others
+
+  rimraf resourcesDir, callback
+  return
 
 gulp.task 'coffee', ->
   gulp.src paths.src.glob
@@ -162,7 +182,9 @@ gulp.task 'less', ->
     .pipe plugins.less()
     .pipe gulp.dest paths.build.styles.dir
 
-gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron', 'greenworks'], (callback) ->
+gulp.task 'package', ['package-launcher', 'package-greenworks', 'package-modules', 'remove-resources-dir']
+
+gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron'], (callback) ->
   ncp paths.dep.electron.dir, paths.dist.dir, (err) ->
     return callback(err) if err
 
@@ -199,13 +221,32 @@ gulp.task 'package', ['coffee', 'jade', 'less', 'download-electron', 'greenworks
 
   return
 
-gulp.task 'run', ['download-electron', 'package'], ->
+gulp.task 'package-greenworks', ['package-launcher'], ->
+  if process.platform == 'darwin'
+    resourcesDir = paths.dist.app.resources.mac
+  else
+    resourcesDir = paths.dist.app.resources.others
+
+  gulp.src 'dep/greenworks/**/*', {base: 'dep/greenworks/'}
+    .pipe gulp.dest path.join(paths.dist.dir, 'dep', 'greenworks')
+
+gulp.task 'package-modules', ['package-launcher'], ->
+  if process.platform == 'darwin'
+    resourcesDir = paths.dist.app.resources.mac
+  else
+    resourcesDir = paths.dist.app.resources.others
+
+  gulp.src 'node_modules/**/*'
+    .pipe gulp.dest path.join(resourcesDir, 'node_modules')
+
+gulp.task 'run', ['download-electron'], ->
   if process.platform == 'darwin'
     app = paths.dist.app.executable.mac
   else
     app = paths.dist.app.executable.others
 
-  spawn app, [],
+  spawn "../#{app}", [],
+    cwd: path.resolve paths.dist.dir
     stdio: 'inherit'
 
   return
