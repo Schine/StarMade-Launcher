@@ -34,3 +34,5 @@ html(ng-app='launcher')
             button(ng-controller='LaunchCtrl' ng-click='launch()' ng-disabled='updaterProgress.inProgress') Launch
             span(ng-if='versions.length > 0') Using v{{versions[selectedVersion].version}}
             span(ng-if='versions.length == 0') Getting versions...
+            |  
+            a(ng-click='openLicenses()') Licenses

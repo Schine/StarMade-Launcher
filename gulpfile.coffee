@@ -49,6 +49,9 @@ paths =
   nodeModules:
     dir: 'node_modules'
   package: './package.json'
+  res:
+    licenses:
+      dir: 'res/licenses'
   src:
     dir: 'src'
     glob: 'src/**/*.coffee'
@@ -77,6 +80,8 @@ if process.platform == 'darwin'
   resourcesDir = paths.dist.app.resources.mac
 else
   resourcesDir = paths.dist.app.resources.others
+
+licenses = path.join resourcesDir, 'static', 'licenses.txt'
 
 gulp.task 'default', ['run']
 
@@ -193,7 +198,7 @@ gulp.task 'copy-package', ->
   gulp.src paths.package
     .pipe gulp.dest resourcesDir
 
-gulp.task 'copy-lib', ->
+gulp.task 'copy-lib', ['coffee'], ->
   gulp.src paths.lib.glob
     .pipe gulp.dest path.join(resourcesDir, 'lib')
 
@@ -201,7 +206,7 @@ gulp.task 'copy-static-entries', ->
   gulp.src paths.static.entries
     .pipe gulp.dest path.join(resourcesDir, 'static')
 
-gulp.task 'copy-build', ->
+gulp.task 'copy-build', ['jade', 'less'], ->
   gulp.src paths.build.glob
     .pipe gulp.dest path.join(resourcesDir, 'static')
 
@@ -229,15 +234,76 @@ copyModuleTask = (name) ->
     gulp.src src
       .pipe gulp.dest dest
 
+acknowledgeTasks = [
+  'package-launcher'
+  'acknowledge-clear'
+  'acknowledge-electron'
+  'acknowledge-greenworks'
+]
+
+gulp.task 'acknowledge-clear', (callback) ->
+  fs.unlink licenses, (err) ->
+    if err
+      mkdirp path.join(resourcesDir, 'static'), callback
+    else
+      callback()
+
+gulp.task 'acknowledge-starmade', ['acknowledge-clear'], (callback) ->
+  fs.readFile path.join(paths.res.licenses.dir, 'starmade'), (err, contents) ->
+    data = contents + '\n' +
+      'This application contains third-party libraries in accordance with the following\nlicenses:\n' +
+      '--------------------------------------------------------------------------------\n\n'
+    fs.appendFile licenses, data, callback
+
+gulp.task 'acknowledge-electron', ['acknowledge-clear', 'acknowledge-starmade', 'download-electron'], (callback) ->
+  fs.readFile path.join(paths.dep.electron.dir, 'LICENSE'), (err, data) ->
+    return callback(err) if err
+    data = 'electron\n' +
+      '--------------------------------------------------------------------------------\n' +
+      data.toString() + '\n'
+    fs.appendFile licenses, data, callback
+
+gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
+  fs.readFile path.join(paths.dep.greenworks.dir, 'LICENSE'), (err, data) ->
+    return callback(err) if err
+    data = 'greenworks\n' +
+      '--------------------------------------------------------------------------------\n' +
+      data.toString() + '\n'
+    fs.appendFile licenses, data, callback
+
+acknowledgeModuleTask = (name) ->
+  (callback) ->
+    moduleLicense = path.join paths.nodeModules.dir, name, 'LICENSE'
+    modulePkg = require(path.resolve(path.join(paths.nodeModules.dir, name, 'package.json')))
+
+    data = "#{modulePkg.name}\n" +
+      '--------------------------------------------------------------------------------\n'
+
+    if fs.existsSync moduleLicense
+      fs.readFile moduleLicense, (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n'
+        fs.appendFile licenses, data, callback
+    else
+      fs.readFile path.join(paths.res.licenses.dir, name), (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n'
+        fs.appendFile licenses, data, callback
+
 # Create copy tasks for each non-development dependencies
+# Also create tasks to add their license contents to the licenses file
 for name of pkg.dependencies
-  taskName = "copy-module-#{name}"
-  gulp.task taskName, copyModuleTask(name)
-  copyTasks.push taskName
+  copyTaskName = "copy-module-#{name}"
+  acknowledgeTaskName = "acknowledge-module-#{name}"
+  gulp.task copyTaskName, copyModuleTask(name)
+  gulp.task acknowledgeTaskName, ['acknowledge-clear', 'acknowledge-starmade'], acknowledgeModuleTask(name)
+  copyTasks.push copyTaskName
+  acknowledgeTasks.push acknowledgeTaskName
 
 gulp.task 'copy', copyTasks
+gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['package-launcher', 'package-greenworks', 'remove-resources-dir']
+gulp.task 'package', ['package-launcher', 'package-greenworks', 'acknowledge', 'remove-resources-dir']
 
 gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron', 'copy'], (callback) ->
   ncp paths.dep.electron.dir, paths.dist.dir, callback

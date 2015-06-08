@@ -51,6 +51,13 @@ app.on 'ready', ->
   gettingStartedWindow.on 'closed', ->
     gettingStartedWindow = null
 
+ipc.on 'open-licenses', ->
+  licensesWindow = new BrowserWindow
+    width: 800
+    height: 600
+
+  licensesWindow.loadUrl "file://#{staticDir}/licenses.txt"
+
 ipc.on 'start-auth', ->
   authWindow = new BrowserWindow
     frame: false

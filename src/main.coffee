@@ -48,6 +48,9 @@ app.constant 'paths',
 app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
+  $rootScope.openLicenses = ->
+    ipc.send 'open-licenses'
+
   $rootScope.startAuth = ->
     ipc.send 'start-auth'
 

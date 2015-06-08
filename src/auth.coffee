@@ -19,6 +19,8 @@ rememberMeBox = document.getElementById 'rememberMe'
 
 guestForm = document.getElementById 'guest'
 
+licensesLink = document.getElementById 'licensesLink'
+
 util.setupExternalLinks()
 
 if localStorage.getItem('playerName')?
@@ -84,3 +86,8 @@ doGuest = (event) ->
 
 guestForm.addEventListener 'submit', doGuest
 guestSubmit.addEventListener 'click', doGuest
+
+licensesLink.addEventListener 'click', (event) ->
+  event.preventDefault()
+
+  ipc.send 'open-licenses'
