@@ -224,7 +224,7 @@ gulp.task 'copy-steam-appid', ->
 
 copyModuleTask = (name) ->
   ->
-    src = path.join paths.nodeModules.dir, name
+    src = path.join paths.nodeModules.dir, name, '**/*'
     dest = path.join resourcesDir, 'node_modules', name
     gulp.src src
       .pipe gulp.dest dest
