@@ -46,6 +46,8 @@ paths =
   lib:
     dir: 'lib'
     glob: 'lib/**/*'
+  nodeModules:
+    dir: 'node_modules'
   package: './package.json'
   src:
     dir: 'src'
@@ -221,25 +223,37 @@ gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron'], (
 
   return
 
-gulp.task 'package-greenworks', ['package-launcher'], ->
+gulp.task 'package-greenworks', ['greenworks-steamworks-sdk', 'package-launcher'], ->
   if process.platform == 'darwin'
-    resourcesDir = paths.dist.app.resources.mac
+    # No 64-bit Steamworks binary
+    return
   else
     resourcesDir = paths.dist.app.resources.others
 
   gulp.src 'dep/greenworks/**/*', {base: 'dep/greenworks/'}
     .pipe gulp.dest path.join(paths.dist.dir, 'dep', 'greenworks')
 
-gulp.task 'package-modules', ['package-launcher'], ->
+gulp.task 'package-modules', ['package-launcher'], (callback) ->
   if process.platform == 'darwin'
     resourcesDir = paths.dist.app.resources.mac
   else
     resourcesDir = paths.dist.app.resources.others
 
-  gulp.src 'node_modules/**/*'
-    .pipe gulp.dest path.join(resourcesDir, 'node_modules')
+  copyModule = (name, cb) ->
+    dest = path.join(resourcesDir, 'node_modules', name)
+    mkdirp dest, (err) ->
+      return cb(err) if err
+      ncp path.join(paths.nodeModules.dir, name), dest, cb
 
-gulp.task 'run', ['download-electron'], ->
+  modules = []
+
+  # Get non-development dependencies
+  for name of pkg.dependencies
+    modules.push name
+
+  async.map modules, copyModule, callback
+
+gulp.task 'run', ['download-electron', 'package'], ->
   if process.platform == 'darwin'
     app = paths.dist.app.executable.mac
   else
