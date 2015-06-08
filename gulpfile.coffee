@@ -73,24 +73,19 @@ redistributables =
 pkg = require(paths.package)
 electronVersion = pkg.electronVersion
 
+if process.platform == 'darwin'
+  resourcesDir = paths.dist.app.resources.mac
+else
+  resourcesDir = paths.dist.app.resources.others
+
 gulp.task 'default', ['run']
 
-gulp.task 'asar', ['package-launcher', 'package-greenworks', 'package-modules'], ->
-  if process.platform == 'darwin'
-    resourcesDir = paths.dist.app.resources.mac
-  else
-    resourcesDir = paths.dist.app.resources.others
-
+gulp.task 'asar', ['package-launcher', 'package-greenworks', 'copy'], ->
   gulp.src "#{resourcesDir}/**/*"
     .pipe plugins.asar 'app.asar'
     .pipe gulp.dest path.join(resourcesDir, '..')
 
 gulp.task 'remove-resources-dir', ['asar'], (callback) ->
-  if process.platform == 'darwin'
-    resourcesDir = paths.dist.app.resources.mac
-  else
-    resourcesDir = paths.dist.app.resources.others
-
   rimraf resourcesDir, callback
   return
 
@@ -184,43 +179,68 @@ gulp.task 'less', ->
     .pipe plugins.less()
     .pipe gulp.dest paths.build.styles.dir
 
-gulp.task 'package', ['package-launcher', 'package-greenworks', 'package-modules', 'remove-resources-dir']
+copyTasks = [
+  'copy-package'
+  'copy-lib'
+  'copy-static-entries'
+  'copy-build'
+  'copy-static-images'
+  'copy-redistributables'
+  'copy-steam-appid'
+]
 
-gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron'], (callback) ->
-  ncp paths.dep.electron.dir, paths.dist.dir, (err) ->
-    return callback(err) if err
+gulp.task 'copy-package', ->
+  gulp.src paths.package
+    .pipe gulp.dest resourcesDir
 
-    if process.platform == 'darwin'
-      resourcesDir = paths.dist.app.resources.mac
-    else
-      resourcesDir = paths.dist.app.resources.others
+gulp.task 'copy-lib', ->
+  gulp.src paths.lib.glob
+    .pipe gulp.dest path.join(resourcesDir, 'lib')
 
-    mkdirp resourcesDir, (err) ->
-      return callback(err) if err
+gulp.task 'copy-static-entries', ->
+  gulp.src paths.static.entries
+    .pipe gulp.dest path.join(resourcesDir, 'static')
 
-      gulp.src paths.package
-        .pipe gulp.dest resourcesDir
+gulp.task 'copy-build', ->
+  gulp.src paths.build.glob
+    .pipe gulp.dest path.join(resourcesDir, 'static')
 
-      gulp.src paths.lib.glob
-        .pipe gulp.dest path.join(resourcesDir, 'lib')
+gulp.task 'copy-static-images', ->
+  gulp.src paths.static.images.glob
+    .pipe gulp.dest path.join(resourcesDir, 'static', 'images')
 
-      gulp.src paths.static.entries
-        .pipe gulp.dest path.join(resourcesDir, 'static')
+gulp.task 'copy-redistributables', ->
+  # TODO: Handle other platforms
+  return unless process.platform == 'win32'
 
-      gulp.src paths.build.glob
-        .pipe gulp.dest path.join(resourcesDir, 'static')
+  gulp.src redistributables.win32
+    .pipe gulp.dest paths.dist.dir
 
-      gulp.src paths.static.images.glob
-        .pipe gulp.dest path.join(resourcesDir, 'static', 'images')
+gulp.task 'copy-steam-appid', ->
+  return if process.platform == 'darwin'
 
-      gulp.src redistributables.win32
-        .pipe gulp.dest paths.dist.dir
+  gulp.src paths.steamAppid
+    .pipe gulp.dest paths.dist.dir
 
-      gulp.src paths.steamAppid
-        .pipe gulp.dest paths.dist.dir
+copyModuleTask = (name) ->
+  ->
+    src = path.join paths.nodeModules.dir, name
+    dest = path.join resourcesDir, 'node_modules', name
+    gulp.src src
+      .pipe gulp.dest dest
 
-      callback()
+# Create copy tasks for each non-development dependencies
+for name of pkg.dependencies
+  taskName = "copy-module-#{name}"
+  gulp.task taskName, copyModuleTask(name)
+  copyTasks.push taskName
 
+gulp.task 'copy', copyTasks
+
+gulp.task 'package', ['package-launcher', 'package-greenworks', 'remove-resources-dir']
+
+gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron', 'copy'], (callback) ->
+  ncp paths.dep.electron.dir, paths.dist.dir, callback
   return
 
 gulp.task 'package-greenworks', ['greenworks-steamworks-sdk', 'package-launcher'], ->
@@ -232,26 +252,6 @@ gulp.task 'package-greenworks', ['greenworks-steamworks-sdk', 'package-launcher'
 
   gulp.src 'dep/greenworks/**/*', {base: 'dep/greenworks/'}
     .pipe gulp.dest path.join(paths.dist.dir, 'dep', 'greenworks')
-
-gulp.task 'package-modules', ['package-launcher'], (callback) ->
-  if process.platform == 'darwin'
-    resourcesDir = paths.dist.app.resources.mac
-  else
-    resourcesDir = paths.dist.app.resources.others
-
-  copyModule = (name, cb) ->
-    dest = path.join(resourcesDir, 'node_modules', name)
-    mkdirp dest, (err) ->
-      return cb(err) if err
-      ncp path.join(paths.nodeModules.dir, name), dest, cb
-
-  modules = []
-
-  # Get non-development dependencies
-  for name of pkg.dependencies
-    modules.push name
-
-  async.map modules, copyModule, callback
 
 gulp.task 'run', ['download-electron', 'package'], ->
   if process.platform == 'darwin'
