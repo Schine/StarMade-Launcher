@@ -134,7 +134,7 @@ gulp.task 'greenworks-build', ['greenworks-steamworks-sdk', 'greenworks-npm'], (
   nodeGyp = 'node-gyp'
   nodeGyp += '.cmd' if process.platform == 'win32'
 
-  arch = process.auth
+  arch = process.arch
 
   # grunt-download-electron will download the 32-bit version of Electron
   # if on Windows
