@@ -25,17 +25,12 @@ openMainWindow = ->
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
 
-  #mainWindow.openDevTools()
+  mainWindow.openDevTools()
 
   mainWindow.on 'closed', ->
     mainWindow = null
 
-app.on 'window-all-closed', ->
-  app.quit()
-
-app.on 'ready', ->
-  protocol = require('protocol')
-
+openGettingStartedWindow = (args) ->
   gettingStartedWindow = new BrowserWindow
     frame: false
     resizable: false
@@ -43,14 +38,25 @@ app.on 'ready', ->
     width: 650
     height: 504
 
-  gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html"
+  gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
   #gettingStartedWindow.openDevTools()
 
   gettingStartedWindow.on 'close', ->
-    openMainWindow()
+    if mainWindow?
+      mainWindow.show()
+    else
+      openMainWindow()
 
   gettingStartedWindow.on 'closed', ->
     gettingStartedWindow = null
+
+app.on 'window-all-closed', ->
+  app.quit()
+
+app.on 'ready', ->
+  protocol = require('protocol')
+
+  openGettingStartedWindow()
 
 ipc.on 'open-licenses', ->
   licensesWindow = new BrowserWindow
@@ -81,3 +87,6 @@ ipc.on 'finish-auth', (event, args) ->
     console.warn 'finish-auth was triggered when authWindow is null!'
 
   mainWindow.webContents.send 'finish-auth', args
+
+ipc.on 'start-steam-link', ->
+  openGettingStartedWindow('steam')

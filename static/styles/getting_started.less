@@ -191,6 +191,75 @@ body.getting_started {
 
       }
     }
+
+    &#step3 {
+      display: none;
+
+      div.side {
+        background-image: url(../images/getting_started/GS_bg_02.jpg);
+      }
+
+      div.content {
+        div#linkBg {
+          background-image: url(../images/getting_started/linkSteam_btn.png);
+          background-repeat: no-repeat;
+          left: 0;
+          height: 163px;
+          position: absolute;
+          transition: .3s;
+          top: 338px;
+          width: 305px;
+          z-index: 0;
+
+          &.hover {
+            background-image: url(../images/getting_started/linkSteam_over.png);
+          }
+        }
+
+        a#link {
+          left: 24px;
+          height: 38px;
+          position: absolute;
+          top: 398px;
+          width: 217px;
+          z-index: 1;
+        }
+
+        div#skipOnceBg {
+          background-image: url(../images/getting_started/skipOnce_btn.png);
+          background-repeat: no-repeat;
+          left: 204px;
+          height: 163px;
+          position: absolute;
+          transition: .3s;
+          top: 338px;
+          width: 229px;
+          z-index: 0;
+
+          &.hover {
+            background-image: url(../images/getting_started/skipOnce_over.png);
+          }
+        }
+
+        a#skipOnce {
+          left: 264px;
+          height: 37px;
+          position: absolute;
+          top: 399px;
+          width: 110px;
+          z-index: 1;
+        }
+
+        a#skipAlways {
+          color: #C5791B;
+          font-size: 10px;
+          left: 265px;
+          position: absolute;
+          text-decoration: underline;
+          top: 443px;
+        }
+      }
+    }
   }
 
   footer {

@@ -336,6 +336,7 @@ gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade'
 acknowledgeModuleTask = (name) ->
   (callback) ->
     moduleLicense = path.join paths.nodeModules.dir, name, 'LICENSE'
+    moduleLicence = path.join paths.nodeModules.dir, name, 'LICENCE'
     modulePkg = require(path.resolve(path.join(paths.nodeModules.dir, name, 'package.json')))
 
     data = "#{modulePkg.name}\n" +
@@ -343,6 +344,11 @@ acknowledgeModuleTask = (name) ->
 
     if fs.existsSync moduleLicense
       fs.readFile moduleLicense, (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n'
+        fs.appendFile licenses, data, callback
+    else if fs.existsSync moduleLicence
+      fs.readFile moduleLicence, (err, contents) ->
         return callback(err) if err
         data += contents.toString() + '\n'
         fs.appendFile licenses, data, callback

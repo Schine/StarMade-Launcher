@@ -5,18 +5,24 @@ shell = require('shell')
 
 util = require('./util')
 
+step1 = document.getElementById 'step1'
+step2 = document.getElementById 'step2'
+step3 = document.getElementById 'step3'
+
 if localStorage.getItem('gotStarted')?
-  window.close()
-  return
+  if window.location.href.split('?')[1] == 'steam'
+    step1.style.display = 'none'
+    step3.style.display = 'block'
+    remote.getCurrentWindow().show()
+  else
+    window.close()
+    return
 else
   remote.getCurrentWindow().show()
 
 localStorage.setItem 'gotStarted', true
 
 util.setupExternalLinks()
-
-step1 = document.getElementById 'step1'
-step2 = document.getElementById 'step2'
 
 #
 # Step 1
@@ -66,4 +72,40 @@ skip.addEventListener 'mouseleave', ->
 
 skip.addEventListener 'click', ->
   # TODO: Go directly to the guest tab on the login dialog
+  window.close()
+
+
+#
+# Step 3
+#
+
+link = document.getElementById 'link'
+linkBg = document.getElementById 'linkBg'
+skipOnce = document.getElementById 'skipOnce'
+skipOnceBg = document.getElementById 'skipOnceBg'
+skipAlways = document.getElementById 'skipAlways'
+
+link.addEventListener 'mouseenter', ->
+  linkBg.className = 'hover'
+
+link.addEventListener 'mouseleave', ->
+  linkBg.className = ''
+
+link.addEventListener 'click', ->
+  # TODO: Confirm with user that they are linking to the right Steam account
+  # TODO: Link the account
+  localStorage.setItem 'steamLinked', true
+  window.close()
+
+skipOnce.addEventListener 'mouseenter', ->
+  skipOnceBg.className = 'hover'
+
+skipOnce.addEventListener 'mouseleave', ->
+  skipOnceBg.className = ''
+
+skipOnce.addEventListener 'click', ->
+  window.close()
+
+skipAlways.addEventListener 'click', ->
+  localStorage.setItem 'steamLinked', 'ignored'
   window.close()

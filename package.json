@@ -35,6 +35,7 @@
     "angular-moment": "^0.10.1",
     "angular-ui-router": "^0.2.14",
     "async": "^0.9.0",
+    "bignumber.js": "^2.0.7",
     "mkdirp": "^0.5.0",
     "request": "^2.55.0",
     "underscore": "^1.8.3"
