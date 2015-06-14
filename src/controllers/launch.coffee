@@ -9,7 +9,7 @@ util = require('../util')
 
 pkg = require(path.join(path.dirname(path.dirname(__dirname)), 'package.json'))
 javaVersion = pkg.javaVersion
-javaJreVersion = util.parseJreVersion javaVersion
+javaJreDirectory = util.getJreDirectory javaVersion
 
 app = angular.module 'launcher'
 
@@ -31,7 +31,7 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
   $scope.launch = ->
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
-    javaBinDir = path.resolve "dep/java/#{javaJreVersion}/bin"
+    javaBinDir = path.resolve "dep/java/#{javaJreDirectory}/bin"
     javaExec = path.join javaBinDir, 'java'
 
     # TODO: Find a way to detect the arch that isn't based on the current
