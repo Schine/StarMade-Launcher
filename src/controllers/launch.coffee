@@ -5,6 +5,11 @@ os = require('os')
 path = require('path')
 remote = require('remote')
 spawn = require('child_process').spawn
+util = require('../util')
+
+pkg = require(path.join(path.dirname(path.dirname(__dirname)), 'package.json'))
+javaVersion = pkg.javaVersion
+javaJreVersion = util.parseJreVersion javaVersion
 
 app = angular.module 'launcher'
 
@@ -26,7 +31,8 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
   $scope.launch = ->
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
-    javaExec = 'java'
+    javaBinDir = path.resolve "dep/java/#{javaJreVersion}/bin"
+    javaExec = path.join javaBinDir, 'java'
 
     # TODO: Find a way to detect the arch that isn't based on the current
     # process

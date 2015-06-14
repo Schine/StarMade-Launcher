@@ -1,8 +1,8 @@
 'use strict'
 
-shell = require('shell')
-
 exports.setupExternalLinks = ->
+  shell = require('shell')
+  
   externalLinks = document.getElementsByClassName 'external'
 
   Array.prototype.forEach.call externalLinks, (link) ->
@@ -16,3 +16,10 @@ exports.parseBoolean = (str) ->
     true
   else
     false
+
+exports.parseJreVersion = (javaVersion) ->
+  javaVersionBits = javaVersion.split('u')
+  javaVersionNumber = "1.#{javaVersionBits[0]}.0"
+  javaUpdateNumber = javaVersionBits[1]
+
+  "jre#{javaVersionNumber}_#{javaUpdateNumber}"

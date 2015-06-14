@@ -1,5 +1,6 @@
 'use strict'
 
+JAVA_URL = 'https://s3.amazonaws.com/sm-launcher/java'
 STEAMWORKS_SDK_URL = 'https://partner.steamgames.com/downloads/steamworks_sdk_133b.zip'
 
 async = require('async')
@@ -11,8 +12,11 @@ gutil = require('gulp-util')
 path = require('path')
 plugins = require('gulp-load-plugins')()
 rimraf = require('rimraf')
+source = require('vinyl-source-stream')
 spawn = require('child_process').spawn
 standaloneGruntRunner = require('standalone-grunt-runner')
+
+util = require('./src/util')
 
 paths =
   build:
@@ -28,6 +32,8 @@ paths =
     dir: 'dep'
     electron:
       dir: 'dep/electron'
+    java:
+      dir: 'dep/java'
     greenworks:
       dir: 'dep/greenworks'
       deps:
@@ -73,8 +79,16 @@ redistributables =
   linux32: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/linux32/libsteam_api.so"
   linux64: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/linux64/libsteam_api.so"
 
+java =
+  win32: "#{JAVA_URL}/jre-#{javaVersion}-windows-i586.tar.gz"
+  win64: "#{JAVA_URL}/jre-#{javaVersion}-windows-x64.tar.gz"
+  osx64: "#{JAVA_URL}/jre-#{javaVersion}-macosx-x64.tar.gz"
+  linux32: "#{JAVA_URL}/jre-#{javaVersion}-linux-i586.tar.gz"
+  linux64: "#{JAVA_URL}/jre-#{javaVersion}-linux-x64.tar.gz"
+
 pkg = require(paths.package)
 electronVersion = pkg.electronVersion
+javaVersion = pkg.javaVersion
 
 if process.platform == 'darwin'
   resourcesDir = paths.dist.app.resources.mac
@@ -173,6 +187,27 @@ gulp.task 'greenworks-steamworks-sdk', ['greenworks-steamworks-sdk-download'], (
   fs.rename path.join(paths.dep.greenworks.deps.dir, 'sdk'), paths.dep.greenworks.deps.steamworksSdk.dir, (err) ->
     callback(err)
 
+gulp.task 'java', ->
+  return if fs.existsSync paths.dep.java.dir
+
+  switch process.platform
+    when 'win32'
+      if process.arch == 'ia32'
+        platform = 'win32'
+      else
+        platform = 'win64'
+    when 'darwin'
+      platform = 'osx64'
+    when 'linux'
+      platform = 'linux'
+    else
+      throw 'Unsupported platform'
+
+  plugins.download(java[platform])
+    .pipe plugins.gunzip()
+    .pipe plugins.untar()
+    .pipe gulp.dest paths.dep.java.dir
+
 gulp.task 'jade', ->
   gulp.src paths.static.jade.glob
     .pipe plugins.jade
@@ -238,6 +273,9 @@ acknowledgeTasks = [
   'package-launcher'
   'acknowledge-clear'
   'acknowledge-electron'
+  'acknowledge-java'
+  'acknowledge-java-thirdparty'
+  'acknowledge-java-thirdparty-javafx'
   'acknowledge-greenworks'
 ]
 
@@ -259,6 +297,30 @@ gulp.task 'acknowledge-electron', ['acknowledge-clear', 'acknowledge-starmade', 
   fs.readFile path.join(paths.dep.electron.dir, 'LICENSE'), (err, data) ->
     return callback(err) if err
     data = 'electron\n' +
+      '--------------------------------------------------------------------------------\n' +
+      data.toString() + '\n'
+    fs.appendFile licenses, data, callback
+
+gulp.task 'acknowledge-java', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
+  fs.readFile path.join(paths.dep.java.dir, util.parseJreVersion(javaVersion), 'LICENSE'), (err, data) ->
+    return callback(err) if err
+    data = 'java\n' +
+      '--------------------------------------------------------------------------------\n' +
+      data.toString() + '\n'
+    fs.appendFile licenses, data, callback
+
+gulp.task 'acknowledge-java-thirdparty', ['acknowledge-clear', 'acknowledge-starmade', 'acknowledge-java'], (callback) ->
+  fs.readFile path.join(paths.dep.java.dir, util.parseJreVersion(javaVersion), 'THIRDPARTYLICENSEREADME.txt'), (err, data) ->
+    return callback(err) if err
+    data = 'java third party\n' +
+      '--------------------------------------------------------------------------------\n' +
+      data.toString() + '\n'
+    fs.appendFile licenses, data, callback
+
+gulp.task 'acknowledge-java-thirdparty-javafx', ['acknowledge-clear', 'acknowledge-starmade', 'acknowledge-java', 'acknowledge-java-thirdparty'], (callback) ->
+  fs.readFile path.join(paths.dep.java.dir, util.parseJreVersion(javaVersion), 'THIRDPARTYLICENSEREADME-JAVAFX.txt'), (err, data) ->
+    return callback(err) if err
+    data = 'java third party javafx\n' +
       '--------------------------------------------------------------------------------\n' +
       data.toString() + '\n'
     fs.appendFile licenses, data, callback
@@ -303,7 +365,7 @@ for name of pkg.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['package-launcher', 'package-greenworks', 'acknowledge', 'remove-resources-dir']
+gulp.task 'package', ['package-launcher', 'package-greenworks', 'package-java', 'acknowledge', 'remove-resources-dir']
 
 gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron', 'copy'], (callback) ->
   ncp paths.dep.electron.dir, paths.dist.dir, callback
@@ -318,6 +380,10 @@ gulp.task 'package-greenworks', ['greenworks-steamworks-sdk', 'package-launcher'
 
   gulp.src 'dep/greenworks/**/*', {base: 'dep/greenworks/'}
     .pipe gulp.dest path.join(paths.dist.dir, 'dep', 'greenworks')
+
+gulp.task 'package-java', ['java'], ->
+  gulp.src "#{paths.dep.java.dir}/**/*", {base: paths.dep.java.dir}
+    .pipe gulp.dest path.join(paths.dist.dir, 'dep', 'java')
 
 gulp.task 'run', ['download-electron', 'package'], ->
   if process.platform == 'darwin'

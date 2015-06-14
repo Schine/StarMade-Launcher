@@ -1,6 +1,7 @@
 build/
 cache/
 dep/electron
+dep/java
 dist/
 lib/
 node_modules/
