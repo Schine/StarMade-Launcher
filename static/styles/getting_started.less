@@ -1,0 +1,199 @@
+body.getting_started {
+  background-color: #0F0F13;
+
+  div.header {
+    background-image: url(../images/getting_started/GS_top_banner.jpg);
+    height: 94px;
+    vertical-align: middle;
+
+    img.logo {
+      margin-left: 60px;
+    }
+
+    img.schine-logo {
+      float: right;
+      margin: 23px 16px 0;
+    }
+  }
+
+  div.step {
+    background-color: #0F0F13;
+    background-image: url(../images/getting_started/GS_content_bg-topleft.png);
+    background-repeat: no-repeat;
+    height: 410px;
+    padding-top: 50px;
+
+    div.content {
+      padding-left: 26px;
+      width: 373px;
+
+      h1 {
+        font-size: 31px;
+        font-weight: normal;
+        line-height: normal;
+        text-transform: none;
+      }
+    }
+
+    div.side {
+      float: right;
+      margin-top: -50px;
+      height: 410px;
+      width: 277px;
+    }
+
+    span.reference {
+      color: #2F9EAF;
+    }
+
+    &#step1 {
+      div.content {
+        a#next {
+          background-image: url(../images/getting_started/continue_btn.png);
+          background-repeat: no-repeat;
+          left: 0;
+          height: 166px;
+          position: absolute;
+          top: 338px;
+          width: 200px;
+          z-index: 0;
+
+          &:hover {
+            background-image: url(../images/getting_started/continue_over.png)
+          }
+        }
+
+        div#nextCoverTop {
+          height: 69px;
+          left: 0;
+          position: absolute;
+          top: 338px;
+          width: 200px;
+          z-index: 1;
+        }
+
+        div#nextCoverRight {
+          height: 37px;
+          left: 134px;
+          position: absolute;
+          top: 407px;
+          width: 66px;
+          z-index: 1;
+        }
+
+        div#nextCoverBottom {
+          height: 60px;
+          left: 0;
+          position: absolute;
+          top: 444px;
+          width: 200px;
+          z-index: 1;
+        }
+
+        div#nextCoverLeft {
+          height: 37px;
+          left: 0;
+          position: absolute;
+          top: 407px;
+          width: 25px;
+          z-index: 1;
+        }
+      }
+
+      div.side {
+        background-image: url(../images/getting_started/GS_bg_01.jpg);
+      }
+    }
+
+    &#step2 {
+      display: none;
+
+      div.side {
+        background-image: url(../images/getting_started/GS_bg_02.jpg);
+      }
+
+      div.content {
+        div#loginBg {
+          background-image: url(../images/getting_started/login_btn.png);
+          background-repeat: no-repeat;
+          left: 0;
+          height: 163px;
+          position: absolute;
+          transition: .3s;
+          top: 338px;
+          width: 171px;
+          z-index: 0;
+
+          &.hover {
+            background-image: url(../images/getting_started/login_over.png);
+          }
+        }
+
+        a#login {
+          left: 24px;
+          height: 38px;
+          position: absolute;
+          top: 404px;
+          width: 79px;
+          z-index: 1;
+        }
+
+        div#createAccountBg {
+          background-image: url(../images/getting_started/createAccount_btn.png);
+          background-repeat: no-repeat;
+          left: 60px;
+          height: 163px;
+          position: absolute;
+          transition: .3s;
+          top: 338px;
+          width: 297px;
+          z-index: 0;
+
+          &.hover {
+            background-image: url(../images/getting_started/createAccount_over.png);
+            transition: .3s;
+          }
+        }
+
+        a#createAccount {
+          left: 123px;
+          height: 38px;
+          position: absolute;
+          top: 404px;
+          width: 166px;
+          z-index: 1;
+        }
+
+        div#skipBg {
+          background-image: url(../images/getting_started/skip_btn.png);
+          background-repeat: no-repeat;
+          left: 253px;
+          height: 163px;
+          position: absolute;
+          transition: .3s;
+          top: 338px;
+          width: 182px;
+          z-index: 0;
+
+          &.hover {
+            background-image: url(../images/getting_started/skip_over.png);
+          }
+        }
+
+        a#skip {
+          left: 310px;
+          height: 38px;
+          position: absolute;
+          top: 404px;
+          width: 67px;
+          z-index: 1;
+        }
+
+      }
+    }
+  }
+
+  footer {
+    width: 395px;
+  }
+}

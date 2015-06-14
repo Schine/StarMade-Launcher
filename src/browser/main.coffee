@@ -37,10 +37,11 @@ app.on 'ready', ->
   protocol = require('protocol')
 
   gettingStartedWindow = new BrowserWindow
+    frame: false
     resizable: false
     show: false
-    width: 800
-    height: 600
+    width: 650
+    height: 504
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html"
   #gettingStartedWindow.openDevTools()
