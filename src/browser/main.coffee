@@ -1,5 +1,8 @@
 'use strict'
 
+# For some reason, windows open taller on OS X
+OSX_HEIGHT_OFFSET = 44
+
 app = require('app')
 dialog = require('dialog')
 ipc = require('ipc')
@@ -16,12 +19,15 @@ gettingStartedWindow = null
 app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
 
 openMainWindow = ->
+  height = 750
+  height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
+
   mainWindow = new BrowserWindow
     frame: false
     resizable: false
     show: false
     width: 1200
-    height: 750
+    height: height
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
 
@@ -31,12 +37,15 @@ openMainWindow = ->
     mainWindow = null
 
 openGettingStartedWindow = (args) ->
+  height = 504
+  height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
+
   gettingStartedWindow = new BrowserWindow
     frame: false
     resizable: false
     show: false
     width: 650
-    height: 504
+    height: height
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
   #gettingStartedWindow.openDevTools()
@@ -66,11 +75,14 @@ ipc.on 'open-licenses', ->
   licensesWindow.loadUrl "file://#{staticDir}/licenses.txt"
 
 ipc.on 'start-auth', ->
+  height = 404
+  height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
+
   authWindow = new BrowserWindow
     frame: false
     resizable: false
     width: 255
-    height: 404
+    height: height
 
   mainWindow.hide()
 
