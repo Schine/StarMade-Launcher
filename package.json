@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "description": "Launcher for StarMade",
   "main": "lib/browser/main.js",
-  "electronVersion": "0.27.2",
+  "electronVersion": "0.28.1",
   "javaVersion": "8u45",
   "devDependencies": {
     "coffee-script": "^1.9.2",
