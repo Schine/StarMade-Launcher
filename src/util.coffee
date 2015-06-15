@@ -25,3 +25,5 @@ exports.getJreDirectory = (javaVersion) ->
   jreDirectory = "jre#{javaVersionNumber}_#{javaUpdateNumber}"
   if process.platform == 'darwin'
     jreDirectory += '.jre/Contents/Home'
+  else
+    jreDirectory
