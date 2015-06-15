@@ -135,13 +135,17 @@ gulp.task 'download-electron', (callback) ->
 
   return
 
-gulp.task 'greenworks', ['greenworks-npm', 'greenworks-build']
+gulp.task 'greenworks', ['greenworks-clean', 'greenworks-npm', 'greenworks-build']
 
-gulp.task 'greenworks-npm', ['greenworks-steamworks-sdk'], (callback) ->
+gulp.task 'greenworks-clean', (callback) ->
+  rimraf path.join(paths.dep.greenworks.dir, 'build'), callback
+  return
+
+gulp.task 'greenworks-npm', ['greenworks-clean', 'greenworks-steamworks-sdk'], (callback) ->
   npm = 'npm'
   npm += '.cmd' if process.platform == 'win32'
 
-  ps = spawn npm, ['install'],
+  ps = spawn npm, ['install', '--ignore-scripts'],
     cwd: paths.dep.greenworks.dir
     stdio: 'inherit'
 
@@ -151,7 +155,7 @@ gulp.task 'greenworks-npm', ['greenworks-steamworks-sdk'], (callback) ->
   return
 
 # greenworks-npm will build, but not for Electron
-gulp.task 'greenworks-build', ['greenworks-steamworks-sdk', 'greenworks-npm'], (callback) ->
+gulp.task 'greenworks-build', ['greenworks-steamworks-sdk', 'greenworks-clean', 'greenworks-npm'], (callback) ->
   # No Steamworks support for OS X 64-bit
   return callback() if process.platform == 'darwin'
 
@@ -382,7 +386,7 @@ gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron', 'c
   ncp paths.dep.electron.dir, paths.dist.dir, callback
   return
 
-gulp.task 'package-greenworks', ['greenworks-steamworks-sdk', 'package-launcher'], ->
+gulp.task 'package-greenworks', ['greenworks', 'package-launcher'], ->
   if process.platform == 'darwin'
     # No 64-bit Steamworks binary
     return
