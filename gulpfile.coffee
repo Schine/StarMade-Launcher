@@ -208,7 +208,10 @@ gulp.task 'java', ->
     when 'darwin'
       platform = 'osx64'
     when 'linux'
-      platform = 'linux'
+      if process.arch == 'ia32'
+        platform = 'linux32'
+      else
+        platform = 'linux64'
     else
       throw 'Unsupported platform'
 
