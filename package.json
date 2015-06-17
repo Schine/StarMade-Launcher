@@ -9,7 +9,7 @@
   "javaVersion": "8u45",
   "devDependencies": {
     "coffee-script": "^1.9.2",
-    "electron-prebuilt": "^0.27.2",
+    "electron-prebuilt": "^0.28.1",
     "electron-rebuild": "^0.2.0",
     "grunt-download-electron": "^2.0.1",
     "gulp": "^3.8.11",
