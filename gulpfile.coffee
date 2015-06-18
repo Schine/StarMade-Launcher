@@ -393,7 +393,11 @@ gulp.task 'package-greenworks', ['greenworks', 'package-launcher'], ->
   else
     resourcesDir = paths.dist.app.resources.others
 
-  gulp.src 'dep/greenworks/**/*', {base: 'dep/greenworks/'}
+  gulp.src [
+      'dep/greenworks/greenworks.js'
+      'dep/greenworks/lib/**/*'
+    ]
+    , {base: 'dep/greenworks'}
     .pipe gulp.dest path.join(paths.dist.dir, 'dep', 'greenworks')
 
 gulp.task 'package-java', ['java'], ->
