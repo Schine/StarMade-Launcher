@@ -31,7 +31,7 @@ openMainWindow = ->
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
 
-  mainWindow.openDevTools()
+  #mainWindow.openDevTools()
 
   mainWindow.on 'closed', ->
     mainWindow = null
