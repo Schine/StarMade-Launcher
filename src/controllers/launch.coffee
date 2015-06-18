@@ -31,7 +31,11 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
   $scope.launch = ->
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
-    javaBinDir = path.resolve "dep/java/#{javaJreDirectory}/bin"
+    if process.platform == 'darwin'
+      appDir = path.dirname(process.execPath)
+      javaBinDir = path.join path.dirname(path.dirname(path.dirname(path.dirname(path.dirname(process.execPath))))), 'MacOS', 'dep', 'java', javaJreDirectory, 'bin'
+    else
+      javaBinDir = path.resolve "dep/java/#{javaJreDirectory}/bin"
     javaExec = path.join javaBinDir, 'java'
 
     # TODO: Find a way to detect the arch that isn't based on the current

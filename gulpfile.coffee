@@ -407,7 +407,7 @@ gulp.task 'package-java', ['java'], ->
   distDir = paths.dist.dir
   if process.platform == 'darwin'
     distDir = paths.dist.app.macos.dir
-  distDir = path.join(paths.dist.dir, 'dep', 'java')
+  distDir = path.join(distDir, 'dep', 'java')
 
   filter = plugins.filter('**/*/bin/*')
 
