@@ -53,7 +53,6 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
         "-port:#{port}"
         "-auth #{accessToken.get()}" if accessToken.get()?
       ],
-        detached: true
         cwd: installDir
     else
       child = spawn javaExec, [
@@ -68,7 +67,9 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
         "-port:#{port}"
         "-auth #{accessToken.get()}" if accessToken.get()?
       ],
-        detached: true
         cwd: installDir
 
-    remote.require('app').quit()
+    child.on 'close', ->
+      remote.require('app').quit()
+
+    remote.getCurrentWindow().hide()
