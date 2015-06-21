@@ -54,6 +54,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
         "-auth #{accessToken.get()}" if accessToken.get()?
       ],
         cwd: installDir
+        stdio: 'inherit'
     else
       child = spawn javaExec, [
         '-Djava.net.preferIPv4Stack=true'
@@ -68,6 +69,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
         "-auth #{accessToken.get()}" if accessToken.get()?
       ],
         cwd: installDir
+        stdio: 'inherit'
 
     child.on 'close', ->
       remote.require('app').quit()

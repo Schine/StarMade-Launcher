@@ -164,10 +164,6 @@ gulp.task 'greenworks-build', ['greenworks-steamworks-sdk', 'greenworks-clean', 
 
   arch = process.arch
 
-  # grunt-download-electron will download the 32-bit version of Electron
-  # if on Windows
-  arch = 'ia32' if process.platform == 'win32'
-
   ps = spawn nodeGyp, [
     'rebuild'
     "--target=#{electronVersion}"

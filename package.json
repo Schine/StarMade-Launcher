@@ -11,7 +11,7 @@
     "coffee-script": "^1.9.2",
     "electron-prebuilt": "^0.28.1",
     "electron-rebuild": "^0.2.0",
-    "grunt-download-electron": "^2.0.1",
+    "grunt-download-electron": "git://github.com/Schine/grunt-download-electron.git",
     "gulp": "^3.9.0",
     "gulp-asar": "git://github.com/danshick/gulp-asar.git",
     "gulp-chmod": "^1.2.0",
