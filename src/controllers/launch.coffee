@@ -13,7 +13,7 @@ javaJreDirectory = util.getJreDirectory javaVersion
 
 app = angular.module 'launcher'
 
-app.controller 'LaunchCtrl', ($scope, paths) ->
+app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
   maxMemory = 1024
   minMemory = 512
   earlyGenMemory = 128
@@ -51,6 +51,7 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
         starmadeJar
         '-force'
         "-port:#{port}"
+        "-auth #{accessToken.get()}" if accessToken.get()?
       ],
         detached: true
         cwd: installDir
@@ -65,6 +66,7 @@ app.controller 'LaunchCtrl', ($scope, paths) ->
         starmadeJar
         '-force'
         "-port:#{port}"
+        "-auth #{accessToken.get()}" if accessToken.get()?
       ],
         detached: true
         cwd: installDir
