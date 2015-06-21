@@ -51,6 +51,7 @@ login.addEventListener 'mouseleave', ->
   loginBg.className = ''
 
 login.addEventListener 'click', ->
+  localStorage.setItem 'authGoto', 'uplink'
   window.close()
 
 createAccount.addEventListener 'mouseenter', ->
@@ -60,8 +61,7 @@ createAccount.addEventListener 'mouseleave', ->
   createAccountBg.className = ''
 
 createAccount.addEventListener 'click', ->
-  # TODO: Introduce a create account dialog instead
-  shell.openExternal 'https://registry.star-made.org/users/sign_up'
+  localStorage.setItem 'authGoto', 'register'
   window.close()
 
 skip.addEventListener 'mouseenter', ->
@@ -71,7 +71,7 @@ skip.addEventListener 'mouseleave', ->
   skipBg.className = ''
 
 skip.addEventListener 'click', ->
-  # TODO: Go directly to the guest tab on the login dialog
+  localStorage.setItem 'authGoto', 'guest'
   window.close()
 
 

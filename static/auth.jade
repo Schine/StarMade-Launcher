@@ -32,7 +32,7 @@ html
         ul
           li
             a.external(href='https://registry.star-made.org/users/password/new') Forgotten Password
-            a.external(href='https://registry.star-made.org/users/sign_up') Register
+            a#registerLink Register
     form#guest(style='display: none;')
       ul.tabs
         li.uplinkTab
@@ -51,6 +51,31 @@ html
           button(type='submit') Play as Guest
       #guestSubmitLeftCover
       #guestSubmitRightCover
+    form#register(style='display: none;')
+      a#registerBack
+        img(src='images/auth/back_icon.png' alt='Back')
+      ul.tabs
+        li.registerTab
+          span Register New Account
+      .fields
+        label(for='username') Username
+        input(type='text' name='username' id='username')
+        br
+        label(for='email') Email
+        input(type='email' name='email' id='email')
+        br
+        label(for='password') Password
+        input(type='password' name='password' id='password')
+        label#subscribeLabel
+          | Subscribe to our official StarMade newsletter
+        a#subscribe &#10003;
+        #status
+      #registerSubmitBg
+      a#registerSubmit
+        span.hidden
+          button(type='submit') Register New Account
+      .options
+        a.external(href='https://registry.star-made.org/users/confirmation/new') Didn't receive confirmation instructions?
     footer
       ul.links
         li

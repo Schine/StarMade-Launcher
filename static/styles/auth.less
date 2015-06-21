@@ -38,6 +38,16 @@ body.auth {
         padding-right: 20px;
         text-align: right;
       }
+
+      &.registerTab {
+        width: 100%;
+
+        span {
+          display: block;
+          margin-top: 2px;
+          padding-left: 16px;
+        }
+      }
     }
   }
 
@@ -179,6 +189,92 @@ body.auth {
         top: 327px;
         width: 58px;
         z-index: 1;
+      }
+    }
+
+    &#register {
+      background-image: url(../images/auth/register_content_bg.png);
+
+      a#registerBack {
+        cursor: pointer;
+        left: 4px;
+        position: absolute;
+        top: 4px;
+        -webkit-app-region: no-drag;
+      }
+
+      div.fields {
+        height: auto;
+        width: auto;
+
+        label#subscribeLabel {
+          font-size: 10px;
+          margin-left: 20px;
+          margin-top: 11px;
+          white-space: nowrap;
+        }
+
+        a#subscribe {
+          background-color: #1B1D29;
+          border: 2px solid #2E303C;
+          color: #FFFFFF;
+          cursor: pointer;
+          display: block;
+          font-size: 8px;
+          float: left;
+          height: 16px;
+          margin-left: 0;
+          margin-top: -17px;
+          padding-left: 1px;
+          text-align: center;
+          width: 16px;
+        }
+      }
+
+      p {
+        font-size: 11px;
+        text-align: center;
+      }
+
+      div#registerSubmitBg {
+        background-image: url(../images/auth/register_btn.png);
+        background-repeat: no-repeat;
+        left: 0;
+        height: 164px;
+        position: absolute;
+        top: 326px;
+        transition: .3s;
+        width: 255px;
+        z-index: 0;
+
+        &.hover {
+          background-image: url(../images/auth/register_over.png)
+        }
+      }
+
+      a#registerSubmit {
+        left: 18px;
+        height: 39px;
+        position: absolute;
+        top: 393px;
+        width: 218px;
+        z-index: 1;
+      }
+
+      div.options {
+        font-size: 10px;
+        left: 18px;
+        position: absolute;
+        top: 437px;
+
+        a {
+          color: #309CA9;
+          text-decoration: underline;
+
+          &:hover {
+            color: #24EFF2;
+          }
+        }
       }
     }
 
