@@ -1,6 +1,7 @@
 'use strict'
 
 REGISTRY_TOKEN_URL = 'https://registry.star-made.org/oauth/token'
+REGISTRY_REGISTER_URL = 'https://registry.star-made.org/api/v1/users.json'
 
 ipc = require('ipc')
 remote = require('remote')
@@ -25,6 +26,7 @@ registerForm = document.getElementById 'register'
 registerBack = document.getElementById 'registerBack'
 registerSubmit = document.getElementById 'registerSubmit'
 registerSubmitBg = document.getElementById 'registerSubmitBg'
+registerStatus = document.getElementById 'registerStatus'
 subscribe = true
 subscribeLabel = document.getElementById 'subscribeLabel'
 subscribeBox = document.getElementById 'subscribe'
@@ -131,9 +133,33 @@ guestSubmit.addEventListener 'click', doGuest
 doRegister = (event) ->
   event.preventDefault()
 
-  # TODO: Implement registration
-  status.innerHTML = 'Registered! Please confirm your email.'
-  exitRegister()
+  registerStatus.innerHTML = 'Registering...'
+
+  username = document.getElementById('registerUsername').value
+
+  request.post REGISTRY_REGISTER_URL,
+    form:
+      user:
+        username: document.getElementById('registerUsername').value,
+        email: document.getElementById('registerEmail').value,
+        password: document.getElementById('registerPassword').value,
+        password_confirmation: document.getElementById('registerPassword').value,
+        subscribe_to_newsletter: if subscribe then '1' else '0'
+    (err, res, body) ->
+      body = JSON.parse body
+      if !err && (res.statusCode == 200 || res.statusCode == 201)
+        registerStatus.innerHTML = ''
+        status.innerHTML = 'Registered! Please confirm your email.'
+        document.getElementById('username').value = username
+        exitRegister()
+      else if res.statusCode == 422
+        field = Object.keys(body.errors)[0]
+        error = body.errors[field][0]
+        field = field.substring(0, 1).toUpperCase() + field.substring(1, field.length)
+
+        registerStatus.innerHTML = "#{field} #{error}"
+      else
+        registerStatus.innerHTML = 'Unable to register, please try later.'
 
 registerForm.addEventListener 'submit', doRegister
 registerSubmit.addEventListener 'click', doRegister
