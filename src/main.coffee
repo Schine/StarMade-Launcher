@@ -42,7 +42,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $httpProvider.interceptors.push 'tokenInterceptor'
 
 app.constant 'paths',
-  gameData: "#{electronApp.getPath('appData')}/StarMade/Game"
+  gameData: "#{electronApp.getPath('appData')}/StarMade"
   launcherData: "#{electronApp.getPath('userData')}"
 
 app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->

@@ -28,4 +28,5 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
   $scope.installDir = localStorage.getItem('installDir') || paths.gameData
 
   $scope.update = ->
+    electronApp.setPath 'userData', "#{$scope.installDir}/Launcher"
     updater.update($scope.versions[$scope.selectedVersion], $scope.installDir)

@@ -7,6 +7,7 @@ app = require('app')
 dialog = require('dialog')
 ipc = require('ipc')
 path = require('path')
+rimraf = require('rimraf')
 shell = require('shell')
 BrowserWindow = require('browser-window')
 
@@ -16,7 +17,10 @@ authWindow = null
 mainWindow = null
 gettingStartedWindow = null
 
+oldUserData = app.getPath 'userData'
 app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
+rimraf oldUserData, (err) ->
+  console.warn "Unable to remove old user data directory: #{err}" if err
 
 openMainWindow = ->
   height = 750
