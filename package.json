@@ -5,11 +5,11 @@
   "version": "0.0.0",
   "description": "Launcher for StarMade",
   "main": "lib/browser/main.js",
-  "electronVersion": "0.28.1",
+  "electronVersion": "0.28.2",
   "javaVersion": "8u45",
   "devDependencies": {
     "coffee-script": "^1.9.2",
-    "electron-prebuilt": "^0.28.1",
+    "electron-prebuilt": "^0.28.2",
     "electron-rebuild": "^0.2.0",
     "grunt-download-electron": "git://github.com/Schine/grunt-download-electron.git",
     "gulp": "^3.9.0",

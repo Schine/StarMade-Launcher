@@ -101,7 +101,9 @@ licenses = path.join resourcesDir, 'static', 'licenses.txt'
 
 gulp.task 'default', ['run']
 
-gulp.task 'asar', ['package-launcher', 'package-greenworks', 'acknowledge', 'copy'], ->
+gulp.task 'bootstrap', ['build-electron']
+
+gulp.task 'asar', ['package-electron', 'package-greenworks', 'acknowledge', 'copy'], ->
   gulp.src "#{resourcesDir}/**/*"
     .pipe plugins.asar 'app.asar'
     .pipe gulp.dest path.join(resourcesDir, '..')
@@ -117,23 +119,46 @@ gulp.task 'coffee', ->
     .pipe plugins.sourcemaps.write()
     .pipe gulp.dest paths.lib.dir
 
-gulp.task 'download-electron', (callback) ->
-  async.map [
-    paths.cache.electron.dir
-    paths.dep.electron.dir
-  ], mkdirp, (err) ->
-    return callback(err) if err
+gulp.task 'build-electron', (callback) ->
+  python = 'python'
+  python += '.exe' if process.platform == 'win32'
 
-    standaloneGruntRunner 'download-electron',
-      config:
-        version: electronVersion
-        downloadDir: paths.cache.electron.dir
-        outputDir: paths.dep.electron.dir
-      npm: 'grunt-download-electron'
-      ->
-        callback()
+  bootstrap = (cb) ->
+    ps = spawn python, [
+      'script/bootstrap.py'
+      "--target_arch=#{process.arch}"
+    ],
+      cwd: paths.dep.electron.dir
+      stdio: 'inherit'
 
-  return
+    ps.on 'close', ->
+      cb()
+
+  build = (cb) ->
+    ps = spawn python, [
+      'script/build.py'
+      '-c'
+      'R'
+    ],
+      cwd: paths.dep.electron.dir
+      stdio: 'inherit'
+
+    ps.on 'close', ->
+      cb()
+
+  createDist = (cb) ->
+    ps = spawn python, [
+      'script/create-dist.py'
+    ],
+      cwd: paths.dep.electron.dir
+      stdio: 'inherit'
+
+    ps.on 'close', ->
+      cb()
+
+  bootstrap ->
+    build ->
+      createDist callback
 
 gulp.task 'greenworks', ['greenworks-clean', 'greenworks-npm', 'greenworks-build']
 
@@ -278,7 +303,7 @@ copyModuleTask = (name) ->
       .pipe gulp.dest dest
 
 acknowledgeTasks = [
-  'package-launcher'
+  'package-electron'
   'acknowledge-clear'
   'acknowledge-electron'
   'acknowledge-java'
@@ -301,7 +326,7 @@ gulp.task 'acknowledge-starmade', ['acknowledge-clear'], (callback) ->
       '--------------------------------------------------------------------------------\n\n'
     fs.appendFile licenses, data, callback
 
-gulp.task 'acknowledge-electron', ['acknowledge-clear', 'acknowledge-starmade', 'download-electron'], (callback) ->
+gulp.task 'acknowledge-electron', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
   fs.readFile path.join(paths.dep.electron.dir, 'LICENSE'), (err, data) ->
     return callback(err) if err
     data = 'electron\n' +
@@ -379,13 +404,14 @@ for name of pkg.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['package-launcher', 'package-greenworks', 'package-java', 'acknowledge', 'remove-resources-dir']
+gulp.task 'package', ['package-electron', 'package-greenworks', 'package-java', 'acknowledge', 'remove-resources-dir']
 
-gulp.task 'package-launcher', ['coffee', 'jade', 'less', 'download-electron', 'copy'], (callback) ->
-  ncp paths.dep.electron.dir, paths.dist.dir, callback
-  return
+gulp.task 'package-electron', ['coffee', 'jade', 'less', 'copy'], ->
+  gulp.src path.join paths.dep.electron.dir, 'dist', "#{pkg.name}-v#{electronVersion}-#{process.platform}-#{process.arch}.zip"
+    .pipe plugins.unzip()
+    .pipe gulp.dest paths.dist.dir
 
-gulp.task 'package-greenworks', ['greenworks', 'package-launcher'], ->
+gulp.task 'package-greenworks', ['greenworks', 'package-electron'], ->
   if process.platform == 'darwin'
     # No 64-bit Steamworks binary
     return
@@ -413,7 +439,7 @@ gulp.task 'package-java', ['java'], ->
     .pipe filter.restore()
     .pipe gulp.dest distDir
 
-gulp.task 'run', ['download-electron', 'package'], ->
+gulp.task 'run', ['package'], ->
   if process.platform == 'darwin'
     app = paths.dist.app.executable.mac
   else

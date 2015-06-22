@@ -1,3 +1,7 @@
 [submodule "dep/greenworks"]
 	path = dep/greenworks
 	url = https://github.com/Schine/greenworks.git
+[submodule "dep/electron"]
+	path = dep/electron
+	url = https://github.com/Schine/electron.git
+	branch = starmade-launcher
