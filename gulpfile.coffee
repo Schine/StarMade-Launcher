@@ -14,7 +14,6 @@ plugins = require('gulp-load-plugins')()
 rimraf = require('rimraf')
 source = require('vinyl-source-stream')
 spawn = require('child_process').spawn
-standaloneGruntRunner = require('standalone-grunt-runner')
 
 util = require('./src/util')
 
