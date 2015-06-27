@@ -61,9 +61,14 @@ openGettingStartedWindow = (args) ->
   #gettingStartedWindow.openDevTools()
 
   gettingStartedWindow.on 'close', ->
-    if mainWindow?
+    if authWindow?
+      # User was looking at licenses
+      return
+    else if mainWindow?
+      # User was being asked to link with Steam
       mainWindow.show()
     else
+      # Getting started process finished
       openMainWindow()
 
   gettingStartedWindow.on 'closed', ->
@@ -81,11 +86,7 @@ app.on 'before-quit', ->
   quitting = true
 
 ipc.on 'open-licenses', ->
-  licensesWindow = new BrowserWindow
-    width: 800
-    height: 600
-
-  licensesWindow.loadUrl "file://#{staticDir}/licenses.txt"
+  openGettingStartedWindow('licenses')
 
 ipc.on 'start-auth', ->
   height = 404
