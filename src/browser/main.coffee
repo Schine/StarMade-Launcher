@@ -17,6 +17,7 @@ authWindow = null
 mainWindow = null
 gettingStartedWindow = null
 
+authFinished = false
 quitting = false
 
 oldUserData = app.getPath 'userData'
@@ -105,8 +106,12 @@ ipc.on 'start-auth', ->
 
   authWindow.on 'closed', ->
     authWindow = null
+    if mainWindow? && !mainWindow.isVisible() && !authFinished
+      mainWindow.close()
 
 ipc.on 'finish-auth', (event, args) ->
+  authFinished = true
+
   if authWindow?
     authWindow.close()
   else
