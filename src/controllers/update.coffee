@@ -50,13 +50,16 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
 
   $scope.$watch 'branch', (newVal) ->
     localStorage.setItem 'branch', newVal
+    $scope.switchingBranch = true
     updater.getVersions newVal
       .then (versions) ->
+        $scope.switchingBranch = false
         $scope.versions = $filter('orderBy')(versions, '-build')
         $scope.versions[0].latest = '(Latest)'
         $scope.selectedVersion = 0
         updater.update($scope.versions[0], $scope.installDir, true)
       , ->
+        $scope.switchingBranch = false
         $scope.versions = null
         $scope.selectedVersion = null
 

@@ -46,7 +46,7 @@ html(ng-app='launcher')
                 sup
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
-              select(id='buildType' ng-model='branch' ng-disabled='updaterProgress.inProgress')
+              select(id='buildType' ng-model='branch' ng-disabled='updaterProgress.inProgress || switchingBranch')
                 option(value='release') Release (recommended)
                 option(value='dev') Dev
                 option(value='pre') Pre
@@ -59,7 +59,7 @@ html(ng-app='launcher')
                 sup
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
-              select(id='buildVersion' ng-model='selectedVersion' ng-disabled='updaterProgress.inProgress')
+              select(id='buildVersion' ng-model='selectedVersion' ng-disabled='updaterProgress.inProgress || switchingBranch')
                 option(ng-repeat="version in versions" value='{{$index}}')
                   | v{{version.version}} {{version.latest}}
               a.gear &nbsp;
