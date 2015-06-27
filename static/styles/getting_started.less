@@ -5,6 +5,7 @@ body.getting_started {
     background-image: url(../images/getting_started/GS_top_banner.jpg);
     height: 94px;
     vertical-align: middle;
+    -webkit-app-region: drag;
 
     img.logo {
       margin-left: 60px;
@@ -15,6 +16,14 @@ body.getting_started {
     img.schine-logo {
       float: right;
       margin: 23px 16px 0;
+    }
+
+    a#close {
+      display: none;
+      position: absolute;
+      right: 8px;
+      top: 6px;
+      -webkit-app-region: no-drag;
     }
   }
 

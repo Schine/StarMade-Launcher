@@ -7,10 +7,12 @@ shell = require('shell')
 
 util = require('./util')
 
+close = document.getElementById 'close'
 footerLinks = document.getElementById 'footerLinks'
 currentStep = -1
 
 showLicenses = ->
+  close.style.display = 'none'
   step0.style.display = 'block'
   step1.style.display = 'none'
   step2.style.display = 'none'
@@ -19,6 +21,7 @@ showLicenses = ->
 
 acceptEula = ->
   localStorage.setItem 'acceptedEula', true
+  close.style.display = 'inline'
   footerLinks.style.display = 'block'
 
   switch currentStep
@@ -34,6 +37,9 @@ acceptEula = ->
     when 3
       step0.style.display = 'none'
       step3.style.display = 'block'
+
+close.addEventListener 'click', ->
+  remote.require('app').quit()
 
 step0 = document.getElementById 'step0'
 step1 = document.getElementById 'step1'

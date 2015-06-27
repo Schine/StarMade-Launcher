@@ -9,6 +9,8 @@ request = require('request')
 
 util = require('./util')
 
+close = document.getElementById 'close'
+
 uplinkLink = document.getElementById 'uplinkLink'
 guestLink = document.getElementById 'guestLink'
 
@@ -38,6 +40,9 @@ originalHeight = window.innerHeight
 
 util.setupExternalLinks()
 
+close.addEventListener 'click', ->
+  remote.require('app').quit()
+
 if localStorage.getItem('playerName')?
   # Set username and player name to last used player name
   playerName = localStorage.getItem 'playerName'
@@ -49,6 +54,7 @@ showGuest = ->
   guestForm.style.display = 'block'
 
 showRegister = ->
+  close.style.display = 'none'
   uplinkForm.style.display = 'none'
   guestForm.style.display = 'none'
   registerForm.style.display = 'block'
@@ -58,6 +64,7 @@ showRegister = ->
   remote.getCurrentWindow().center()
 
 exitRegister = ->
+  close.style.display = 'inline'
   uplinkForm.style.display = 'block'
   guestForm.style.display = 'none'
   registerForm.style.display = 'none'
