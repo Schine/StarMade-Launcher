@@ -14,7 +14,7 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
     release: "#{BASE_URL}/releasebuildindex"
     archive: "#{BASE_URL}/archivebuildindex"
 
-  @update = (version, installDir) ->
+  @update = (version, installDir, checkOnly = false) ->
     updaterProgress.curValue = 0
     updaterProgress.inProgress = true
     updaterProgress.text = 'Getting checksums'
@@ -26,6 +26,7 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
         download = _.after checksums.length, ->
           if filesToDownload.length == 0
             updaterProgress.text = 'Up to date'
+            updaterProgress.needsUpdating = false
             updaterProgress.inProgress = false
             return
 
@@ -49,10 +50,15 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
           q.drain = ->
             updaterProgress.text = 'All files downloaded'
             updaterProgress.inProgress = false
+            updaterProgress.needsUpdating = false
 
-          filesToDownload.forEach (checksum) ->
-            q.push checksum, (err) ->
-              console.error err if err
+          if checkOnly
+            updaterProgress.needsUpdating = true
+            updaterProgress.inProgress = false
+          else
+            filesToDownload.forEach (checksum) ->
+              q.push checksum, (err) ->
+                console.error err if err
 
         updaterProgress.text = 'Determining files to download...'
         updaterProgress.curValue = 0

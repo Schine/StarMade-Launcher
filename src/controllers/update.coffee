@@ -10,7 +10,6 @@ app = angular.module 'launcher'
 app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) ->
   $scope.versions = []
   $scope.updaterProgress = updaterProgress
-  $scope.needsUpdating = true
   $scope.status = ''
 
   $scope.onPlayTab = true
@@ -41,7 +40,7 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
   updateStatus = (selectedVersion) ->
     return if $scope.versions.length == 0
 
-    if $scope.needsUpdating
+    if $scope.updaterProgress.needsUpdating
       $scope.status = "You need to update for v#{$scope.versions[selectedVersion].version}"
     else
       if selectedVersion == 0
@@ -67,15 +66,16 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
     localStorage.setItem 'serverPort', newVal
 
   $scope.$watch 'selectedVersion', (newVal) ->
-    # TODO: Check if updating is needed
-    updateStatus($scope.selectedVersion)
+    return unless $scope.versions[newVal]?
+    updater.update($scope.versions[newVal], $scope.installDir, true)
 
   $scope.$watch 'updaterProgress.text', (newVal) ->
     if $scope.updaterProgress.inProgress
       $scope.status = newVal
 
   $scope.$watch 'updaterProgress.inProgress', (newVal) ->
-    updateStatus($scope.selectedVersion) if !newVal
+    if !newVal # Not in progress
+      updateStatus($scope.selectedVersion)
 
   $scope.branch = localStorage.getItem('branch') || 'release'
   $scope.installDir = localStorage.getItem('installDir') || paths.gameData
