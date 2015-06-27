@@ -171,9 +171,8 @@ link.addEventListener 'mouseleave', ->
   linkBg.className = ''
 
 link.addEventListener 'click', ->
-  # TODO: Confirm with user that they are linking to the right Steam account
-  # TODO: Link the account
-  localStorage.setItem 'steamLinked', true
+  # Steam linking takes place on the Registry website
+  shell.openExternal 'https://registry.star-made.org/profile/steam_link'
   window.close()
 
 skipOnce.addEventListener 'mouseenter', ->
