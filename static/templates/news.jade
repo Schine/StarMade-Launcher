@@ -10,7 +10,7 @@ ul.side
       img
 ul.news
   li(ng-repeat='entry in news')
-    div.banner(ng-class="{'no-banner': !entry.banner}")
+    div.banner(ng-class="{'no-banner': !entry.banner}" ng-hide='!entry.title')
       h2.title {{entry.title}}
       span.date
         | {{entry.created_at | ordinalDate}}

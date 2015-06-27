@@ -96,6 +96,10 @@ guestLink.addEventListener 'click', (event) ->
 doLogin = (event) ->
   event.preventDefault()
 
+  unless navigator.onLine
+    status.innerHTML = 'You are not connected to the Internet.'
+    return
+
   status.innerHTML = 'Logging in...'
 
   request.post REGISTRY_TOKEN_URL,

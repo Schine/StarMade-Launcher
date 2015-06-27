@@ -59,8 +59,9 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
         $scope.selectedVersion = 0
         updater.update($scope.versions[0], $scope.installDir, true)
       , ->
+        $scope.status = 'You are offline.' unless navigator.onLine
         $scope.switchingBranch = false
-        $scope.versions = null
+        $scope.versions = []
         $scope.selectedVersion = null
 
   $scope.$watch 'installDir', (newVal) ->
@@ -71,6 +72,7 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
 
   $scope.$watch 'selectedVersion', (newVal) ->
     return unless $scope.versions[newVal]?
+    return unless navigator.onLine
     updater.update($scope.versions[newVal], $scope.installDir, true)
 
   $scope.$watch 'updaterProgress.text', (newVal) ->
