@@ -55,6 +55,7 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
         $scope.versions = $filter('orderBy')(versions, '-build')
         $scope.versions[0].latest = '(Latest)'
         $scope.selectedVersion = 0
+        updater.update($scope.versions[0], $scope.installDir, true)
       , ->
         $scope.versions = null
         $scope.selectedVersion = null

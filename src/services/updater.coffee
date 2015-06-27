@@ -15,6 +15,8 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
     archive: "#{BASE_URL}/archivebuildindex"
 
   @update = (version, installDir, checkOnly = false) ->
+    return if updaterProgress.inProgress
+
     updaterProgress.curValue = 0
     updaterProgress.inProgress = true
     updaterProgress.text = 'Getting checksums'
