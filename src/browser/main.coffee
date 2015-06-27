@@ -17,12 +17,16 @@ authWindow = null
 mainWindow = null
 gettingStartedWindow = null
 
+quitting = false
+
 oldUserData = app.getPath 'userData'
 app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
 rimraf oldUserData, (err) ->
   console.warn "Unable to remove old user data directory: #{err}" if err
 
 openMainWindow = ->
+  return if quitting
+
   height = 550
   height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
 
@@ -41,6 +45,8 @@ openMainWindow = ->
     mainWindow = null
 
 openGettingStartedWindow = (args) ->
+  return if quitting
+
   height = 504
   height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
 
@@ -70,6 +76,9 @@ app.on 'ready', ->
   protocol = require('protocol')
 
   openGettingStartedWindow()
+
+app.on 'before-quit', ->
+  quitting = true
 
 ipc.on 'open-licenses', ->
   licensesWindow = new BrowserWindow

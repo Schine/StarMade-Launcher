@@ -9,6 +9,17 @@ html
     div.header
       img.logo(src='images/getting_started/GS_logo.png' alt='StarMade')
       img.schine-logo(src='images/getting_started/schine_logo.png' alt='Schine')
+    div#step0.step
+      div.content
+        pre#licenses
+
+        #acceptBg
+        a#accept
+          span.hidden Accept
+        #declineBg
+        a#decline
+          span.hidden Decline
+
     div#step1.step
       div.side
       div.content
@@ -74,7 +85,7 @@ html
           span.hidden Skip Once
         a#skipAlways Skip and don't ask again
     footer
-      ul.links
+      ul.links#footerLinks
         li
           a#licensesLink Licenses
         li

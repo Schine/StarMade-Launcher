@@ -24,9 +24,6 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
     .state 'authToken',
       url: '/access_token=:response'
       controller: 'AuthTokenCtrl'
-    .state 'eula',
-      controller: 'EulaCtrl'
-      templateUrl: 'templates/eula.html'
     .state 'news',
       controller: 'NewsCtrl'
       templateUrl: 'templates/news.html'
@@ -128,15 +125,9 @@ app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
   unless localStorage.getItem('installDir')?
     localStorage.setItem 'installDir', paths.gameData
 
-  $rootScope.acceptedEula = localStorage.getItem 'acceptedEula'
-
-  if $rootScope.acceptedEula
-    $state.go 'news'
-  else
-    $state.go 'eula'
+  $state.go 'news'
 
 # Controllers
-require('./controllers/eula')
 require('./controllers/launch')
 require('./controllers/news')
 require('./controllers/update')

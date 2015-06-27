@@ -8,6 +8,8 @@ body.getting_started {
 
     img.logo {
       margin-left: 60px;
+      position: relative;
+      z-index: 2;
     }
 
     img.schine-logo {
@@ -46,7 +48,80 @@ body.getting_started {
       color: #2F9EAF;
     }
 
+    &#step0 {
+      div.content {
+        margin-top: -44px;
+
+        pre#licenses {
+          background-color: transparent;
+          color: #A1A6AC;
+          font-family: 'Ubuntu';
+          font-size: 12px;
+          height: 299px;
+          overflow: auto;
+          position: relative;
+          width: 594px;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+          z-index: 1;
+        }
+
+        div#acceptBg {
+          background-image: url(../images/eula/eula_accept_btn.png);
+          background-repeat: no-repeat;
+          bottom: 0;
+          height: 134px;
+          position: absolute;
+          right: 76px;
+          transition: .3s;
+          width: 228px;
+          z-index: 0;
+
+          &.hover {
+            background-image: url(../images/eula/eula_accept_roll.png);
+          }
+        }
+
+        a#accept {
+          bottom: 26px;
+          height: 37px;
+          position: absolute;
+          right: 141px;
+          width: 93px;
+          z-index: 1;
+        }
+
+        div#declineBg {
+          background-image: url(../images/eula/eula_decline_btn.png);
+          background-repeat: no-repeat;
+          bottom: 0;
+          height: 130px;
+          position: absolute;
+          right: 0;
+          transition: .3s;
+          width: 182px;
+          z-index: 0;
+
+          &.hover {
+            background-image: url(../images/eula/eula_decline_roll.png);
+            transition: .3s;
+          }
+        }
+
+        a#decline {
+          bottom: 26px;
+          height: 37px;
+          position: absolute;
+          right: 29px;
+          width: 95px;
+          z-index: 1;
+        }
+      }
+    }
+
     &#step1 {
+      display: none;
+
       div.content {
         a#next {
           background-image: url(../images/getting_started/continue_btn.png);
@@ -264,5 +339,9 @@ body.getting_started {
 
   footer {
     width: 395px;
+
+    ul#footerLinks {
+      display: none;
+    }
   }
 }

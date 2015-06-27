@@ -1,28 +1,99 @@
 'use strict'
 
+fs = require('fs')
+path = require('path')
 remote = require('remote')
 shell = require('shell')
 
 util = require('./util')
 
+footerLinks = document.getElementById 'footerLinks'
+currentStep = -1
+
+showLicenses = ->
+  step0.style.display = 'block'
+  step1.style.display = 'none'
+  step2.style.display = 'none'
+  step3.style.display = 'none'
+  footerLinks.style.display = 'none'
+
+acceptEula = ->
+  localStorage.setItem 'acceptedEula', true
+  footerLinks.style.display = 'block'
+
+  switch currentStep
+    when -1
+      window.close()
+    when 0, 1
+      currentStep = 1
+      step0.style.display = 'none'
+      step1.style.display = 'block'
+    when 2
+      step0.style.display = 'none'
+      step2.style.display = 'block'
+    when 3
+      step0.style.display = 'none'
+      step3.style.display = 'block'
+
+step0 = document.getElementById 'step0'
 step1 = document.getElementById 'step1'
 step2 = document.getElementById 'step2'
 step3 = document.getElementById 'step3'
 
 if localStorage.getItem('gotStarted')?
-  if window.location.href.split('?')[1] == 'steam'
-    step1.style.display = 'none'
+  if window.location.href.split('?')[1] == 'licenses'
+    showLicenses()
+    remote.getCurrentWindow().show()
+  else if window.location.href.split('?')[1] == 'steam'
+    currentStep = 3
+    step0.style.display = 'none'
     step3.style.display = 'block'
+    footerLinks.style.display = 'block'
     remote.getCurrentWindow().show()
   else
     window.close()
     return
 else
+  currentStep = 0
+  acceptEula() if localStorage.getItem('acceptedEula')?
   remote.getCurrentWindow().show()
 
-localStorage.setItem 'gotStarted', true
-
 util.setupExternalLinks()
+
+#
+# Step 0 (Licenses)
+#
+
+licenses = document.getElementById 'licenses'
+accept = document.getElementById 'accept'
+acceptBg = document.getElementById 'acceptBg'
+decline = document.getElementById 'decline'
+declineBg = document.getElementById 'declineBg'
+
+fs.readFile path.join(path.dirname(__dirname), 'static', 'licenses.txt'), (err, data) ->
+  if err
+    console.warn 'Unable to open licenses.txt'
+    acceptEula()
+
+  licenses.innerHTML = '\n\n\n' + data
+
+accept.addEventListener 'mouseenter', ->
+  acceptBg.className = 'hover'
+
+accept.addEventListener 'mouseleave', ->
+  acceptBg.className = ''
+
+accept.addEventListener 'click', ->
+  acceptEula()
+
+decline.addEventListener 'mouseenter', ->
+  declineBg.className = 'hover'
+
+decline.addEventListener 'mouseleave', ->
+  declineBg.className = ''
+
+decline.addEventListener 'click', ->
+  remote.require('app').quit()
 
 #
 # Step 1
@@ -30,6 +101,8 @@ util.setupExternalLinks()
 
 next = document.getElementById 'next'
 next.addEventListener 'click', ->
+  currentStep = 2
+  localStorage.setItem 'gotStarted', true
   step1.style.display = 'none'
   step2.style.display = 'block'
 
@@ -109,3 +182,12 @@ skipOnce.addEventListener 'click', ->
 skipAlways.addEventListener 'click', ->
   localStorage.setItem 'steamLinked', 'ignored'
   window.close()
+
+#
+# Footer links
+#
+
+licensesLink = document.getElementById 'licensesLink'
+
+licensesLink.addEventListener 'click', ->
+  showLicenses()
