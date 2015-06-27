@@ -23,19 +23,19 @@ rimraf oldUserData, (err) ->
   console.warn "Unable to remove old user data directory: #{err}" if err
 
 openMainWindow = ->
-  height = 750
+  height = 550
   height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
 
   mainWindow = new BrowserWindow
     frame: false
     resizable: false
     show: false
-    width: 1200
+    width: 800
     height: height
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
 
-  #mainWindow.openDevTools()
+  mainWindow.openDevTools()
 
   mainWindow.on 'closed', ->
     mainWindow = null

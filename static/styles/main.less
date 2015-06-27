@@ -1,3 +1,8 @@
+@import 'fonts.less';
+
+@contentBackground: #15151A;
+@contentBorder: #393942;
+
 * {
   box-sizing: border-box;
 }
@@ -7,7 +12,7 @@ html, body {
 }
 
 body {
-  background-color: #080A0E;
+  background-color: #100F14;
   color: #A1A6AC;
   font-family: 'Ubuntu', Arial, sans-serif;
   font-size: 14px;
@@ -67,47 +72,114 @@ code {
   flex-direction: column;
   height: 100%;
 
+  img.logo {
+    left: 21px;
+    position: absolute;
+    z-index: 1;
+    -webkit-app-region: drag;
+  }
+
   .top {
-    background-color: #1C6B7F;
-    border-bottom: 6px solid #0B3848;
+    background-image: url(../images/main/header_top.png);
     color: #FFFFFF;
-    height: 74px;
+    height: 99px;
+    margin-bottom: 4px;
     overflow: hidden; // clearfix
+    position: relative;
+    width: 800px;
     -webkit-app-region: drag;
 
+    img.schine-logo {
+      position: absolute;
+      right: 54px;
+      top: 10px;
+    }
+
     ul {
-      font-size: 24px;
+      list-style: none;
       margin: 0;
       padding: 0;
 
+      li {
+        float: left;
+      }
+
       &.window-controls {
-        float: right;
+        position: absolute;
+        right: 8px;
+        top: 6px;
 
         li {
-          padding: 20px 16px;
+          padding: 0;
+          -webkit-app-region: no-drag;
+        }
+
+        li:not(:last-child) {
+          padding-right: 8px;
         }
       }
 
-      li {
-        float: left;
-        list-style: none;
-        padding: 20px 36px;
+      &.nav {
+        bottom: 5px;
+        left: 170px;
+        position: absolute;
 
-        a {
-          cursor: default;
-          -webkit-app-region: no-drag;
+        &.nav-right {
+          left: auto;
+          right: 0;
+        }
+
+        li {
+          a {
+            color: #1F758E;
+            cursor: pointer;
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 12px 20px;
+            text-transform: uppercase;
+            -webkit-app-region: no-drag;
+
+            span.nav-options-gear {
+              background-image: url(../images/main/nav_options_gear_btn.png);
+              background-position: 0 0;
+              background-repeat: no-repeat;
+              float: left;
+              height: 20px;
+              margin-top: -3px;
+              margin-right: 4px;
+              transition: opacity .3s;
+              width: 20px;
+
+              &.hover {
+                background-position: -20px 0;
+                margin-left: -24px;
+                opacity: 0;
+              }
+            }
+
+            &.active, &:hover {
+              background-color: #121526;
+              color: #FFFFFF;
+
+              span.nav-options-gear.hover {
+                opacity: 1;
+                transition: opacity .3s;
+              }
+            }
+          }
         }
       }
     }
   }
 
   .content {
-    height: calc(~'100% - 148px');
-    padding: 8px;
+    padding: 2px 5px;
+    position: relative;
     overflow: auto;
     width: 100%;
 
-    img {
+    iframe, img {
       max-width: 100%;
     }
 
@@ -117,12 +189,139 @@ code {
   }
 
   .footer {
-    height: 74px;
-    padding: 8px;
+    background-color: #16151B;
+    height: 107px;
     width: 100%;
+
+    form {
+      margin-top: 10px;
+
+      .field-group {
+        float: left;
+        margin-left: 16px;
+
+        label {
+          color: #A1A6Ac;
+          font-size: 12px;
+          font-family: 'Ubuntu';
+
+          sup {
+            margin-left: 4px;
+          }
+        }
+
+        select, input {
+          background-color: #191F29;
+          border: 2px solid #30303C;
+          color: #FFFFFF;
+          font-family: 'Ubuntu';
+          font-size: 12px;
+          padding: 5px;
+        }
+
+        input {
+          width: 80px;
+        }
+      }
+    }
 
     a.player {
       float: right;
+    }
+
+    a.gear {
+      background-image: url(../images/main/launch_options_gear.png);
+      background-repeat: no-repeat;
+      background-size: 100%;
+      display: inline-block;
+      height: 17px;
+      margin-left: 5px;
+      width: 18px;
+    }
+
+    ul.tabs {
+      font-size: 11px;
+      list-style: none;
+      margin: 0;
+      overflow: hidden; // clearfix
+      padding: 0;
+
+      li {
+        float: left;
+        padding: 7px 0 9px 22px;
+        width: 127px;
+
+        a {
+          color: #A1A6AC;
+          cursor: pointer;
+        }
+      }
+    }
+
+    div.play {
+      background-image: url(../images/main/footer_normalplay_bg.jpg);
+      overflow: hidden; // clearfix
+    }
+
+    div.dedicated {
+      background-image: url(../images/main/footer_dedicated_bg.jpg);
+      overflow: hidden; // clearfix
+    }
+
+    div.status {
+      bottom: 75px;
+      color: #A1A6AC;
+      font-family: 'Ubuntu';
+      font-size: 10px;
+      height: 23px;
+      position: absolute;
+      right: 16px;
+      text-align: center;
+      width: 217px;
+    }
+
+    div.update-bg {
+      background-image: url(../images/main/update_btn.png);
+      bottom: 0;
+      position: absolute;
+      right: 0;
+      height: 108px;
+      transition: .3s;
+      width: 300px;
+
+      &.hover {
+        background-image: url(../images/main/update_roll.png);
+      }
+    }
+
+    a.update {
+      bottom: 13px;
+      height: 61px;
+      position: absolute;
+      right: 17px;
+      width: 214px;
+    }
+
+    div.launch-bg {
+      background-image: url(../images/main/launch_btn.png);
+      bottom: 0;
+      position: absolute;
+      right: 0;
+      height: 108px;
+      transition: .3s;
+      width: 300px;
+
+      &.hover {
+        background-image: url(../images/main/launch_roll.png);
+      }
+    }
+
+    a.launch {
+      bottom: 13px;
+      height: 61px;
+      position: absolute;
+      right: 17px;
+      width: 214px;
     }
   }
 }

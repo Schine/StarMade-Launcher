@@ -1,12 +1,17 @@
-ul.news(ng-repeat='entry in news')
+ul.side
   li
-    .date
-      | {{entry.created_at | date : 'MMM'}}
-      div {{entry.created_at | date : 'd'}}
-    h2.title {{entry.title}}
-    .meta
-      | Posted by 
-      strong {{entry.author}}
-      |  about 
-      span(am-time-ago='entry.created_at')
+    a
+      img
+  li
+    a
+      img
+  li
+    a
+      img
+ul.news
+  li(ng-repeat='entry in news')
+    div.banner(ng-class="{'no-banner': !entry.banner}")
+      h2.title {{entry.title}}
+      span.date
+        | {{entry.created_at | ordinalDate}}
     news-body(ng-bind-html='entry.body')

@@ -2,37 +2,80 @@ doctype html
 html(ng-app='launcher')
   head
     title Launcher
-    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,700')
     link(rel='stylesheet' href='styles/main.css')
     script(src='index.js')
   body
     .container
+      img.logo(src='images/main/logo.png' alt='StarMade')
       .top
-        ul(ng-show='acceptedEula' class='ng-hide')
+        img.schine-logo(src='images/main/launcher_schine_logo.png' alt='Schine')
+        ul.window-controls
+          li
+            minimize-button
+              img(src='images/main/minimize_icon.png' alt='Minimize')
+          li
+            close-button
+              img(src='images/main/close_icon.png' alt='Close')
+        ul.nav
           li
             a(ui-sref='news') News
           li
-            a(ui-sref='update') Update
-          //li Options
-          //li Tools
-          li
             a(ui-sref='community') Community
           li
-            external-link(href='http://help.star-made.org/') Help
-        ul.window-controls
+            a(ui-sref='council') Council
           li
-            minimize-button _
-          li 
-            close-button X
-      .content(ui-view ng-class="{'no-footer': !acceptedEula}")
-      .footer(ng-show='acceptedEula' class='ng-hide')
-        div(ng-controller='UpdateCtrl')
-          progress-bar(cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}') {{updaterProgress.text}}
+            a(ui-sref='support') Support
+        ul.nav.nav-right
+          li
+            a
+              span.nav-options-gear
+              span.nav-options-gear.hover
+              | Options
+      .content(ui-view)
+      .footer(ng-controller='UpdateCtrl')
+        .pane(ng-class='{play: onPlayTab, dedicated: onDedicatedTab}')
+          ul.tabs
+            li
+              a(ng-click='showPlayTab()') Play StarMade
+            li
+              a(ng-click='showDedicatedTab()') Dedicated Server
           form
-            a.player(ng-click='startAuth()' ng-bind='playerName')
-            button(ng-click='update()' ng-disabled='versions.length == 0 || updaterProgress.inProgress') Update
-            button(ng-controller='LaunchCtrl' ng-click='launch()' ng-disabled='updaterProgress.inProgress') Launch
-            span(ng-if='versions.length > 0') Using v{{versions[selectedVersion].version}}
-            span(ng-if='versions.length == 0') Getting versions...
-            |  
-            a(ng-click='openLicenses()') Licenses
+            .field-group
+              label(for='buildType')
+                | Build Type
+                sup
+                  img(src='images/main/launch_tooltip_icon.png' alt='')
+              br
+              select(id='buildType' ng-model='branch')
+                option(value='release') Release (recommended)
+                option(value='dev') Dev
+                option(value='pre') Pre
+                option(value='archive') Archive
+              a.gear &nbsp;
+            
+            .field-group
+              label(for='buildVersion')
+                | Build Version
+                sup
+                  img(src='images/main/launch_tooltip_icon.png' alt='')
+              br
+              select(id='buildVersion' ng-model='selectedVersion')
+                option(ng-repeat="version in versions" value='{{$index}}')
+                  | v{{version.version}} {{version.latest}}
+              a.gear &nbsp;
+            
+            .field-group(ng-show='onDedicatedTab')
+              label(for='serverPort')
+                | Server Port
+                sup
+                  img(src='images/main/launch_tooltip_icon.png' alt='')
+              br
+              input(id='serverPort' ng-model='serverPort')
+        .status {{status}}
+        .update-bg(ng-class='{hover: updateHover}' ng-show='needsUpdating && !updaterProgress.inProgress')
+        a.update(ng-click='update()' ng-mouseenter='updateMouseEnter()' ng-mouseleave='updateMouseLeave()')
+        
+        progress-bar(ng-show='updaterProgress.inProgress' cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}')
+
+        .launch-bg(ng-class='{hover: launchHover}' ng-hide='needsUpdating || updaterProgress.inProgress')
+        a.launch(ng-controller='LaunchCtrl' ng-click='launch()' ng-hide='updaterProgress.inProgress || needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')

@@ -148,6 +148,9 @@ require('./directives/minimizeButton')
 require('./directives/newsBody')
 require('./directives/progressBar')
 
+# Filters
+require('./filters/ordinalDate')
+
 # Services
 require('./services/Checksum')
 require('./services/Version')

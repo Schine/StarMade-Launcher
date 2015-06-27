@@ -9,4 +9,5 @@ app.controller 'NewsCtrl', ($http, $scope, $sce) ->
     .success (data) ->
       $scope.news = data
       $scope.news.forEach (entry) ->
+        entry.body = entry.body.replace(/style=['"].*["']/g, '')
         entry.body = $sce.trustAsHtml(entry.body)

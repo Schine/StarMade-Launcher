@@ -46,7 +46,7 @@ paths =
         dir: 'dist/Electron.app/Contents/MacOS'
       executable:
         mac: 'dist/Electron.app/Contents/MacOS/electron'
-        others: 'dist/electron'
+        others: 'dist/starmade-launcher'
       resources:
         mac: 'dist/Electron.app/Contents/Resources/app'
         others: 'dist/resources/app'
@@ -65,6 +65,8 @@ paths =
   static:
     dir: 'static'
     entries: 'static/*.js'
+    fonts:
+      glob: 'static/fonts/**/*'
     images:
       glob: 'static/images/**/*'
     jade:
@@ -256,6 +258,7 @@ copyTasks = [
   'copy-lib'
   'copy-static-entries'
   'copy-build'
+  'copy-static-fonts'
   'copy-static-images'
   'copy-redistributables'
   'copy-steam-appid'
@@ -276,6 +279,10 @@ gulp.task 'copy-static-entries', ->
 gulp.task 'copy-build', ['jade', 'less'], ->
   gulp.src paths.build.glob
     .pipe gulp.dest path.join(resourcesDir, 'static')
+
+gulp.task 'copy-static-fonts', ->
+  gulp.src paths.static.fonts.glob
+    .pipe gulp.dest path.join(resourcesDir, 'static', 'fonts')
 
 gulp.task 'copy-static-images', ->
   gulp.src paths.static.images.glob
@@ -305,6 +312,8 @@ acknowledgeTasks = [
   'package-electron'
   'acknowledge-clear'
   'acknowledge-electron'
+  'acknowledge-bebas-neue'
+  'acknowledge-ubuntu'
   'acknowledge-java'
   'acknowledge-java-thirdparty'
   'acknowledge-java-thirdparty-javafx'
@@ -321,7 +330,7 @@ gulp.task 'acknowledge-clear', (callback) ->
 gulp.task 'acknowledge-starmade', ['acknowledge-clear'], (callback) ->
   fs.readFile path.join(paths.res.licenses.dir, 'starmade'), (err, contents) ->
     data = contents + '\n' +
-      'This application contains third-party libraries in accordance with the following\nlicenses:\n' +
+      'This application contains third-party libraries and fonts in accordance with the following\nlicenses:\n' +
       '--------------------------------------------------------------------------------\n\n'
     fs.appendFile licenses, data, callback
 
@@ -329,6 +338,22 @@ gulp.task 'acknowledge-electron', ['acknowledge-clear', 'acknowledge-starmade'],
   fs.readFile path.join(paths.dep.electron.dir, 'LICENSE'), (err, data) ->
     return callback(err) if err
     data = 'electron\n' +
+      '--------------------------------------------------------------------------------\n' +
+      data.toString() + '\n'
+    fs.appendFile licenses, data, callback
+
+gulp.task 'acknowledge-bebas-neue', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
+  fs.readFile path.join(paths.res.licenses.dir, 'bebas_neue'), (err, data) ->
+    return callback(err) if err
+    data = 'bebas neue font\n' +
+      '--------------------------------------------------------------------------------\n' +
+      data.toString() + '\n'
+    fs.appendFile licenses, data, callback
+
+gulp.task 'acknowledge-ubuntu', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
+  fs.readFile path.join(paths.res.licenses.dir, 'ubuntu'), (err, data) ->
+    return callback(err) if err
+    data = 'ubuntu fonts\n' +
       '--------------------------------------------------------------------------------\n' +
       data.toString() + '\n'
     fs.appendFile licenses, data, callback

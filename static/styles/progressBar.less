@@ -1,11 +1,11 @@
 div.progress {
-  background-color: gray;
-  border: 1px solid #333333;
-  border-radius: 4px;
-  height: 26px;
-  margin: 4px;
-  position: relative;
-  width: 100%;
+  background-image: url(../images/main/update_load_empty.png);
+  bottom: 0;
+  position: absolute;
+  right: 0;
+  height: 108px;
+  transition: .3s;
+  width: 300px;
 
   span {
     color: #FFFFFF;
@@ -18,8 +18,11 @@ div.progress {
   }
 
   div.progress-bar {
-    background-color: #1C6B7F;
-    border-radius: 4px;
-    height: 100%;
+    background-color: #F28D0F;
+    height: 54px;
+    left: 72px;
+    position: relative;
+    top: 37px;
+    width: 0;
   }
 }
