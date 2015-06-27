@@ -58,7 +58,7 @@ openGettingStartedWindow = (args) ->
     height: height
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
-  #gettingStartedWindow.openDevTools()
+  gettingStartedWindow.openDevTools()
 
   gettingStartedWindow.on 'close', ->
     if authWindow?
