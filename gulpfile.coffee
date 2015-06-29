@@ -43,12 +43,12 @@ paths =
     dir: 'dist',
     app:
       macos:
-        dir: 'dist/Electron.app/Contents/MacOS'
+        dir: 'dist/StarMade Launcher.app/Contents/MacOS'
       executable:
-        mac: 'dist/Electron.app/Contents/MacOS/electron'
+        mac: 'dist/StarMade Launcher.app/Contents/MacOS/StarMade Launcher'
         others: 'dist/starmade-launcher'
       resources:
-        mac: 'dist/Electron.app/Contents/Resources/app'
+        mac: 'dist/StarMade Launcher.app/Contents/Resources/app'
         others: 'dist/resources/app'
   lib:
     dir: 'lib'
@@ -428,12 +428,17 @@ for name of pkg.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['package-electron', 'package-greenworks', 'package-java', 'acknowledge', 'remove-resources-dir']
+gulp.task 'package', ['package-electron', 'package-electron-darwin', 'package-greenworks', 'package-java', 'acknowledge', 'remove-resources-dir']
 
 gulp.task 'package-electron', ['coffee', 'jade', 'less', 'copy'], ->
+  return if process.platform == 'darwin'
   gulp.src path.join paths.dep.electron.dir, 'dist', "#{pkg.name}-v#{electronVersion}-#{process.platform}-#{process.arch}.zip"
     .pipe plugins.unzip()
     .pipe gulp.dest paths.dist.dir
+
+gulp.task 'package-electron-darwin', (callback) ->
+  return unless process.platform == 'darwin'
+  ncp path.join(paths.dep.electron.dir, 'dist', 'StarMade Launcher.app'), path.join(paths.dist.dir, 'StarMade Launcher.app'), callback
 
 gulp.task 'package-greenworks', ['greenworks', 'package-electron'], ->
   if process.platform == 'darwin'
