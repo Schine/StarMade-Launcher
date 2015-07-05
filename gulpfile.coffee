@@ -47,7 +47,8 @@ paths =
   dist:
     dir: 'dist',
     platform:
-      # TODO: Figure out paths for OS X
+      darwin:
+        x64: 'dist/starmade-launcher-darwin-x64/starmade-launcher.app/Contents/MacOS'
       linux:
         ia32: 'dist/starmade-launcher-linux-ia32'
         x64: 'dist/starmade-launcher-linux-x64'
@@ -102,6 +103,8 @@ licenses = path.join paths.build.static.dir, 'licenses.txt'
 
 gulp.task 'default', ['run']
 
+gulp.task 'bootstrap', ['greenworks']
+
 gulp.task 'build', ['coffee', 'jade', 'less', 'copy', 'acknowledge']
 
 gulp.task 'coffee', ->
@@ -152,9 +155,6 @@ gulp.task 'greenworks-npm', ['greenworks-clean', 'greenworks-steamworks-sdk'], (
 
 # greenworks-npm will build, but not for Electron
 gulp.task 'greenworks-build', ['greenworks-steamworks-sdk', 'greenworks-clean', 'greenworks-npm'], (callback) ->
-  # No Steamworks support for OS X 64-bit
-  return callback() if process.platform == 'darwin'
-
   nodeGyp = 'node-gyp'
   nodeGyp += '.cmd' if process.platform == 'win32'
 
@@ -326,7 +326,7 @@ gulp.task 'acknowledge-java-thirdparty-javafx', ['acknowledge-clear', 'acknowled
       data.toString() + '\n'
     fs.appendFile licenses, data, callback
 
-gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade', 'greenworks'], (callback) ->
+gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
   fs.readFile path.join(paths.dep.greenworks.dir, 'LICENSE'), (err, data) ->
     return callback(err) if err
     data = 'greenworks\n' +
@@ -374,11 +374,7 @@ gulp.task 'acknowledge', acknowledgeTasks
 
 gulp.task 'package', ['build', 'electron-packager', 'package-greenworks', 'package-java', 'package-steam-appid']
 
-gulp.task 'package-greenworks', ['greenworks', 'electron-packager'], ->
-  if process.platform == 'darwin'
-    # No 64-bit Steamworks binary
-    return
-
+gulp.task 'package-greenworks', ['electron-packager'], ->
   gulp.src [
       'dep/greenworks/greenworks.js'
       'dep/greenworks/lib/**/*'
@@ -388,7 +384,7 @@ gulp.task 'package-greenworks', ['greenworks', 'electron-packager'], ->
     .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'greenworks')
     .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'greenworks')
     .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'greenworks')
-    # TODO: Figure out paths for OS X
+    .pipe gulp.dest path.join(paths.dist.platform.darwin.x64, 'dep', 'greenworks')
 
 gulp.task 'package-java', ['java', 'electron-packager'], ->
   filter = plugins.filter('**/*/bin/*')
@@ -401,17 +397,15 @@ gulp.task 'package-java', ['java', 'electron-packager'], ->
     .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'java')
     .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'java')
     .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'java')
-    # TODO: Figure out paths for OS X
+    .pipe gulp.dest path.join(paths.dist.platform.darwin.x64, 'dep', 'java')
 
 gulp.task 'package-steam-appid', ['electron-packager'], ->
-  return if process.platform == 'darwin'
-
   gulp.src paths.steamAppid
     .pipe gulp.dest paths.dist.platform.win32.ia32
     .pipe gulp.dest paths.dist.platform.win32.x64
     .pipe gulp.dest paths.dist.platform.linux.ia32
     .pipe gulp.dest paths.dist.platform.linux.x64
-    # TODO: Figure out paths for OS X
+    .pipe gulp.dest paths.dist.platform.darwin.x64
 
 gulp.task 'run', ['build'], ->
   electron = './node_modules/.bin/electron'

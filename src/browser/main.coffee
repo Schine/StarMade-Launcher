@@ -11,6 +11,10 @@ rimraf = require('rimraf')
 shell = require('shell')
 BrowserWindow = require('browser-window')
 
+if process.platform == 'darwin' && process.cwd() == '/'
+  # Change working directory
+  process.chdir(path.join(path.dirname(path.dirname(path.dirname(path.dirname(__dirname)))), 'MacOS'))
+
 staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
 
 authWindow = null
