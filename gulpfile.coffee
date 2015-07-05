@@ -114,7 +114,7 @@ gulp.task 'coffee', ->
 gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
   packager = require('electron-packager')
   packager
-    dir: 'dist/resources/app'
+    dir: paths.build.dir
     out: 'dist'
     name: 'starmade-launcher'
     platform: 'all'
