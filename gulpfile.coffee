@@ -21,9 +21,14 @@ paths =
   build:
     dir: 'build'
     glob: 'build/**/*'
-    styles:
-      dir:
-        'build/styles'
+    lib:
+      dir: 'build/lib'
+    static:
+      dir: 'build/static'
+      glob: 'build/static/**/*'
+      styles:
+        dir:
+          'build/static/styles'
   cache:
     electron:
       dir: 'cache/electron'
@@ -41,15 +46,14 @@ paths =
           dir: 'dep/greenworks/deps/steamworks_sdk'
   dist:
     dir: 'dist',
-    app:
-      macos:
-        dir: 'dist/StarMade Launcher.app/Contents/MacOS'
-      executable:
-        mac: 'dist/StarMade Launcher.app/Contents/MacOS/StarMade Launcher'
-        others: 'dist/starmade-launcher'
-      resources:
-        mac: 'dist/StarMade Launcher.app/Contents/Resources/app'
-        others: 'dist/resources/app'
+    platform:
+      # TODO: Figure out paths for OS X
+      linux:
+        ia32: 'dist/starmade-launcher-linux-ia32'
+        x64: 'dist/starmade-launcher-linux-x64'
+      win32:
+        ia32: 'dist/starmade-launcher-win32-ia32'
+        x64: 'dist/starmade-launcher-win32-x64'
   lib:
     dir: 'lib'
     glob: 'lib/**/*'
@@ -57,6 +61,7 @@ paths =
     dir: 'node_modules'
   package: './package.json'
   res:
+    icon: 'res/starmade.ico'
     licenses:
       dir: 'res/licenses'
   src:
@@ -93,73 +98,38 @@ java =
   linux32: "#{JAVA_URL}/jre-#{javaVersion}-linux-i586.tar.gz"
   linux64: "#{JAVA_URL}/jre-#{javaVersion}-linux-x64.tar.gz"
 
-if process.platform == 'darwin'
-  resourcesDir = paths.dist.app.resources.mac
-else
-  resourcesDir = paths.dist.app.resources.others
-
-licenses = path.join resourcesDir, 'static', 'licenses.txt'
+licenses = path.join paths.build.static.dir, 'licenses.txt'
 
 gulp.task 'default', ['run']
 
-gulp.task 'bootstrap', ['build-electron']
-
-gulp.task 'asar', ['package-electron', 'package-greenworks', 'acknowledge', 'copy'], ->
-  gulp.src "#{resourcesDir}/**/*"
-    .pipe plugins.asar 'app.asar'
-    .pipe gulp.dest path.join(resourcesDir, '..')
-
-gulp.task 'remove-resources-dir', ['acknowledge', 'asar'], (callback) ->
-  rimraf resourcesDir, callback
-  return
+gulp.task 'build', ['coffee', 'jade', 'less', 'copy', 'acknowledge']
 
 gulp.task 'coffee', ->
   gulp.src paths.src.glob
     .pipe plugins.coffee()
       .on 'error', gutil.log
     .pipe plugins.sourcemaps.write()
-    .pipe gulp.dest paths.lib.dir
+    .pipe gulp.dest paths.build.lib.dir
 
-gulp.task 'build-electron', (callback) ->
-  python = 'python'
-  python += '.exe' if process.platform == 'win32'
-
-  bootstrap = (cb) ->
-    ps = spawn python, [
-      'script/bootstrap.py'
-      "--target_arch=#{process.arch}"
-    ],
-      cwd: paths.dep.electron.dir
-      stdio: 'inherit'
-
-    ps.on 'close', ->
-      cb()
-
-  build = (cb) ->
-    ps = spawn python, [
-      'script/build.py'
-      '-c'
-      'R'
-    ],
-      cwd: paths.dep.electron.dir
-      stdio: 'inherit'
-
-    ps.on 'close', ->
-      cb()
-
-  createDist = (cb) ->
-    ps = spawn python, [
-      'script/create-dist.py'
-    ],
-      cwd: paths.dep.electron.dir
-      stdio: 'inherit'
-
-    ps.on 'close', ->
-      cb()
-
-  bootstrap ->
-    build ->
-      createDist callback
+gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
+  packager = require('electron-packager')
+  packager
+    dir: 'dist/resources/app'
+    out: 'dist'
+    name: 'starmade-launcher'
+    platform: 'all'
+    arch: 'all'
+    version: electronVersion
+    icon: paths.res.icon
+    overwrite: true
+    asar: true
+    'version-string':
+      FileDescription: 'StarMade Launcher'
+      CompanyName: 'Schine GmbH'
+      LegalCopyright: 'Copyright (C) 2015 Schine GmbH'
+      ProductName: 'StarMade Launcher'
+      OriginalFilename: 'starmade-launcher.exe'
+  , callback
 
 gulp.task 'greenworks', ['greenworks-clean', 'greenworks-npm', 'greenworks-build']
 
@@ -246,70 +216,44 @@ gulp.task 'jade', ->
   gulp.src paths.static.jade.glob
     .pipe plugins.jade
       pretty: true
-    .pipe gulp.dest paths.build.dir
+    .pipe gulp.dest paths.build.static.dir
 
 gulp.task 'less', ->
   gulp.src paths.static.styles.main
     .pipe plugins.less()
-    .pipe gulp.dest paths.build.styles.dir
+    .pipe gulp.dest paths.build.static.styles.dir
 
 copyTasks = [
   'copy-package'
-  'copy-lib'
   'copy-static-entries'
-  'copy-build'
   'copy-static-fonts'
   'copy-static-images'
-  'copy-redistributables'
-  'copy-steam-appid'
 ]
 
 gulp.task 'copy-package', ->
   gulp.src paths.package
-    .pipe gulp.dest resourcesDir
-
-gulp.task 'copy-lib', ['coffee'], ->
-  gulp.src paths.lib.glob
-    .pipe gulp.dest path.join(resourcesDir, 'lib')
+    .pipe gulp.dest paths.build.dir
 
 gulp.task 'copy-static-entries', ->
   gulp.src paths.static.entries
-    .pipe gulp.dest path.join(resourcesDir, 'static')
-
-gulp.task 'copy-build', ['jade', 'less'], ->
-  gulp.src paths.build.glob
-    .pipe gulp.dest path.join(resourcesDir, 'static')
+    .pipe gulp.dest paths.build.static.dir
 
 gulp.task 'copy-static-fonts', ->
   gulp.src paths.static.fonts.glob
-    .pipe gulp.dest path.join(resourcesDir, 'static', 'fonts')
+    .pipe gulp.dest path.join(paths.build.static.dir, 'fonts')
 
 gulp.task 'copy-static-images', ->
   gulp.src paths.static.images.glob
-    .pipe gulp.dest path.join(resourcesDir, 'static', 'images')
-
-gulp.task 'copy-redistributables', ->
-  # TODO: Handle other platforms
-  return unless process.platform == 'win32'
-
-  gulp.src redistributables.win32
-    .pipe gulp.dest paths.dist.dir
-
-gulp.task 'copy-steam-appid', ->
-  return if process.platform == 'darwin'
-
-  gulp.src paths.steamAppid
-    .pipe gulp.dest paths.dist.dir
+    .pipe gulp.dest path.join(paths.build.static.dir, 'images')
 
 copyModuleTask = (name) ->
   ->
     src = path.join paths.nodeModules.dir, name, '**/*'
-    dest = path.join resourcesDir, 'node_modules', name
+    dest = path.join paths.build.dir, 'node_modules', name
     gulp.src src
       .pipe gulp.dest dest
 
 acknowledgeTasks = [
-  'package-electron'
   'acknowledge-clear'
   'acknowledge-electron'
   'acknowledge-bebas-neue'
@@ -323,7 +267,7 @@ acknowledgeTasks = [
 gulp.task 'acknowledge-clear', (callback) ->
   fs.unlink licenses, (err) ->
     if err
-      mkdirp path.join(resourcesDir, 'static'), callback
+      mkdirp paths.build.static.dir, callback
     else
       callback()
 
@@ -335,7 +279,7 @@ gulp.task 'acknowledge-starmade', ['acknowledge-clear'], (callback) ->
     fs.appendFile licenses, data, callback
 
 gulp.task 'acknowledge-electron', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
-  fs.readFile path.join(paths.dep.electron.dir, 'LICENSE'), (err, data) ->
+  fs.readFile path.join(paths.res.licenses.dir, 'electron'), (err, data) ->
     return callback(err) if err
     data = 'electron\n' +
       '--------------------------------------------------------------------------------\n' +
@@ -428,54 +372,53 @@ for name of pkg.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['package-electron', 'package-electron-darwin', 'package-greenworks', 'package-java', 'acknowledge', 'remove-resources-dir']
+gulp.task 'package', ['build', 'electron-packager', 'package-greenworks', 'package-java', 'package-steam-appid']
 
-gulp.task 'package-electron', ['coffee', 'jade', 'less', 'copy'], ->
-  return if process.platform == 'darwin'
-  gulp.src path.join paths.dep.electron.dir, 'dist', "#{pkg.name}-v#{electronVersion}-#{process.platform}-#{process.arch}.zip"
-    .pipe plugins.unzip()
-    .pipe gulp.dest paths.dist.dir
-
-gulp.task 'package-electron-darwin', (callback) ->
-  return unless process.platform == 'darwin'
-  ncp path.join(paths.dep.electron.dir, 'dist', 'StarMade Launcher.app'), path.join(paths.dist.dir, 'StarMade Launcher.app'), callback
-
-gulp.task 'package-greenworks', ['greenworks', 'package-electron'], ->
+gulp.task 'package-greenworks', ['greenworks', 'electron-packager'], ->
   if process.platform == 'darwin'
     # No 64-bit Steamworks binary
     return
-  else
-    resourcesDir = paths.dist.app.resources.others
 
   gulp.src [
       'dep/greenworks/greenworks.js'
       'dep/greenworks/lib/**/*'
     ]
     , {base: 'dep/greenworks'}
-    .pipe gulp.dest path.join(paths.dist.dir, 'dep', 'greenworks')
+    .pipe gulp.dest path.join(paths.dist.platform.win32.ia32, 'dep', 'greenworks')
+    .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'greenworks')
+    .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'greenworks')
+    .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'greenworks')
+    # TODO: Figure out paths for OS X
 
-gulp.task 'package-java', ['java'], ->
-  distDir = paths.dist.dir
-  if process.platform == 'darwin'
-    distDir = paths.dist.app.macos.dir
-  distDir = path.join(distDir, 'dep', 'java')
-
+gulp.task 'package-java', ['java', 'electron-packager'], ->
   filter = plugins.filter('**/*/bin/*')
 
   gulp.src "#{paths.dep.java.dir}/**/*", {base: paths.dep.java.dir}
     .pipe filter
     .pipe plugins.chmod 755
     .pipe filter.restore()
-    .pipe gulp.dest distDir
+    .pipe gulp.dest path.join(paths.dist.platform.win32.ia32, 'dep', 'java')
+    .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'java')
+    .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'java')
+    .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'java')
+    # TODO: Figure out paths for OS X
 
-gulp.task 'run', ['package'], ->
-  if process.platform == 'darwin'
-    app = paths.dist.app.executable.mac
-  else
-    app = paths.dist.app.executable.others
+gulp.task 'package-steam-appid', ['electron-packager'], ->
+  return if process.platform == 'darwin'
 
-  spawn "../#{app}", [],
-    cwd: path.resolve paths.dist.dir
+  gulp.src paths.steamAppid
+    .pipe gulp.dest paths.dist.platform.win32.ia32
+    .pipe gulp.dest paths.dist.platform.win32.x64
+    .pipe gulp.dest paths.dist.platform.linux.ia32
+    .pipe gulp.dest paths.dist.platform.linux.x64
+    # TODO: Figure out paths for OS X
+
+gulp.task 'run', ['build'], ->
+  electron = './node_modules/.bin/electron'
+  electron += '.cmd' if process.platform == 'win32'
+  electron = path.resolve electron
+
+  spawn electron, [paths.build.dir],
     stdio: 'inherit'
 
   return
