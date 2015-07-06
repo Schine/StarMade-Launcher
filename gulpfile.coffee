@@ -439,12 +439,14 @@ gulp.task 'package-steam-appid', ['electron-packager'], ->
     .pipe gulp.dest paths.dist.platform.linux.x64
     .pipe gulp.dest paths.dist.platform.darwin.x64
 
-gulp.task 'run', ['build'], ->
-  electron = './node_modules/.bin/electron'
-  electron += '.cmd' if process.platform == 'win32'
-  electron = path.resolve electron
+gulp.task 'run', ['package'], ->
+  appDir = paths.dist.platform[process.platform][process.arch]
+  app = path.join appDir, 'starmade-launcher'
+  app += '.exe' if process.platform == 'win32'
+  app = path.resolve app
 
-  spawn electron, [paths.build.dir],
+  spawn app, [],
+    cwd: appDir
     stdio: 'inherit'
 
   return
