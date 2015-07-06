@@ -6,11 +6,12 @@
   "description": "Launcher for StarMade",
   "main": "lib/browser/main.js",
   "electronVersion": "0.28.2",
+  "greenworksVersion": "0.4.1",
   "javaVersion": "8u45",
   "devDependencies": {
     "coffee-script": "^1.9.2",
     "electron-packager": "^5.0.0",
-    "electron-prebuilt": "^0.28.2",
+    "electron-prebuilt": "0.28.2",
     "electron-rebuild": "^0.2.0",
     "gulp": "^3.9.0",
     "gulp-asar": "git://github.com/danshick/gulp-asar.git",

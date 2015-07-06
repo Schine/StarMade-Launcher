@@ -1,6 +1,6 @@
 build/
 cache/
-dep/java
+dep/
 dist/
 lib/
 node_modules/

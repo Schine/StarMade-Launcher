@@ -1,7 +1,7 @@
 'use strict'
 
+GREENWORKS_URL = 'https://s3.amazonaws.com/sm-launcher/greenworks'
 JAVA_URL = 'https://s3.amazonaws.com/sm-launcher/java'
-STEAMWORKS_SDK_URL = 'https://partner.steamgames.com/downloads/steamworks_sdk_133b.zip'
 
 async = require('async')
 fs = require('fs')
@@ -40,10 +40,11 @@ paths =
       dir: 'dep/java'
     greenworks:
       dir: 'dep/greenworks'
-      deps:
-        dir: 'dep/greenworks/deps'
-        steamworksSdk:
-          dir: 'dep/greenworks/deps/steamworks_sdk'
+      entry: 'dep/greenworks/greenworks.js'
+      lib:
+        dir: 'dep/greenworks/lib'
+    steamworksSdk:
+      dir: 'dep/steamworks'
   dist:
     dir: 'dist',
     platform:
@@ -81,29 +82,47 @@ paths =
       main: 'static/styles/main.less'
   steamAppid: 'steam_appid.txt'
 
-redistributables =
-  win32: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/steam_api.dll"
-  win64: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/win64/steam_api64.dll"
-  osx32: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/osx32/libsteam_api.dylib"
-  linux32: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/linux32/libsteam_api.so"
-  linux64: "#{paths.dep.greenworks.deps.steamworksSdk.dir}/linux64/libsteam_api.so"
-
 pkg = require(paths.package)
 electronVersion = pkg.electronVersion
+greenworksVersion = pkg.greenworksVersion
 javaVersion = pkg.javaVersion
 
+greenworks =
+  win32: "#{paths.dep.greenworks.dir}/lib/greenworks-win32.node"
+  win64: "#{paths.dep.greenworks.dir}/lib/greenworks-win64.node"
+  osx64: "#{paths.dep.greenworks.dir}/lib/greenworks-osx64.node"
+  linux32: "#{paths.dep.greenworks.dir}/lib/greenworks-linux32.node"
+  linux64: "#{paths.dep.greenworks.dir}/lib/greenworks-linux64.node"
+
 java =
-  win32: "#{JAVA_URL}/jre-#{javaVersion}-windows-i586.tar.gz"
-  win64: "#{JAVA_URL}/jre-#{javaVersion}-windows-x64.tar.gz"
-  osx64: "#{JAVA_URL}/jre-#{javaVersion}-macosx-x64.tar.gz"
-  linux32: "#{JAVA_URL}/jre-#{javaVersion}-linux-i586.tar.gz"
-  linux64: "#{JAVA_URL}/jre-#{javaVersion}-linux-x64.tar.gz"
+  dir:
+    win32:
+      ia32: "#{paths.dep.java.dir}/win32"
+      x64: "#{paths.dep.java.dir}/win64"
+    darwin:
+      x64: "#{paths.dep.java.dir}/osx64"
+    linux:
+      ia32: "#{paths.dep.java.dir}/linux32"
+      x64: "#{paths.dep.java.dir}/linux64"
+  url:
+    win32: "#{JAVA_URL}/jre-#{javaVersion}-windows-i586.tar.gz"
+    win64: "#{JAVA_URL}/jre-#{javaVersion}-windows-x64.tar.gz"
+    osx64: "#{JAVA_URL}/jre-#{javaVersion}-macosx-x64.tar.gz"
+    linux32: "#{JAVA_URL}/jre-#{javaVersion}-linux-i586.tar.gz"
+    linux64: "#{JAVA_URL}/jre-#{javaVersion}-linux-x64.tar.gz"
+
+redistributables =
+  win32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/steam_api.dll"
+  win64: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/win64/steam_api64.dll"
+  osx32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/osx32/libsteam_api.dylib"
+  linux32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/linux32/libsteam_api.so"
+  linux64: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/linux64/libsteam_api.so"
 
 licenses = path.join paths.build.static.dir, 'licenses.txt'
 
 gulp.task 'default', ['run']
 
-gulp.task 'bootstrap', ['greenworks']
+gulp.task 'bootstrap', ['greenworks', 'java']
 
 gulp.task 'build', ['coffee', 'jade', 'less', 'copy', 'acknowledge']
 
@@ -134,83 +153,26 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
       OriginalFilename: 'starmade-launcher.exe'
   , callback
 
-gulp.task 'greenworks', ['greenworks-clean', 'greenworks-npm', 'greenworks-build']
-
-gulp.task 'greenworks-clean', (callback) ->
-  rimraf path.join(paths.dep.greenworks.dir, 'build'), callback
-  return
-
-gulp.task 'greenworks-npm', ['greenworks-clean', 'greenworks-steamworks-sdk'], (callback) ->
-  npm = 'npm'
-  npm += '.cmd' if process.platform == 'win32'
-
-  ps = spawn npm, ['install', '--ignore-scripts'],
-    cwd: paths.dep.greenworks.dir
-    stdio: 'inherit'
-
-  ps.on 'close', ->
-    callback()
-
-  return
-
-# greenworks-npm will build, but not for Electron
-gulp.task 'greenworks-build', ['greenworks-steamworks-sdk', 'greenworks-clean', 'greenworks-npm'], (callback) ->
-  nodeGyp = 'node-gyp'
-  nodeGyp += '.cmd' if process.platform == 'win32'
-
-  arch = process.arch
-
-  ps = spawn nodeGyp, [
-    'rebuild'
-    "--target=#{electronVersion}"
-    "--arch=#{arch}"
-    '--dist-url=https://gh-contractor-zcbenz.s3.amazonaws.com/atom-shell/dist'
-  ],
-    cwd: paths.dep.greenworks.dir
-    stdio: 'inherit'
-
-  ps.on 'close', ->
-    callback()
-
-  return
-
-gulp.task 'greenworks-steamworks-sdk-download', ->
-  return if fs.existsSync paths.dep.greenworks.deps.steamworksSdk.dir
-
-  plugins.download(STEAMWORKS_SDK_URL)
+gulp.task 'greenworks', ->
+  plugins.download(GREENWORKS_URL + "/greenworks-v#{greenworksVersion}-starmade-electron-#{electronVersion}.zip")
     .pipe plugins.unzip()
-    .pipe gulp.dest paths.dep.greenworks.deps.dir
+    .pipe gulp.dest paths.dep.greenworks.dir
 
-# Hacky way to rename the extracted folder from the Steamworks SDK zip file
-gulp.task 'greenworks-steamworks-sdk', ['greenworks-steamworks-sdk-download'], (callback) ->
-  return callback() if fs.existsSync paths.dep.greenworks.deps.steamworksSdk.dir
+javaTasks = []
 
-  fs.rename path.join(paths.dep.greenworks.deps.dir, 'sdk'), paths.dep.greenworks.deps.steamworksSdk.dir, (err) ->
-    callback(err)
+downloadJavaTask = (platform) ->
+  ->
+    plugins.download(java.url[platform])
+      .pipe plugins.gunzip()
+      .pipe plugins.untar()
+      .pipe gulp.dest path.join(paths.dep.java.dir, platform)
 
-gulp.task 'java', ->
-  return if fs.existsSync paths.dep.java.dir
+for platform, url of java.url
+  taskName = "java-#{platform}"
+  gulp.task taskName, downloadJavaTask(platform)
+  javaTasks.push taskName
 
-  switch process.platform
-    when 'win32'
-      if process.arch == 'ia32'
-        platform = 'win32'
-      else
-        platform = 'win64'
-    when 'darwin'
-      platform = 'osx64'
-    when 'linux'
-      if process.arch == 'ia32'
-        platform = 'linux32'
-      else
-        platform = 'linux64'
-    else
-      throw 'Unsupported platform'
-
-  plugins.download(java[platform])
-    .pipe plugins.gunzip()
-    .pipe plugins.untar()
-    .pipe gulp.dest paths.dep.java.dir
+gulp.task 'java', javaTasks
 
 gulp.task 'jade', ->
   gulp.src paths.static.jade.glob
@@ -302,8 +264,8 @@ gulp.task 'acknowledge-ubuntu', ['acknowledge-clear', 'acknowledge-starmade'], (
       data.toString() + '\n'
     fs.appendFile licenses, data, callback
 
-gulp.task 'acknowledge-java', ['acknowledge-clear', 'acknowledge-starmade', 'java'], (callback) ->
-  fs.readFile path.join(paths.dep.java.dir, util.getJreDirectory(javaVersion), 'LICENSE'), (err, data) ->
+gulp.task 'acknowledge-java', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
+  fs.readFile path.join(java.dir[process.platform][process.arch], util.getJreDirectory(javaVersion), 'LICENSE'), (err, data) ->
     return callback(err) if err
     data = 'java\n' +
       '--------------------------------------------------------------------------------\n' +
@@ -311,7 +273,7 @@ gulp.task 'acknowledge-java', ['acknowledge-clear', 'acknowledge-starmade', 'jav
     fs.appendFile licenses, data, callback
 
 gulp.task 'acknowledge-java-thirdparty', ['acknowledge-clear', 'acknowledge-starmade', 'acknowledge-java'], (callback) ->
-  fs.readFile path.join(paths.dep.java.dir, util.getJreDirectory(javaVersion), 'THIRDPARTYLICENSEREADME.txt'), (err, data) ->
+  fs.readFile path.join(java.dir[process.platform][process.arch], util.getJreDirectory(javaVersion), 'THIRDPARTYLICENSEREADME.txt'), (err, data) ->
     return callback(err) if err
     data = 'java third party\n' +
       '--------------------------------------------------------------------------------\n' +
@@ -319,7 +281,7 @@ gulp.task 'acknowledge-java-thirdparty', ['acknowledge-clear', 'acknowledge-star
     fs.appendFile licenses, data, callback
 
 gulp.task 'acknowledge-java-thirdparty-javafx', ['acknowledge-clear', 'acknowledge-starmade', 'acknowledge-java', 'acknowledge-java-thirdparty'], (callback) ->
-  fs.readFile path.join(paths.dep.java.dir, util.getJreDirectory(javaVersion), 'THIRDPARTYLICENSEREADME-JAVAFX.txt'), (err, data) ->
+  fs.readFile path.join(java.dir[process.platform][process.arch], util.getJreDirectory(javaVersion), 'THIRDPARTYLICENSEREADME-JAVAFX.txt'), (err, data) ->
     return callback(err) if err
     data = 'java third party javafx\n' +
       '--------------------------------------------------------------------------------\n' +
@@ -327,7 +289,7 @@ gulp.task 'acknowledge-java-thirdparty-javafx', ['acknowledge-clear', 'acknowled
     fs.appendFile licenses, data, callback
 
 gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
-  fs.readFile path.join(paths.dep.greenworks.dir, 'LICENSE'), (err, data) ->
+  fs.readFile path.join(paths.res.licenses.dir, 'greenworks'), (err, data) ->
     return callback(err) if err
     data = 'greenworks\n' +
       '--------------------------------------------------------------------------------\n' +
@@ -372,32 +334,102 @@ for name of pkg.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['build', 'electron-packager', 'package-greenworks', 'package-java', 'package-steam-appid']
+gulp.task 'package', ['build', 'electron-packager', 'package-greenworks', 'package-java', 'package-redistributables', 'package-steam-appid']
 
-gulp.task 'package-greenworks', ['electron-packager'], ->
-  gulp.src [
-      'dep/greenworks/greenworks.js'
-      'dep/greenworks/lib/**/*'
-    ]
-    , {base: 'dep/greenworks'}
+packageGreenworksTasks = [
+  'electron-packager'
+]
+
+packageGreenworksNativeTask = (platform) ->
+  ->
+    os = platform.slice(0, -2)
+    arch = platform.slice(-2)
+
+    switch os
+      when 'osx'
+        os = 'darwin'
+      when 'win'
+        os = 'win32'
+
+    switch arch
+      when '32'
+        arch = 'ia32'
+      when '64'
+        arch = 'x64'
+
+    gulp.src greenworks[platform]
+      .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'greenworks', 'lib')
+
+for platform of greenworks
+  taskName = "package-greenworks-#{platform}"
+  gulp.task taskName, ['electron-packager'], packageGreenworksNativeTask(platform)
+  packageGreenworksTasks.push taskName
+
+gulp.task 'package-greenworks', packageGreenworksTasks, ->
+  gulp.src paths.dep.greenworks.entry
     .pipe gulp.dest path.join(paths.dist.platform.win32.ia32, 'dep', 'greenworks')
     .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'greenworks')
     .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'greenworks')
     .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'greenworks')
     .pipe gulp.dest path.join(paths.dist.platform.darwin.x64, 'dep', 'greenworks')
 
-gulp.task 'package-java', ['java', 'electron-packager'], ->
-  filter = plugins.filter('**/*/bin/*')
+packageJavaTasks = [
+  'electron-packager'
+]
 
-  gulp.src "#{paths.dep.java.dir}/**/*", {base: paths.dep.java.dir}
-    .pipe filter
-    .pipe plugins.chmod 755
-    .pipe filter.restore()
-    .pipe gulp.dest path.join(paths.dist.platform.win32.ia32, 'dep', 'java')
-    .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'java')
-    .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'java')
-    .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'java')
-    .pipe gulp.dest path.join(paths.dist.platform.darwin.x64, 'dep', 'java')
+packageJavaTask = (platform, arch) ->
+  ->
+    filter = plugins.filter('**/*/bin/*')
+    javaDir = path.join(java.dir[platform][arch], util.getJreDirectory(javaVersion))
+
+    gulp.src "#{javaDir}/**/*", {base: java.dir[platform][arch]}
+      .pipe filter
+      .pipe plugins.chmod 755
+      .pipe filter.restore()
+      .pipe gulp.dest path.join(paths.dist.platform[platform][arch], 'dep', 'java')
+
+for platform of java.dir
+  for arch of java.dir[platform]
+    taskName = "package-java-#{platform}-#{arch}"
+    gulp.task taskName, ['electron-packager'], packageJavaTask(platform, arch)
+    packageJavaTasks.push taskName
+
+gulp.task 'package-java', packageJavaTasks
+
+packageRedistributablesTasks = [
+  'electron-packager'
+]
+
+packageRedistributablesTask = (platform) ->
+  ->
+    os = platform.slice(0, -2)
+    arch = platform.slice(-2)
+
+    switch os
+      when 'osx'
+        os = 'darwin'
+      when 'win'
+        os = 'win32'
+
+    switch arch
+      when '32'
+        if os == 'darwin'
+          # Place the 32-bit OS X binary in the 64-bit distribution
+          arch = 'x64'
+        else
+          arch = 'ia32'
+      when '64'
+        arch = 'x64'
+
+    gulp.src redistributables[platform]
+      .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'greenworks', 'lib')
+
+for platform of redistributables
+  taskName = "package-redistributables-#{platform}"
+  gulp.task taskName, ['electron-packager'], packageRedistributablesTask(platform)
+  packageRedistributablesTasks.push taskName
+
+gulp.task 'package-redistributables', packageRedistributablesTasks
 
 gulp.task 'package-steam-appid', ['electron-packager'], ->
   gulp.src paths.steamAppid
