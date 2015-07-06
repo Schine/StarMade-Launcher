@@ -3,6 +3,7 @@
 GREENWORKS_URL = 'https://s3.amazonaws.com/sm-launcher/greenworks'
 JAVA_URL = 'https://s3.amazonaws.com/sm-launcher/java'
 
+argv = require('minimist')(process.argv.slice(2))
 async = require('async')
 fs = require('fs')
 mkdirp = require('mkdirp')
@@ -87,6 +88,15 @@ electronVersion = pkg.electronVersion
 greenworksVersion = pkg.greenworksVersion
 javaVersion = pkg.javaVersion
 
+targetPlatform = argv.platform || 'current'
+targetArch = argv.arch || 'current'
+
+if targetPlatform == 'current'
+  targetPlatform = process.platform
+
+if targetArch == 'current'
+  targetArch = process.arch
+
 greenworks =
   win32: "#{paths.dep.greenworks.dir}/lib/greenworks-win32.node"
   win64: "#{paths.dep.greenworks.dir}/lib/greenworks-win64.node"
@@ -139,8 +149,8 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
     dir: paths.build.dir
     out: 'dist'
     name: 'starmade-launcher'
-    platform: 'all'
-    arch: 'all'
+    platform: targetPlatform
+    arch: targetArch
     version: electronVersion
     icon: paths.res.icon
     overwrite: true
@@ -357,6 +367,12 @@ packageGreenworksNativeTask = (platform) ->
       when '64'
         arch = 'x64'
 
+    if targetPlatform != 'all'
+      return unless os == targetPlatform
+
+    if targetArch != 'all'
+      return unless arch == targetArch
+
     gulp.src greenworks[platform]
       .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'greenworks', 'lib')
 
@@ -381,6 +397,12 @@ packageJavaTask = (platform, arch) ->
   ->
     filter = plugins.filter('**/*/bin/*')
     javaDir = path.join(java.dir[platform][arch], util.getJreDirectory(javaVersion))
+
+    if targetPlatform != 'all'
+      return unless platform == targetPlatform
+
+    if targetArch != 'all'
+      return unless arch == targetArch
 
     gulp.src "#{javaDir}/**/*", {base: java.dir[platform][arch]}
       .pipe filter
@@ -420,6 +442,12 @@ packageRedistributablesTask = (platform) ->
           arch = 'ia32'
       when '64'
         arch = 'x64'
+
+    if targetPlatform != 'all'
+      return unless os == targetPlatform
+
+    if targetArch != 'all'
+      return unless arch == targetArch
 
     gulp.src redistributables[platform]
       .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'greenworks', 'lib')
