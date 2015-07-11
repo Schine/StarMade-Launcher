@@ -32,6 +32,9 @@ html(ng-app='launcher')
               span.nav-options-gear.hover
               | Options
       .content(ui-view)
+      div(ng-controller='CitizenBroadcastCtrl')
+        popup(title='Citizen Broadcast' type='notification' opened='unread')
+          div(ng-bind-html='message')
       .footer(ng-controller='UpdateCtrl')
         .pane(ng-class='{play: onPlayTab, dedicated: onDedicatedTab}')
           ul.tabs

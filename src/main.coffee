@@ -128,6 +128,7 @@ app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
   $state.go 'news'
 
 # Controllers
+require('./controllers/citizenBroadcast')
 require('./controllers/launch')
 require('./controllers/news')
 require('./controllers/update')
@@ -137,6 +138,7 @@ require('./directives/closeButton')
 require('./directives/externalLink')
 require('./directives/minimizeButton')
 require('./directives/newsBody')
+require('./directives/popup')
 require('./directives/progressBar')
 
 # Filters

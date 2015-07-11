@@ -1,0 +1,58 @@
+div.popup {
+  div.popup-overlay {
+    background-color: #0F0F13;
+    height: 365px;
+    opacity: 0.9;
+    position: absolute;
+    top: 87px;
+    width: 100%;
+  }
+
+  div.popup-container {
+    box-shadow: -5px 4px 0 rgba(0, 0, 0, 0.2);
+    left: 25%;
+    min-width: 420px;
+    position: absolute;
+    top: 25%;
+
+    div.popup-header {
+      background-color: #121526;
+      background-repeat: no-repeat;
+      background-position: 9px;
+      color: #FFFFFF;
+      font-size: 14px;
+      font-family: 'Ubuntu';
+      font-weight: bold;
+      height: 37px;
+      padding: 10px 10px 10px 32px;
+      text-transform: uppercase;
+
+      &.notification {
+        background-image: url(../images/main/popup_notification_header_icon.png);
+      }
+
+      &.settings {
+        background-image: url(../images/main/popup_settings_header_close.png);
+      }
+
+      a.popup-close {
+        background-image: url(../images/main/popup_settings_header_close.png);
+        background-repeat: no-repeat;
+        float: right;
+        height: 13px;
+        width: 14px;
+      }
+    }
+
+    div.popup-body {
+      background-color: #0F0F13;
+      border: 1px solid #393942;
+      border-top: 1px solid #1D1C2A;
+      color: #A1A6AC;
+      font-family: 'Ubuntu';
+      font-size: 12px;
+      font-weight: lighter;
+      padding: 13px 13px 13px 8px;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+.popup(ng-show='opened')
+  .popup-overlay
+  .popup-container
+    .popup-header(ng-class="{notification: type == 'notification', settings: type == 'settings'}")
+      | {{title}}
+      a.popup-close(ng-click='close()')
+    .popup-body(ng-transclude)
