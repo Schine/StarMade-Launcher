@@ -36,6 +36,23 @@ html(ng-app='launcher')
         popup(title='Citizen Broadcast' type='notification' opened='unread')
           div(ng-bind-html='message')
       .footer(ng-controller='UpdateCtrl')
+        popup(title='Build Type' type='tooltip' opened='buildTypeTooltip')
+          p
+            | Build Types are different branches of the game. For the most
+            | stable version of the game choose our Release build type.
+            br
+            | If you want to be on the forefront of every new addition we add
+            | then choose our Dev build type.
+          p
+            | Be aware Dev builds are more unstable and often can change several
+            | times in the space of hours so are probably not the best choice
+            | for a server to be running.
+        popup(title='Build Version' type='tooltip' opened='buildVersionTooltip')
+          p
+            | Build Versions are different versions of the game.
+        popup(title='Server Port' type='tooltip' opened='serverPortTooltip')
+          p
+            | Server Port is the port the dedicated server will listen on.
         .pane(ng-class='{play: onPlayTab, dedicated: onDedicatedTab}')
           ul.tabs
             li
@@ -46,7 +63,7 @@ html(ng-app='launcher')
             .field-group
               label(for='buildType')
                 | Build Type
-                sup
+                sup(ng-click='buildTypeTooltip = true')
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
               select(id='buildType' ng-model='branch' ng-disabled='updaterProgress.inProgress || switchingBranch')
@@ -59,7 +76,7 @@ html(ng-app='launcher')
             .field-group
               label(for='buildVersion')
                 | Build Version
-                sup
+                sup(ng-click='buildVersionTooltip = true')
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
               select(id='buildVersion' ng-model='selectedVersion' ng-disabled='updaterProgress.inProgress || switchingBranch')
@@ -70,7 +87,7 @@ html(ng-app='launcher')
             .field-group(ng-show='onDedicatedTab')
               label(for='serverPort')
                 | Server Port
-                sup
+                sup(ng-click='serverPortTooltip = true')
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
               input(id='serverPort' ng-model='serverPort')

@@ -11,9 +11,9 @@ div.popup {
   div.popup-container {
     box-shadow: -5px 4px 0 rgba(0, 0, 0, 0.2);
     left: 25%;
-    min-width: 420px;
     position: absolute;
     top: 25%;
+    width: 420px;
 
     div.popup-header {
       background-color: #121526;
@@ -35,6 +35,10 @@ div.popup {
         background-image: url(../images/main/popup_settings_header_close.png);
       }
 
+      &.tooltip {
+        background-image: url(../images/main/tooltip_popup_icon.png);
+      }
+
       a.popup-close {
         background-image: url(../images/main/popup_settings_header_close.png);
         background-repeat: no-repeat;
@@ -53,6 +57,16 @@ div.popup {
       font-size: 12px;
       font-weight: lighter;
       padding: 13px 13px 13px 8px;
+
+      p {
+        &:first-child {
+          margin-top: 0;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
     }
   }
 }
