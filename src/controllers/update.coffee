@@ -3,6 +3,8 @@
 angular = require('angular')
 remote = require('remote')
 
+dialog = remote.require('dialog')
+
 electronApp = remote.require('app')
 
 app = angular.module 'launcher'
@@ -16,6 +18,8 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
   $scope.onDedicatedTab = false
   $scope.updateHover = false
   $scope.launchHover = false
+
+  $scope.popupData = {}
 
   $scope.showPlayTab = ->
     $scope.onPlayTab = true
@@ -36,6 +40,36 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
 
   $scope.launchMouseLeave = ->
     $scope.launchHover = false
+
+  $scope.openOptions = (name) ->
+    switch name
+      when 'buildType'
+        $scope.buildTypeOptions = true
+        $scope.popupData.branch = $scope.branch
+        $scope.popupData.installDir = $scope.installDir
+      when 'buildVersion'
+        $scope.buildVersionOptions = true
+
+  $scope.closeOptions = (name) ->
+    switch name
+      when 'buildType'
+        $scope.buildTypeOptions = false
+      when 'buildVersion'
+        $scope.buildVersionOptions = false
+
+
+  $scope.browseInstallDir = ->
+    dialog.showOpenDialog remote.getCurrentWindow(),
+      title: 'Select Installation Directory'
+      properties: ['openDirectory']
+    , (path) ->
+      return unless path?
+      $scope.popupData.installDir = path
+
+  $scope.popupBuildTypeSave = ->
+    $scope.branch = $scope.popupData.branch
+    $scope.installDir = $scope.popupData.installDir
+    $scope.buildTypeOptions = false
 
   updateStatus = (selectedVersion) ->
     return if $scope.versions.length == 0

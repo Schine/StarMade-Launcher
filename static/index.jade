@@ -71,7 +71,29 @@ html(ng-app='launcher')
                 option(value='dev') Dev
                 option(value='pre') Pre
                 option(value='archive') Archive
-              a.gear &nbsp;
+              a.gear(ng-click="openOptions('buildType')") &nbsp;
+            
+            popup(title='Build Type Options' type='settings' opened='buildTypeOptions')
+              .field-group
+                label(for='popupBuildType')
+                  | Build Type
+                br
+                select(id='popupBuildType' ng-model='popupData.branch')
+                  option(value='release') Release (recommended)
+                  option(value='dev') Dev
+                  option(value='pre') Pre
+                  option(value='archive') Archive
+              
+              .field-group
+                label(for='popupInstallDir')
+                  | Installation Directory
+                br
+                input.wide(ng-model='popupData.installDir')
+                button(ng-click='browseInstallDir()') Browse
+              
+              .field-group
+                button(ng-click='popupBuildTypeSave()') Save
+                button(ng-click="closeOptions('buildType')") Cancel
             
             .field-group
               label(for='buildVersion')

@@ -32,7 +32,7 @@ div.popup {
       }
 
       &.settings {
-        background-image: url(../images/main/popup_settings_header_close.png);
+        background-image: url(../images/main/popup_settings_header_icon.png);
       }
 
       &.tooltip {
@@ -65,6 +65,28 @@ div.popup {
 
         &:last-child {
           margin-bottom: 0;
+        }
+      }
+
+      div.field-group {
+        float: none;
+        margin: 0;
+
+        &:not(:first-child) {
+          margin-top: 16px;
+        }
+
+        label {
+          display: inline-block;
+          margin-bottom: 8px;
+        }
+
+        input.wide {
+          width: 325px;
+        }
+
+        button:not(:first-child) {
+          margin-left: 4px;
         }
       }
     }
