@@ -142,5 +142,36 @@ html(ng-app='launcher')
         
         progress-bar(ng-show='updaterProgress.inProgress' cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}')
 
+        div(ng-controller='LaunchCtrl')
+          popup(title='Client Memory Settings' type='settings' opened='clientMemoryOptions')
+            p
+              | Please keep in mind that 32-bit OS have a limit of allocated
+              | memory. Should 1024 throw out memory excpetions, please try less
+              | than 1024.
+            
+            form.side-by-side
+              .field-group
+                label(for='maxMemory')
+                  | Maximal Memory (MB)
+                br
+                input(id='maxMemory' ng-model='memory.max')
+              
+              .field-group
+                label(for='initialMemory')
+                  | Initial Memory (MB)
+                br
+                input(id='initialMemory' ng-model='memory.initial')
+                
+              .field-group
+                label(for='earlyGenMemory')
+                  | Early Gen Memory
+                br
+                input(id='earlyGenMemory' ng-model='memory.earlyGen')
+                  
+              .field-group.block
+                button(ng-click='saveClientOptions()') Save
+                button(ng-click='closeClientOptions()') Cancel
+
+          a.gear.gear-launch(ng-click="openClientOptions()") &nbsp;
         .launch-bg(ng-class='{hover: launchHover}' ng-hide='updaterProgress.needsUpdating || updaterProgress.inProgress')
         a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')

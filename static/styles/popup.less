@@ -68,7 +68,8 @@ div.popup {
         }
       }
 
-      div.field-group {
+      div.field-group, div.field-group.block {
+        display: block;
         float: none;
         margin: 0;
 
@@ -87,6 +88,27 @@ div.popup {
 
         button:not(:first-child) {
           margin-left: 4px;
+        }
+      }
+
+      form.side-by-side {
+        overflow: hidden; // clearfix
+
+        div.field-group {
+          float: left;
+          margin-top: 0;
+
+          &:not(:first-child):not(.block) {
+            margin-left: 14px;
+          }
+
+          label {
+            width: 123px;
+          }
+
+          input {
+            width: 106px;
+          }
         }
       }
     }
