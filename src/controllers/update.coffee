@@ -1,6 +1,7 @@
 'use strict'
 
 angular = require('angular')
+del = require('del')
 remote = require('remote')
 
 dialog = remote.require('dialog')
@@ -71,6 +72,14 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
     $scope.installDir = $scope.popupData.installDir
     $scope.buildTypeOptions = false
 
+  $scope.selectLastUsedVersion = ->
+    for version, i in $scope.versions
+      if version.build == $scope.lastVersion
+        $scope.selectedVersion = i
+        return
+
+    $scope.selectedVersion = 0
+
   updateStatus = (selectedVersion) ->
     return if $scope.versions.length == 0
 
@@ -90,8 +99,17 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
         $scope.switchingBranch = false
         $scope.versions = $filter('orderBy')(versions, '-build')
         $scope.versions[0].latest = '(Latest)'
-        $scope.selectedVersion = 0
-        updater.update($scope.versions[0], $scope.installDir, true)
+
+        # Workaround for when ngRepeat hasn't processed the versions yet
+        requestAnimationFrame ->
+          $scope.$apply ->
+            if $scope.lastVersion?
+              $scope.selectLastUsedVersion()
+            else
+              $scope.lastVersion = $scope.versions[0].build
+              $scope.selectedVersion = 0
+
+            updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
       , ->
         $scope.status = 'You are offline.' unless navigator.onLine
         $scope.switchingBranch = false
@@ -101,10 +119,19 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
   $scope.$watch 'installDir', (newVal) ->
     localStorage.setItem 'installDir', newVal
 
+  $scope.$watch 'lastVersion', (newVal) ->
+    return unless newVal?
+    $scope.popupData.lastVersion = newVal
+    localStorage.setItem 'lastVersion', newVal
+
+  $scope.$watch 'popupData.selectedVersion', (newVal) ->
+    $scope.selectedVersion = newVal
+
   $scope.$watch 'serverPort', (newVal) ->
     localStorage.setItem 'serverPort', newVal
 
   $scope.$watch 'selectedVersion', (newVal) ->
+    $scope.popupData.selectedVersion = newVal
     return unless $scope.versions[newVal]?
     return unless navigator.onLine
     updater.update($scope.versions[newVal], $scope.installDir, true)
@@ -117,10 +144,23 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
     if !newVal # Not in progress
       updateStatus($scope.selectedVersion)
 
+  $scope.lastVersion = localStorage.getItem('lastVersion')
   $scope.branch = localStorage.getItem('branch') || 'release'
   $scope.installDir = localStorage.getItem('installDir') || paths.gameData
   $scope.serverPort = localStorage.getItem('serverPort') || '4242'
 
+  $scope.forceUpdate = ->
+    $scope.popupData.deleting = true
+    del ["#{$scope.installDir}/*", "!#{$scope.installDir}/Launcher"], {force: true}, (err) ->
+      $scope.popupData.deleting = false
+      if err
+        console.error err
+        return
+
+      $scope.update()
+
   $scope.update = ->
     electronApp.setPath 'userData', "#{$scope.installDir}/Launcher"
-    updater.update($scope.versions[$scope.selectedVersion], $scope.installDir)
+    version = $scope.versions[$scope.selectedVersion]
+    $scope.lastVersion = version.build
+    updater.update(version, $scope.installDir)

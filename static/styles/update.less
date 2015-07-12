@@ -1,0 +1,33 @@
+div.popup.build-version-popup {
+  div.popup-container {
+    left: 23%;
+    width: 440px;
+
+    div.popup-body {
+      div.field-group {
+        &.download-options {
+          overflow: hidden; // clearfix
+
+          button {
+            float: left;
+            margin-left: 0;
+            width: 235px;
+            white-space: nowrap;
+          }
+
+          span.description {
+            display: block;
+            float: left;
+            font-size: 10px;
+            margin-left: 8px;
+            width: 168px;
+
+            &:not(:last-child) {
+              height: 36px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

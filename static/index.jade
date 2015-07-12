@@ -104,7 +104,30 @@ html(ng-app='launcher')
               select(id='buildVersion' ng-model='selectedVersion' ng-disabled='updaterProgress.inProgress || switchingBranch')
                 option(ng-repeat="version in versions" value='{{$index}}')
                   | v{{version.version}} {{version.latest}}
-              a.gear &nbsp;
+              a.gear(ng-click="openOptions('buildVersion')") &nbsp;
+            
+            popup.build-version-popup(title='Build Version Options' type='settings' opened='buildVersionOptions')
+              .field-group
+                label(for='popupBuildVersion')
+                  | Build Version
+                br
+                select(id='popupBuildVersion' ng-model='popupData.selectedVersion' ng-disabled='updaterProgress.inProgress || switchingBranch')
+                  option(ng-repeat="version in versions" value='{{$index}}')
+                    | v{{version.version}} {{version.latest}}
+                button(ng-click='popupData.selectedVersion = 0' ng-disabled='updaterProgress.inProgress || switchingBranch') Select Newest
+                button(ng-click='selectLastUsedVersion()' ng-disabled='updaterProgress.inProgress || switchingBranch') Select Last Used
+              
+              .field-group.download-options
+                label Download Options
+                br
+                button(ng-click='update()' ng-disabled='updaterProgress.inProgress || switchingBranch') Download Selected Build Version
+                span.description
+                  | Repair current download or quickly switch to another Build
+                  | Version
+              
+                button(ng-click='forceUpdate()' ng-disabled='updaterProgress.inProgress || switchingBranch || popupData.deleting') Force Download All &amp; Overwrite
+                span.description
+                  | Force re-download and replace of every file (takes longer)
             
             .field-group(ng-show='onDedicatedTab')
               label(for='serverPort')
