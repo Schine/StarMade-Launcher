@@ -28,7 +28,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
 
   port = 4242
 
-  $scope.launch = ->
+  $scope.launch = (dedicatedServer = false) ->
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
     if process.platform == 'darwin'
@@ -49,7 +49,9 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
         '-Xincgc'
         '-jar'
         starmadeJar
-        '-force'
+        '-force' unless dedicatedServer
+        '-server' if dedicatedServer
+        '-gui' if dedicatedServer
         "-port:#{port}"
         "-auth #{accessToken.get()}" if accessToken.get()?
       ],
@@ -64,7 +66,9 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
         '-Xincgc'
         '-jar'
         starmadeJar
-        '-force'
+        '-force' unless dedicatedServer
+        '-server' if dedicatedServer
+        '-gui' if dedicatedServer
         "-port:#{port}"
         "-auth #{accessToken.get()}" if accessToken.get()?
       ],

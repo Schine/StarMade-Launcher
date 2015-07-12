@@ -120,4 +120,4 @@ html(ng-app='launcher')
         progress-bar(ng-show='updaterProgress.inProgress' cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}')
 
         .launch-bg(ng-class='{hover: launchHover}' ng-hide='updaterProgress.needsUpdating || updaterProgress.inProgress')
-        a.launch(ng-controller='LaunchCtrl' ng-click='launch()' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
+        a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
