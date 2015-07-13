@@ -78,7 +78,7 @@ html(ng-app='launcher')
                 label(for='popupBuildType')
                   | Build Type
                 br
-                select(id='popupBuildType' ng-model='popupData.branch')
+                select(id='popupBuildType' ng-model='popupData.branch' ng-disabled='updaterProgress.inProgress || switchingBranch')
                   option(value='release') Release (recommended)
                   option(value='dev') Dev
                   option(value='pre') Pre
@@ -88,11 +88,11 @@ html(ng-app='launcher')
                 label(for='popupInstallDir')
                   | Installation Directory
                 br
-                input.wide(ng-model='popupData.installDir')
-                button(ng-click='browseInstallDir()') Browse
+                input.wide(ng-model='popupData.installDir' ng-disabled='updaterProgress.inProgress || switchingBranch')
+                button(ng-click='browseInstallDir()' ng-disabled='updaterProgress.inProgress || switchingBranch') Browse
               
               .field-group
-                button(ng-click='popupBuildTypeSave()') Save
+                button(ng-click='popupBuildTypeSave()' ng-disabled='updaterProgress.inProgress || switchingBranch') Save
                 button(ng-click="closeOptions('buildType')") Cancel
             
             .field-group
