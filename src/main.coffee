@@ -4,6 +4,7 @@ angular = require('angular')
 ipc = require('ipc')
 path = require('path')
 remote = require('remote')
+shell = require('shell')
 
 electronApp = remote.require('app')
 
@@ -45,8 +46,14 @@ app.constant 'paths',
 app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
+  $rootScope.openDownloadPage = ->
+    shell.openExternal 'http://star-made.org/download'
+
   $rootScope.openLicenses = ->
     ipc.send 'open-licenses'
+
+  $rootScope.openSteamLink = ->
+    shell.openExternal 'https://registry.star-made.org/profile/steam_link'
 
   $rootScope.startAuth = ->
     ipc.send 'start-auth'
@@ -66,7 +73,9 @@ app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
             scope.playerName = scope.currentUser.username
             localStorage.setItem 'playerName', scope.playerName
 
-            if !data.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
+            scope.steamAccountLinked = true if data.user.steam_link?
+
+            if !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
               steamId = steam.steamId().toString()
               api.get "profiles/steam_links/#{steamId}"
                 .success ->

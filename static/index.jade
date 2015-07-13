@@ -27,7 +27,7 @@ html(ng-app='launcher')
             a(ui-sref='support') Support
         ul.nav.nav-right
           li
-            a
+            a(ng-click='launcherOptions = true')
               span.nav-options-gear
               span.nav-options-gear.hover
               | Options
@@ -175,3 +175,18 @@ html(ng-app='launcher')
           a.gear.gear-launch(ng-click="openClientOptions()") &nbsp;
         .launch-bg(ng-class='{hover: launchHover}' ng-hide='updaterProgress.needsUpdating || updaterProgress.inProgress')
         a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
+
+    popup.launcher-options-popup(title='Launcher Options' type='settings' opened='launcherOptions')
+      form
+        .field-group.launcher-options
+          label Launcher Settings
+          br
+          button(ng-click='openDownloadPage()') Download Latest Launcher
+          span.description
+            | Download the latest launcher
+
+        .field-group.launcher-options(ng-if='currentUser')
+          label Steam Settings
+          br
+          button(ng-if='!steamAccountLinked' ng-click='openSteamLink()') Link Registry Account to Steam
+          button(ng-if='steamAccountLinked' ng-disabled='true') Registry Account Linked to Steam

@@ -84,6 +84,49 @@ code {
 	background-color: #9CA1A7;
 }
 
+form {
+  margin-top: 10px;
+
+  .field-group {
+    float: left;
+    margin-left: 16px;
+
+    label {
+      color: #A1A6Ac;
+      font-size: 12px;
+      font-family: 'Ubuntu';
+
+      sup {
+        cursor: pointer;
+        margin-left: 4px;
+      }
+    }
+
+    select, input {
+      background-color: #191F29;
+      border: 2px solid #30303C;
+      color: #FFFFFF;
+      font-family: 'Ubuntu';
+      font-size: 12px;
+      padding: 5px;
+    }
+
+    input {
+      width: 80px;
+    }
+
+    button {
+      background-color: #30303C;
+      border: 0;
+      color: #FFFFFF;
+      font-family: 'Ubuntu';
+      font-size: 12px;
+      padding: 5px 8px;
+      text-transform: uppercase;
+    }
+  }
+}
+
 :disabled {
   color: #666666 !important;
 }
@@ -213,49 +256,6 @@ code {
     background-color: #16151B;
     height: 107px;
     width: 100%;
-
-    form {
-      margin-top: 10px;
-
-      .field-group {
-        float: left;
-        margin-left: 16px;
-
-        label {
-          color: #A1A6Ac;
-          font-size: 12px;
-          font-family: 'Ubuntu';
-
-          sup {
-            cursor: pointer;
-            margin-left: 4px;
-          }
-        }
-
-        select, input {
-          background-color: #191F29;
-          border: 2px solid #30303C;
-          color: #FFFFFF;
-          font-family: 'Ubuntu';
-          font-size: 12px;
-          padding: 5px;
-        }
-
-        input {
-          width: 80px;
-        }
-
-        button {
-          background-color: #30303C;
-          border: 0;
-          color: #FFFFFF;
-          font-family: 'Ubuntu';
-          font-size: 12px;
-          padding: 5px 8px;
-          text-transform: uppercase;
-        }
-      }
-    }
 
     a.player {
       float: right;
@@ -410,6 +410,40 @@ footer {
 
         &:hover {
           color: #FFFFFF;
+        }
+      }
+    }
+  }
+}
+
+div.launcher-options-popup {
+  form {
+    margin-top: 0;
+  }
+
+  div.popup-body {
+    div.field-group {
+      &.launcher-options {
+        overflow: hidden; // clearfix
+
+        button {
+          cursor: pointer;
+          float: left;
+          margin-left: 0 !important; // Important to override :not(:first-child) rule
+          width: 231px;
+          white-space: nowrap;
+        }
+
+        span.description {
+          display: block;
+          float: left;
+          font-size: 10px;
+          margin-left: 8px;
+          width: 158px;
+
+          &:not(:last-child) {
+            height: 36px;
+          }
         }
       }
     }
