@@ -24,7 +24,10 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
       initial: 512
       earlyGen: 128
 
-  port = 4242
+  $scope.serverPort = localStorage.getItem('serverPort') || 4242
+
+  $scope.$watch 'serverPort', (newVal) ->
+    localStorage.setItem 'serverPort', newVal
 
   loadClientOptions = ->
     $scope.memory =
@@ -69,7 +72,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
       '-force' unless dedicatedServer
       '-server' if dedicatedServer
       '-gui' if dedicatedServer
-      "-port:#{port}"
+      "-port:#{$scope.serverPort}"
       "-auth #{accessToken.get()}" if accessToken.get()?
     ],
       cwd: installDir

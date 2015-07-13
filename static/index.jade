@@ -129,7 +129,7 @@ html(ng-app='launcher')
                 span.description
                   | Force re-download and replace of every file (takes longer)
             
-            .field-group(ng-show='onDedicatedTab')
+            .field-group(ng-show='onDedicatedTab' ng-controller='LaunchCtrl')
               label(for='serverPort')
                 | Server Port
                 sup(ng-click='serverPortTooltip = true')
