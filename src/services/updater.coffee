@@ -14,7 +14,7 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
     release: "#{BASE_URL}/releasebuildindex"
     archive: "#{BASE_URL}/archivebuildindex"
 
-  @update = (version, installDir, checkOnly = false) ->
+  @update = (version, installDir, checkOnly = false, force = false) ->
     return if updaterProgress.inProgress
 
     updaterProgress.curValue = 0
@@ -73,7 +73,7 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
         checksums.forEach (checksum) ->
           checksum.checkLocal installDir
             .then (needsDownloading) ->
-              filesToDownload.push(checksum) if needsDownloading
+              filesToDownload.push(checksum) if needsDownloading || force
               updaterProgress.text = "Determining files to download... #{updaterProgress.calculatePercentage()}%  selected #{filesToDownload.length}/#{checksums.length} (#{updaterProgress.toMegabytes(totalSize)} MB)"
               updaterProgress.curValue++
               download()

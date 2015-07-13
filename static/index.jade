@@ -125,7 +125,7 @@ html(ng-app='launcher')
                   | Repair current download or quickly switch to another Build
                   | Version
               
-                button(ng-click='forceUpdate()' ng-disabled='updaterProgress.inProgress || switchingBranch || popupData.deleting') Force Download All &amp; Overwrite
+                button(ng-click='update(true)' ng-disabled='updaterProgress.inProgress || switchingBranch || popupData.deleting') Force Download All &amp; Overwrite
                 span.description
                   | Force re-download and replace of every file (takes longer)
             

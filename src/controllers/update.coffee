@@ -149,18 +149,8 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
   $scope.installDir = localStorage.getItem('installDir') || paths.gameData
   $scope.serverPort = localStorage.getItem('serverPort') || '4242'
 
-  $scope.forceUpdate = ->
-    $scope.popupData.deleting = true
-    del ["#{$scope.installDir}/*", "!#{$scope.installDir}/Launcher"], {force: true}, (err) ->
-      $scope.popupData.deleting = false
-      if err
-        console.error err
-        return
-
-      $scope.update()
-
-  $scope.update = ->
+  $scope.update = (force = false) ->
     electronApp.setPath 'userData', "#{$scope.installDir}/Launcher"
     version = $scope.versions[$scope.selectedVersion]
     $scope.lastVersion = version.build
-    updater.update(version, $scope.installDir)
+    updater.update(version, $scope.installDir, false, force)
