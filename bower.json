@@ -1,0 +1,15 @@
+{
+  "name": "starmade-launcher",
+  "version": "0.0.0",
+  "description": "Launcher for StarMade",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}
+

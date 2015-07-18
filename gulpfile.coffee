@@ -15,10 +15,14 @@ plugins = require('gulp-load-plugins')()
 rimraf = require('rimraf')
 source = require('vinyl-source-stream')
 spawn = require('child_process').spawn
+wiredep = require('wiredep').stream
 
 util = require('./src/util')
 
 paths =
+  bower: './bower.json'
+  bowerComponents:
+    dir: 'bower_components'
   build:
     dir: 'build'
     glob: 'build/**/*'
@@ -83,6 +87,7 @@ paths =
       main: 'static/styles/main.less'
   steamAppid: 'steam_appid.txt'
 
+bower = require(paths.bower)
 pkg = require(paths.package)
 electronVersion = pkg.electronVersion
 greenworksVersion = pkg.greenworksVersion
@@ -129,6 +134,17 @@ redistributables =
   linux64: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/linux64/libsteam_api.so"
 
 licenses = path.join paths.build.static.dir, 'licenses.txt'
+
+licenseOverrides =
+  'assert-plus':
+    license: 'MIT'
+    source: 'README.md'
+  bl:
+    license: 'MIT'
+    source: 'README.md'
+  jsonpointer:
+    license: 'MIT'
+    source: 'README.md'
 
 gulp.task 'default', ['run']
 
@@ -188,6 +204,7 @@ gulp.task 'jade', ->
   gulp.src paths.static.jade.glob
     .pipe plugins.jade
       pretty: true
+    .pipe wiredep()
     .pipe gulp.dest paths.build.static.dir
 
 gulp.task 'less', ->
@@ -196,11 +213,16 @@ gulp.task 'less', ->
     .pipe gulp.dest paths.build.static.styles.dir
 
 copyTasks = [
+  'copy-bower-components'
   'copy-package'
   'copy-static-entries'
   'copy-static-fonts'
   'copy-static-images'
 ]
+
+gulp.task 'copy-bower-components', ->
+  gulp.src paths.bowerComponents.dir
+    .pipe gulp.dest paths.build.dir
 
 gulp.task 'copy-package', ->
   gulp.src paths.package
@@ -306,12 +328,27 @@ gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade'
       data.toString() + '\n'
     fs.appendFile licenses, data, callback
 
-acknowledgeModuleTask = (name) ->
+acknowledgeModuleTask = (name, dir = paths.nodeModules.dir) ->
+  modulePkg = require(path.resolve(path.join(dir, name, 'package.json')))
+
+  # Acknowledge licenses of this module's dependencies
+  for depName of modulePkg.dependencies
+    acknowledgeTaskName = "acknowledge-module-#{depName}"
+    continue if acknowledgeTasks.indexOf(acknowledgeTaskName) != -1
+
+    # Find where the module is at
+    depModulesDir = path.resolve(path.join(dir, name, 'node_modules'))
+    while !fs.existsSync(path.join(depModulesDir, depName)) && depModulesDir != path.resolve(paths.nodeModules.dir)
+      depModulesDir = path.resolve(path.join(depModulesDir, '..', '..'))
+
+    gulp.task acknowledgeTaskName, ['acknowledge-clear', 'acknowledge-starmade'], acknowledgeModuleTask(depName, depModulesDir)
+    acknowledgeTasks.push acknowledgeTaskName
+
   (callback) ->
-    moduleLicense = path.join paths.nodeModules.dir, name, 'LICENSE'
-    moduleLicenseLower = path.join paths.nodeModules.dir, name, 'license'
-    moduleLicence = path.join paths.nodeModules.dir, name, 'LICENCE'
-    modulePkg = require(path.resolve(path.join(paths.nodeModules.dir, name, 'package.json')))
+    moduleLicense = path.join dir, name, 'LICENSE'
+    moduleLicenseMd = path.join dir, name, 'LICENSE.md'
+    moduleLicenseLower = path.join dir, name, 'license'
+    moduleLicence = path.join dir, name, 'LICENCE'
 
     data = "#{modulePkg.name}\n" +
       '--------------------------------------------------------------------------------\n'
@@ -319,22 +356,80 @@ acknowledgeModuleTask = (name) ->
     if fs.existsSync moduleLicense
       fs.readFile moduleLicense, (err, contents) ->
         return callback(err) if err
-        data += contents.toString() + '\n'
+        data += contents.toString() + '\n\n'
+        fs.appendFile licenses, data, callback
+    else if fs.existsSync moduleLicenseMd
+      fs.readFile moduleLicenseMd, (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n\n'
         fs.appendFile licenses, data, callback
     else if fs.existsSync moduleLicenseLower
       fs.readFile moduleLicenseLower, (err, contents) ->
         return callback(err) if err
-        data += contents.toString() + '\n'
+        data += contents.toString() + '\n\n'
         fs.appendFile licenses, data, callback
     else if fs.existsSync moduleLicence
       fs.readFile moduleLicence, (err, contents) ->
         return callback(err) if err
-        data += contents.toString() + '\n'
+        data += contents.toString() + '\n\n'
+        fs.appendFile licenses, data, callback
+    else if fs.existsSync path.join(paths.res.licenses.dir, name)
+      fs.readFile path.join(paths.res.licenses.dir, name), (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n\n'
+        fs.appendFile licenses, data, callback
+    else if licenseOverrides[modulePkg.name]?
+      fs.readFile path.join(dir, name, licenseOverrides[modulePkg.name].source), (err, contents) ->
+        return callback(err) if err
+        data += "License: #{licenseOverrides[modulePkg.name].license}\n"
+        data += "According to the file #{licenseOverrides[modulePkg.name].source} from the module's repository, which is included\nbelow:\n\n"
+        data += contents.toString() + '\n\n'
+        fs.appendFile licenses, data, callback
+    else
+      unless modulePkg.license?
+        return callback("No license found for #{modulePkg.name}: #{dir}")
+
+      data += "\nLicense: #{modulePkg.license}\n"
+      data += "According to data from package.json; the author of the module did not include a license file.\n\n"
+      fs.appendFile licenses, data, callback
+
+acknowledgeBowerModuleTask = (name) ->
+  modulePkg = require(path.resolve(path.join(paths.bowerComponents.dir, name, 'bower.json')))
+
+  # Acknowledge licenses of this module's dependencies
+  for depName of modulePkg.dependencies
+    acknowledgeTaskName = "acknowledge-bower-module-#{depName}"
+    continue if acknowledgeTasks.indexOf(acknowledgeTaskName) != -1
+    gulp.task acknowledgeTaskName, ['acknowledge-clear', 'acknowledge-starmade'], acknowledgeBowerModuleTask(depName)
+    acknowledgeTasks.push acknowledgeTaskName
+
+  (callback) ->
+    moduleLicense = path.join paths.bowerComponents.dir, name, 'LICENSE'
+    moduleLicenseLower = path.join paths.bowerComponents.dir, name, 'license'
+    moduleLicence = path.join paths.bowerComponents.dir, name, 'LICENCE'
+
+    data = "#{modulePkg.name}\n" +
+      '--------------------------------------------------------------------------------\n'
+
+    if fs.existsSync moduleLicense
+      fs.readFile moduleLicense, (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n\n'
+        fs.appendFile licenses, data, callback
+    else if fs.existsSync moduleLicenseLower
+      fs.readFile moduleLicenseLower, (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n\n'
+        fs.appendFile licenses, data, callback
+    else if fs.existsSync moduleLicence
+      fs.readFile moduleLicence, (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n\n'
         fs.appendFile licenses, data, callback
     else
       fs.readFile path.join(paths.res.licenses.dir, name), (err, contents) ->
         return callback(err) if err
-        data += contents.toString() + '\n'
+        data += contents.toString() + '\n\n'
         fs.appendFile licenses, data, callback
 
 # Create copy tasks for each non-development dependencies
@@ -345,6 +440,13 @@ for name of pkg.dependencies
   gulp.task copyTaskName, copyModuleTask(name)
   gulp.task acknowledgeTaskName, ['acknowledge-clear', 'acknowledge-starmade'], acknowledgeModuleTask(name)
   copyTasks.push copyTaskName
+  acknowledgeTasks.push acknowledgeTaskName
+
+# Create tasks for each Bower dependency to add their license contents to the
+# licenses file
+for name of bower.dependencies
+  acknowledgeTaskName = "acknowledge-bower-module-#{name}"
+  gulp.task acknowledgeTaskName, ['acknowledge-clear', 'acknowledge-starmade'], acknowledgeBowerModuleTask(name)
   acknowledgeTasks.push acknowledgeTaskName
 
 gulp.task 'copy', copyTasks
