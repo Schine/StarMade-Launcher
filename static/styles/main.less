@@ -450,7 +450,42 @@ div.launcher-options-popup {
   }
 }
 
+ul.side {
+  float: left;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    background-color: @contentBackground;
+    border: 1px solid @contentBorder;
+    height: 108px;
+    width: 200px;
+
+    &:not(:last-child) {
+      margin-bottom: 6px;
+    }
+  }
+}
+
+.content(@height: 336px, @top: 2px) {
+  background-color: @contentBackground;
+  border: 1px solid @contentBorder;
+  display: inline-block;
+  float: right;
+  height: @height;
+  margin: 0;
+  overflow: auto;
+  padding: 0;
+  position: absolute;
+  list-style: none;
+  right: 5px;
+  top: @top;
+  width: 587px;
+}
+
 @import 'auth.less';
+@import 'community.less';
 @import 'getting_started.less';
 @import 'news.less';
 @import 'popup.less';
