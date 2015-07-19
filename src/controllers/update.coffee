@@ -9,7 +9,7 @@ electronApp = remote.require('app')
 
 app = angular.module 'launcher'
 
-app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) ->
+app.controller 'UpdateCtrl', ($filter, $scope, updater, updaterProgress) ->
   $scope.versions = []
   $scope.updaterProgress = updaterProgress
   $scope.status = ''
@@ -145,11 +145,10 @@ app.controller 'UpdateCtrl', ($filter, $scope, paths, updater, updaterProgress) 
 
   $scope.lastVersion = localStorage.getItem('lastVersion')
   $scope.branch = localStorage.getItem('branch') || 'release'
-  $scope.installDir = localStorage.getItem('installDir') || paths.gameData
+  $scope.installDir = localStorage.getItem('installDir') || path.resolve(path.join(electronApp.getPath('userData'), '..'))
   $scope.serverPort = localStorage.getItem('serverPort') || '4242'
 
   $scope.update = (force = false) ->
-    electronApp.setPath 'userData', "#{$scope.installDir}/Launcher"
     version = $scope.versions[$scope.selectedVersion]
     $scope.lastVersion = version.build
     updater.update(version, $scope.installDir, false, force)

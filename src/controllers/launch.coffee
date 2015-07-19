@@ -12,7 +12,7 @@ javaJreDirectory = util.getJreDirectory javaVersion
 
 app = angular.module 'launcher'
 
-app.controller 'LaunchCtrl', ($scope, accessToken, paths) ->
+app.controller 'LaunchCtrl', ($scope, accessToken) ->
   defaults =
     ia32:
       max: 512

@@ -11,6 +11,8 @@ rimraf = require('rimraf')
 shell = require('shell')
 BrowserWindow = require('browser-window')
 
+argv = require('minimist')(process.argv.slice(1))
+
 if process.platform == 'darwin' && process.cwd() == '/'
   # Change working directory
   process.chdir(path.join(path.dirname(path.dirname(path.dirname(path.dirname(__dirname)))), 'MacOS'))
@@ -25,7 +27,12 @@ authFinished = false
 quitting = false
 
 oldUserData = app.getPath 'userData'
-app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
+
+if argv['install-dir']?
+  app.setPath 'userData', path.join(path.resolve(argv['install-dir']), 'Launcher')
+else
+  app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
+
 rimraf oldUserData, (err) ->
   console.warn "Unable to remove old user data directory: #{err}" if err
 
@@ -43,6 +50,10 @@ openMainWindow = ->
     height: height
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
+
+  if argv['install-dir']?
+    escapedInstallDir = path.resolve(argv['install-dir']).replace(/\\/g, '\\\\')
+    mainWindow.webContents.executeJavaScript("localStorage.setItem('installDir', '#{escapedInstallDir}');")
 
   mainWindow.openDevTools()
 

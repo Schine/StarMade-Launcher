@@ -8,7 +8,7 @@ request = require('request')
 
 app = angular.module 'launcher'
 
-app.factory 'Checksum', ($q, paths, updaterProgress) ->
+app.factory 'Checksum', ($q, updaterProgress) ->
   class Checksum
     constructor: (@size, @checksum, @relativePath, @buildPath) ->
 

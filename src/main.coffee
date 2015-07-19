@@ -45,11 +45,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $httpProvider.interceptors.push 'xmlHttpInterceptor'
   $httpProvider.interceptors.push 'tokenInterceptor'
 
-app.constant 'paths',
-  gameData: "#{electronApp.getPath('appData')}/StarMade"
-  launcherData: "#{electronApp.getPath('userData')}"
-
-app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
+app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
   $rootScope.openDownloadPage = ->
@@ -136,9 +132,6 @@ app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
 
   unless localStorage.getItem('branch')?
     localStorage.setItem 'branch', 'release'
-
-  unless localStorage.getItem('installDir')?
-    localStorage.setItem 'installDir', paths.gameData
 
   $state.go 'news'
 
