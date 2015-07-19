@@ -21,7 +21,7 @@ body {
 
 a {
   cursor: pointer;
-	color: #FFF;
+	color: #207583;
 	text-decoration: none;
 	-o-transition: .3s;
 	-ms-transition: .3s;
@@ -238,6 +238,7 @@ form {
   }
 
   .content {
+    height: 340px;
     padding: 2px 5px;
     position: relative;
     overflow: auto;
@@ -254,7 +255,9 @@ form {
 
   .footer {
     background-color: #16151B;
+    bottom: 0;
     height: 107px;
+    position: absolute;
     width: 100%;
 
     a.player {
@@ -468,24 +471,32 @@ ul.side {
   }
 }
 
-.content(@height: 336px, @top: 2px) {
+.content(@height: 336px, @top: 2px, @left: 0) {
   background-color: @contentBackground;
   border: 1px solid @contentBorder;
   display: inline-block;
-  float: right;
   height: @height;
   margin: 0;
   overflow: auto;
   padding: 0;
   position: absolute;
   list-style: none;
-  right: 5px;
   top: @top;
   width: 587px;
+
+  & when (@left = 0) {
+    float: right;
+    right: 5px;
+  }
+
+  & when not (@left = 0) {
+    left: @left;
+  }
 }
 
 @import 'auth.less';
 @import 'community.less';
+@import 'council.less';
 @import 'getting_started.less';
 @import 'news.less';
 @import 'popup.less';

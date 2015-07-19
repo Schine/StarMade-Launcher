@@ -10,6 +10,6 @@
     "tests"
   ],
   "dependencies": {
+    "angular-xml": "~2.1.1"
   }
 }
-

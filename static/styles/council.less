@@ -1,0 +1,57 @@
+ul.council-links {
+  margin: 0;
+  left: 148px;
+  list-style: none;
+  padding: 0;
+  position: absolute;
+  top: 35px;
+
+  li {
+    color: #207583;
+    float: left;
+    font-size: 12px;
+    font-weight: lighter;
+
+    &:not(:last-child):after {
+      color: #3B3A40;
+      content: "|";
+      margin: 0 5px;
+    }
+  }
+}
+
+ul.council-news {
+  .content(280px, 58px, 5px);
+}
+
+div.council-side {
+  float: right;
+  text-align: center;
+  width: 208px;
+
+  img {
+    width: 155px;
+  }
+}
+
+// Styles for StarMade Dock elements
+a.setFavicon {
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  background-size: 16px 16px;
+  background-position: left center;
+  padding-left: 18px;
+}
+
+.avatar img {
+  border-radius: 100%;
+}
+
+.inTextMiniMe img {
+  margin-right: 2px;
+  margin-bottom: -2px;
+  width: 12px;
+  height: 12px;
+}

@@ -15,6 +15,7 @@ steam.init()
 app = angular.module 'launcher', [
   require('angular-moment')
   require('angular-ui-router')
+  'xml'
 ]
 
 app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
@@ -29,6 +30,9 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
       templateUrl: 'templates/news.html'
     .state 'community',
       templateUrl: 'templates/community.html'
+    .state 'council',
+      controller: 'CouncilCtrl'
+      templateUrl: 'templates/council.html'
     .state 'player',
       controller: 'PlayerCtrl'
       templateUrl: 'templates/player.html'
@@ -36,6 +40,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
       controller: 'UpdateCtrl'
       templateUrl: 'templates/update.html'
 
+  $httpProvider.interceptors.push 'xmlHttpInterceptor'
   $httpProvider.interceptors.push 'tokenInterceptor'
 
 app.constant 'paths',
@@ -137,6 +142,7 @@ app.run ($q, $rootScope, $state, accessToken, api, paths, refreshToken) ->
 
 # Controllers
 require('./controllers/citizenBroadcast')
+require('./controllers/council')
 require('./controllers/launch')
 require('./controllers/news')
 require('./controllers/update')
