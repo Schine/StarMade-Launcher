@@ -23,6 +23,7 @@ paths =
   bower: './bower.json'
   bowerComponents:
     dir: 'bower_components'
+    glob: 'bower_components/**/*'
   build:
     dir: 'build'
     glob: 'build/**/*'
@@ -221,8 +222,8 @@ copyTasks = [
 ]
 
 gulp.task 'copy-bower-components', ->
-  gulp.src paths.bowerComponents.dir
-    .pipe gulp.dest paths.build.dir
+  gulp.src paths.bowerComponents.glob
+    .pipe gulp.dest path.join paths.build.dir, 'bower_components'
 
 gulp.task 'copy-package', ->
   gulp.src paths.package

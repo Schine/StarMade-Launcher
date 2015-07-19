@@ -1,7 +1,6 @@
 'use strict'
 
 _ = require('underscore')
-angular = require('angular')
 async = require('async')
 
 app = angular.module 'launcher'

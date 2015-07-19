@@ -1,6 +1,5 @@
 'use strict'
 
-angular = require('angular')
 remote = require('remote')
 
 app = angular.module 'launcher'

@@ -1,7 +1,5 @@
 'use strict'
 
-angular = require('angular')
-
 app = angular.module 'launcher'
 
 app.directive 'popup', ->

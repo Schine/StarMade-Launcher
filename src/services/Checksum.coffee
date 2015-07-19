@@ -1,6 +1,5 @@
 'use strict'
 
-angular = require('angular')
 async = require('async')
 crypto = require('crypto')
 fs = require('fs')

@@ -1,6 +1,5 @@
 'use strict'
 
-angular = require('angular')
 del = require('del')
 remote = require('remote')
 

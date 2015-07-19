@@ -1,6 +1,5 @@
 'use strict'
 
-angular = require('angular')
 shell = require('shell')
 
 app = angular.module 'launcher'

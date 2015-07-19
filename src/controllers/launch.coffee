@@ -1,6 +1,5 @@
 'use strict'
 
-angular = require('angular')
 os = require('os')
 path = require('path')
 remote = require('remote')
