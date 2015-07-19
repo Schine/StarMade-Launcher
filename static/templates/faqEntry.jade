@@ -1,0 +1,5 @@
+li
+  h2(ng-click='expanded = !expanded')
+    | {{question}}
+    span.toggle(ng-class="{collapsed: !expanded, expanded: expanded}")
+  p(ng-show='expanded' ng-transclude)

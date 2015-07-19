@@ -494,6 +494,27 @@ ul.side {
   }
 }
 
+.links() {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+  position: absolute;
+  top: 35px;
+
+  li {
+    color: #207583;
+    float: left;
+    font-size: 12px;
+    font-weight: lighter;
+
+    &:not(:last-child):after {
+      color: #3B3A40;
+      content: "|";
+      margin: 0 5px;
+    }
+  }
+}
+
 @import 'auth.less';
 @import 'community.less';
 @import 'council.less';
@@ -501,4 +522,5 @@ ul.side {
 @import 'news.less';
 @import 'popup.less';
 @import 'progressBar.less';
+@import 'support.less';
 @import 'update.less';

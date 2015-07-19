@@ -1,0 +1,68 @@
+ul.support-links {
+  .links;
+
+  right: 18px;
+}
+
+div.support-content {
+  .content(280px, 58px, 5px);
+
+  width: 790px;
+
+  h1 {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 8px;
+    line-height: 50px;
+    text-transform: none;
+  }
+
+  ul.faq {
+    margin: 0 4px;
+    padding: 0;
+    list-style: none;
+    width: 743px;
+
+    li {
+      background-color: #24242A;
+      border: 1px solid #393942;
+      color: #FFFFFF;
+      margin: 4px;
+      min-height: 27px;
+      width: 738px;
+
+      h2 {
+        color: #FFFFFF;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: normal;
+        margin: 0 8px;
+        line-height: 25px;
+
+        span.toggle {
+          display: block;
+          float: right;
+          font-family: 'Webdings';
+          font-size: 14px;
+
+          &.collapsed:before {
+            content: "3";
+          }
+
+          &.expanded:before {
+            content: "6";
+          }
+        }
+      }
+
+      p {
+        font-size: 12px;
+        padding: 0 8px;
+
+        &:first-child {
+          padding-top: 0;
+        }
+      }
+    }
+  }
+}

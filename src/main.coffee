@@ -36,6 +36,8 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
     .state 'player',
       controller: 'PlayerCtrl'
       templateUrl: 'templates/player.html'
+    .state 'support',
+      templateUrl: 'templates/support.html'
     .state 'update',
       controller: 'UpdateCtrl'
       templateUrl: 'templates/update.html'
@@ -150,6 +152,7 @@ require('./controllers/update')
 # Directives
 require('./directives/closeButton')
 require('./directives/externalLink')
+require('./directives/faqEntry')
 require('./directives/minimizeButton')
 require('./directives/newsBody')
 require('./directives/popup')
