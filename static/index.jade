@@ -136,7 +136,7 @@ html(ng-app='launcher')
             .field-group(ng-show='onDedicatedTab' ng-controller='LaunchCtrl')
               label(for='serverPort')
                 | Server Port
-                sup(ng-click='serverPortTooltip = true')
+                sup(ng-click='$parent.serverPortTooltip = true')
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
               input(id='serverPort' ng-model='serverPort')
