@@ -9,7 +9,9 @@ electronApp = remote.require('app')
 
 app = angular.module 'launcher'
 
-app.controller 'UpdateCtrl', ($filter, $scope, updater, updaterProgress) ->
+app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgress) ->
+  argv = remote.getGlobal('argv')
+
   $scope.versions = []
   $scope.updaterProgress = updaterProgress
   $scope.status = ''
@@ -108,7 +110,18 @@ app.controller 'UpdateCtrl', ($filter, $scope, updater, updaterProgress) ->
               $scope.lastVersion = $scope.versions[0].build
               $scope.selectedVersion = 0
 
-            updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
+            if $rootScope.nogui
+              # Always use the latest version with -nogui
+              $scope.lastVersion = $scope.versions[0].build
+              $scope.selectedVersion = 0
+
+              updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, false)
+
+              $scope.$watch 'updaterProgress.inProgress', (newVal) ->
+                # Quit when done
+                electronApp.quit() if !newVal
+            else
+              updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
       , ->
         $scope.status = 'You are offline.' unless navigator.onLine
         $scope.switchingBranch = false
@@ -142,6 +155,25 @@ app.controller 'UpdateCtrl', ($filter, $scope, updater, updaterProgress) ->
   $scope.$watch 'updaterProgress.inProgress', (newVal) ->
     if !newVal # Not in progress
       updateStatus($scope.selectedVersion)
+
+  # Override settings with supplied arguments
+  if argv['install-dir']?
+    localStorage.setItem('installDir', argv['install-dir'])
+
+  if argv.archive
+    localStorage.setItem('branch', 'archive')
+
+  if argv.dev
+    localStorage.setItem('branch', 'dev')
+
+  if argv.latest
+    localStorage.removeItem('lastVersion')
+
+  if argv.pre
+    localStorage.setItem('branch', 'pre')
+
+  if argv.release
+    localStorage.setItem('branch', 'release')
 
   $scope.lastVersion = localStorage.getItem('lastVersion')
   $scope.branch = localStorage.getItem('branch') || 'release'

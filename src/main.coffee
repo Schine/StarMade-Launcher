@@ -46,6 +46,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $httpProvider.interceptors.push 'tokenInterceptor'
 
 app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
+  argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
   $rootScope.openDownloadPage = ->
@@ -99,39 +100,38 @@ app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
       accessToken.delete()
       refreshToken.delete()
 
-  if api.isAuthenticated()
-    if !rememberMe || !refreshToken?
-      accessToken.delete()
-      refreshToken.delete()
-      $rootScope.startAuth()
+  $rootScope.nogui = argv.nogui
+  if !argv.nogui
+    if api.isAuthenticated()
+      if !rememberMe || !refreshToken?
+        accessToken.delete()
+        refreshToken.delete()
+        $rootScope.startAuth()
+      else
+        getCurrentUser = ->
+          api.getCurrentUser()
+            .success (data) ->
+              $rootScope.currentUser = data.user
+              $rootScope.playerName = $rootScope.currentUser.username
+              remote.getCurrentWindow().show()
+            .error (data, status) ->
+              if status == 401
+                refreshToken.refresh()
+                  .then (data) ->
+                    accessToken.set data.access_token
+                    refreshToken.set data.refresh_token
+
+                    # Try again
+                    getCurrentUser()
+                  , ->
+                    accessToken.delete()
+                    refreshToken.delete()
+                    $rootScope.startAuth()
+              else
+                $rootScope.startAuth()
+        getCurrentUser()
     else
-      getCurrentUser = ->
-        api.getCurrentUser()
-          .success (data) ->
-            $rootScope.currentUser = data.user
-            $rootScope.playerName = $rootScope.currentUser.username
-            remote.getCurrentWindow().show()
-          .error (data, status) ->
-            if status == 401
-              refreshToken.refresh()
-                .then (data) ->
-                  accessToken.set data.access_token
-                  refreshToken.set data.refresh_token
-
-                  # Try again
-                  getCurrentUser()
-                , ->
-                  accessToken.delete()
-                  refreshToken.delete()
-                  $rootScope.startAuth()
-            else
-              $rootScope.startAuth()
-      getCurrentUser()
-  else
-    $rootScope.startAuth()
-
-  unless localStorage.getItem('branch')?
-    localStorage.setItem 'branch', 'release'
+      $rootScope.startAuth()
 
   $state.go 'news'
 

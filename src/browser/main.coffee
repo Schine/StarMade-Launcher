@@ -13,6 +13,17 @@ BrowserWindow = require('browser-window')
 
 argv = require('minimist')(process.argv.slice(1))
 
+# Handle certain single dash arguments
+process.argv.slice(1).forEach (arg, index) ->
+  argv.archive = true if arg == '-archive'
+  argv.dev = true if arg == '-dev'
+  argv.latest = true if arg == '-latest'
+  argv.nogui = true if arg == '-nogui'
+  argv.pre = true if arg == '-pre'
+  argv.release = true if arg == '-release'
+
+global.argv = argv
+
 if process.platform == 'darwin' && process.cwd() == '/'
   # Change working directory
   process.chdir(path.join(path.dirname(path.dirname(path.dirname(path.dirname(__dirname)))), 'MacOS'))
@@ -51,9 +62,21 @@ openMainWindow = ->
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
 
-  if argv['install-dir']?
-    escapedInstallDir = path.resolve(argv['install-dir']).replace(/\\/g, '\\\\')
-    mainWindow.webContents.executeJavaScript("localStorage.setItem('installDir', '#{escapedInstallDir}');")
+  #if argv['install-dir']?
+  #  escapedInstallDir = path.resolve(argv['install-dir']).replace(/\\/g, '\\\\')
+  #  mainWindow.webContents.executeJavaScript("localStorage.setItem('installDir', '#{escapedInstallDir}');")
+
+  #if argv.archive
+  #  mainWindow.webContents.executeJavaScript("localStorage.setItem('branch', 'archive');")
+
+  #if argv.dev
+  #  mainWindow.webContents.executeJavaScript("localStorage.setItem('branch', 'dev');")
+
+  #if argv.pre
+  #  mainWindow.webContents.executeJavaScript("localStorage.setItem('branch', 'pre');")
+
+  #if argv.release
+  #  mainWindow.webContents.executeJavaScript("localStorage.setItem('branch', 'release');")
 
   mainWindow.openDevTools()
 
