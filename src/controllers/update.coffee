@@ -1,6 +1,5 @@
 'use strict'
 
-del = require('del')
 remote = require('remote')
 
 dialog = remote.require('dialog')
