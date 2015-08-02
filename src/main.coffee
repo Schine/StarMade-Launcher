@@ -59,7 +59,14 @@ app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
     shell.openExternal 'https://registry.star-made.org/profile/steam_link'
 
   $rootScope.startAuth = ->
+    $rootScope.currentUser = null
+    accessToken.delete()
+    refreshToken.delete()
     ipc.send 'start-auth'
+
+  $rootScope.switchUser = ->
+    $rootScope.launcherOptions = false
+    $rootScope.startAuth()
 
   ipc.on 'finish-auth', (args) ->
     $rootScope.$apply (scope) ->
@@ -104,8 +111,6 @@ app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
   if !argv.nogui
     if api.isAuthenticated()
       if !rememberMe || !refreshToken?
-        accessToken.delete()
-        refreshToken.delete()
         $rootScope.startAuth()
       else
         getCurrentUser = ->

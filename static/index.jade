@@ -188,6 +188,10 @@ html(ng-app='launcher')
           button(ng-click='openDownloadPage()') Download Latest Launcher
           span.description
             | Download the latest launcher
+          br
+          button(ng-click='switchUser()') Switch User
+          span.description
+            | You are currently playing as {{playerName}}
 
         .field-group.launcher-options(ng-if='currentUser')
           label Steam Settings
