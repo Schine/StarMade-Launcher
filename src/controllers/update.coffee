@@ -65,9 +65,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       properties: ['openDirectory']
     , (path) ->
       return unless path?
-      $scope.popupData.installDir = path
+      $scope.popupData.installDir = path[0]
 
   $scope.popupBuildTypeSave = ->
+    if $scope.branch == $scope.popupData.branch && $scope.installDir != $scope.popupData.installDir
+      # Scan the new install directroy
+      updater.update($scope.versions[$scope.selectedVersion], $scope.popupData.installDir, true)
+
     $scope.branch = $scope.popupData.branch
     $scope.installDir = $scope.popupData.installDir
     $scope.buildTypeOptions = false
