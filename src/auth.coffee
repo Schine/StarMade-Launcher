@@ -80,7 +80,7 @@ switch localStorage.getItem('authGoto')
 localStorage.removeItem('authGoto')
 
 rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
-rememberMeBox.innerHTML = '&#10003;' if rememberMe
+rememberMeBox.innerHTML = '&#x2713;' if rememberMe
 
 uplinkLink.addEventListener 'click', (event) ->
   event.preventDefault()
