@@ -42,7 +42,11 @@ oldUserData = app.getPath 'userData'
 if argv['install-dir']?
   app.setPath 'userData', path.join(path.resolve(argv['install-dir']), 'Launcher')
 else
-  app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
+  if process.platform == 'linux'
+    # Use the user's home directory on Linux
+    app.setPath 'userData', "#{app.getPath('home')}/StarMade/Launcher"
+  else
+    app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
 
 rimraf oldUserData, (err) ->
   console.warn "Unable to remove old user data directory: #{err}" if err
