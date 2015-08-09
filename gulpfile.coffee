@@ -505,7 +505,8 @@ packageJavaTasks = [
 packageJavaTask = (platform, arch) ->
   ->
     filter = plugins.filter('**/*/bin/*')
-    javaDir = path.join(java.dir[platform][arch], util.getJreDirectory(javaVersion))
+    javaDir = path.join(java.dir[platform][arch], util.getJreDirectory(javaVersion, platform))
+    javaDir = path.join(javaDir, '..', '..') if platform == 'darwin'
 
     if targetPlatform != 'all'
       return unless platform == targetPlatform

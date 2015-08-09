@@ -17,13 +17,13 @@ exports.parseBoolean = (str) ->
   else
     false
 
-exports.getJreDirectory = (javaVersion) ->
+exports.getJreDirectory = (javaVersion, platform = process.platform) ->
   javaVersionBits = javaVersion.split('u')
   javaVersionNumber = "1.#{javaVersionBits[0]}.0"
   javaUpdateNumber = javaVersionBits[1]
 
   jreDirectory = "jre#{javaVersionNumber}_#{javaUpdateNumber}"
-  if process.platform == 'darwin'
+  if platform == 'darwin'
     jreDirectory += '.jre/Contents/Home'
   else
     jreDirectory
