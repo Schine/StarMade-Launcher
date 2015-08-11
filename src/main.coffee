@@ -14,6 +14,7 @@ steam.init()
 
 app = angular.module 'launcher', [
   require('angular-moment')
+  require('angular-resource')
   require('angular-ui-router')
   'xml'
 ]
@@ -161,6 +162,7 @@ require('./filters/ordinalDate')
 
 # Services
 require('./services/Checksum')
+require('./services/NewsSidebarEntry')
 require('./services/Version')
 require('./services/accessToken')
 require('./services/api')

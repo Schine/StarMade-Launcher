@@ -13,12 +13,14 @@ app.directive 'externalLink', ->
   scope:
     href: '@href'
     thirdPartyWarning: '=thirdPartyWarning'
-  template: '<a ng-click="openExternal()" ng-transclude></a>'
+  template: '<a ng-click="openExternal($event)" ng-transclude></a>'
   transclude: true
   link: (scope, element) ->
     element.removeAttr 'href'
 
-    scope.openExternal = ->
+    scope.openExternal = (event) ->
+      event.preventDefault()
+
       if scope.thirdPartyWarning
         dialog.showMessageBox
           type: 'info'

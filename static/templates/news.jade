@@ -1,13 +1,11 @@
 ul.side
+  li(ng-repeat='entry in sidebarEntries' ng-style="{'background': 'url({{entry.news_sidebar_entry.image_url}})'}")
+    external-link(href='{{entry.news_sidebar_entry.url}}')
+  // Placeholders for when the content is still loading
+ul.side(ng-hide='sidebarEntries.length > 0')
   li
-    a
-      img
   li
-    a
-      img
   li
-    a
-      img
 ul.news
   li(ng-repeat='entry in news')
     div.banner(ng-class="{'no-banner': !entry.banner}" ng-hide='!entry.title')
