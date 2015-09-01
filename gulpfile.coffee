@@ -176,7 +176,7 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
     platform: targetPlatform
     arch: targetArch
     version: electronVersion
-    icon: paths.res.icon
+    icon: properIconFile(targetPlatform)
     overwrite: true
     asar: true
     'version-string':
