@@ -69,8 +69,7 @@ paths =
     dir: 'node_modules'
   package: './package.json'
   res:
-    darwinIcon: 'res/starmade.icns'
-    icon: 'res/starmade.ico'
+    icon: 'res/starmade'
     licenses:
       dir: 'res/licenses'
   src:
@@ -161,12 +160,6 @@ gulp.task 'coffee', ->
     .pipe plugins.sourcemaps.write()
     .pipe gulp.dest paths.build.lib.dir
 
-properIconFile = (platform) ->
-  if platform == 'darwin'
-    return paths.res.darwinIcon
-  else
-    return paths.res.icon
-
 gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
   packager = require('electron-packager')
   packager
@@ -176,7 +169,7 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
     platform: targetPlatform
     arch: targetArch
     version: electronVersion
-    icon: properIconFile(targetPlatform)
+    icon: paths.res.icon
     overwrite: true
     asar: true
     'version-string':
