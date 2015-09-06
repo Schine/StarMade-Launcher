@@ -51,6 +51,9 @@ else
 rimraf oldUserData, (err) ->
   console.warn "Unable to remove old user data directory: #{err}" if err
 
+# Disable caching so that files like the build index and checksums aren't cached
+app.commandLine.appendSwitch('disable-http-cache')
+
 openMainWindow = ->
   return if quitting
 
@@ -163,3 +166,6 @@ ipc.on 'finish-auth', (event, args) ->
 
 ipc.on 'start-steam-link', ->
   openGettingStartedWindow('steam')
+
+ipc.on 'update', ->
+  console.log 'TODO: Start updating'
