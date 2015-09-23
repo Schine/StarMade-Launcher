@@ -79,10 +79,10 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   $scope.selectLastUsedVersion = ->
     for version, i in $scope.versions
       if version.build == $scope.lastVersion
-        $scope.selectedVersion = i
+        $scope.selectedVersion = i.toString()
         return
 
-    $scope.selectedVersion = 0
+    $scope.selectedVersion = '0'
 
   updateStatus = (selectedVersion) ->
     return if $scope.versions.length == 0
@@ -90,7 +90,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     if $scope.updaterProgress.needsUpdating
       $scope.status = "You need to update for v#{$scope.versions[selectedVersion].version}"
     else
-      if selectedVersion == 0
+      if selectedVersion == '0'
         $scope.status = 'You have the latest version for this Build Type'
       else
         $scope.status = "You are up-to-date for v#{$scope.versions[selectedVersion].version}"
@@ -106,17 +106,17 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
         # Workaround for when ngRepeat hasn't processed the versions yet
         requestAnimationFrame ->
-          $scope.$apply ->
+          $scope.$apply ($scope) ->
             if $scope.lastVersion?
               $scope.selectLastUsedVersion()
             else
               $scope.lastVersion = $scope.versions[0].build
-              $scope.selectedVersion = 0
+              $scope.selectedVersion = '0'
 
             if $rootScope.nogui
               # Always use the latest version with -nogui
               $scope.lastVersion = $scope.versions[0].build
-              $scope.selectedVersion = 0
+              $scope.selectedVersion = '0'
 
               updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, false)
 
