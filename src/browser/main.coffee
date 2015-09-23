@@ -85,7 +85,7 @@ openMainWindow = ->
   #if argv.release
   #  mainWindow.webContents.executeJavaScript("localStorage.setItem('branch', 'release');")
 
-  mainWindow.openDevTools()
+  mainWindow.openDevTools({detached: true})
 
   mainWindow.on 'closed', ->
     mainWindow = null
@@ -104,7 +104,7 @@ openGettingStartedWindow = (args) ->
     height: height
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
-  gettingStartedWindow.openDevTools()
+  gettingStartedWindow.openDevTools({detached: true})
 
   gettingStartedWindow.on 'close', ->
     if authWindow?
