@@ -30,6 +30,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
       controller: 'NewsCtrl'
       templateUrl: 'templates/news.html'
     .state 'community',
+      controller: 'CommunityCtrl'
       templateUrl: 'templates/community.html'
     .state 'council',
       controller: 'CouncilCtrl'
@@ -143,6 +144,7 @@ app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
 
 # Controllers
 require('./controllers/citizenBroadcast')
+require('./controllers/community')
 require('./controllers/council')
 require('./controllers/launch')
 require('./controllers/news')
@@ -162,6 +164,7 @@ require('./filters/ordinalDate')
 
 # Services
 require('./services/Checksum')
+require('./services/CommunityContentEntry')
 require('./services/NewsSidebarEntry')
 require('./services/Version')
 require('./services/accessToken')

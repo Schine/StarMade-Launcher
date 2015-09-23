@@ -9,6 +9,17 @@ ul.side
     a
       img
 div.community-featured
-  
+  a(href='{{contentEntries[0].community_content_entry.url}}')
+    img(ng-src='{{contentEntries[0].community_content_entry.image_url}}')
 div.community-featured-details
+  div.community-featured-meta
+    span.author created by {{contentEntries[0].community_content_entry.author}}
+    div.rating
+      span.star(ng-class="{empty: featuredRating == 0.0, half: featuredRating <= 1.0, full: featuredRating >= 1.0}")
+      span.star(ng-class="{empty: featuredRating <= 1.0, half: featuredRating <= 2.0, full: featuredRating >= 2.0}")
+      span.star(ng-class="{empty: featuredRating <= 2.0, half: featuredRating <= 3.0, full: featuredRating >= 3.0}")
+      span.star(ng-class="{empty: featuredRating <= 3.0, half: featuredRating <= 4.0, full: featuredRating >= 4.0}")
+      span.star(ng-class="{empty: featuredRating <= 4.0, half: featuredRating <= 5.0, full: featuredRating == 5.0}")
+  h1 {{contentEntries[0].community_content_entry.title}}
+  {{contentEntries[0].community_content_entry.description}}
   

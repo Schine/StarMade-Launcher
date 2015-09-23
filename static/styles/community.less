@@ -4,4 +4,33 @@ div.community-featured {
 
 div.community-featured-details {
   .content(108px, 230px);
+  
+  div.community-featured-meta {
+    float: right;
+    
+    div.rating {
+      float: right;
+      
+      span.star {
+        background-image: url(../images/community/rating_star.png);
+        background-position: 0 -33px;
+        background-repeat: no-repeat;
+        display: inline-block;
+        height: 16px;
+        width: 16px;
+        
+        &.full {
+          background-position: 0 0;
+        }
+        
+        &.half {
+          background-position: 0 -16px;
+        }
+        
+        &.empty {
+          background-position: 0 -33px;
+        }
+      }
+    }
+  }
 }
