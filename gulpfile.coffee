@@ -10,7 +10,6 @@ mkdirp = require('mkdirp')
 ncp = require('ncp')
 gulp = require('gulp')
 gutil = require('gulp-util')
-packager = require('electron-packager')
 path = require('path')
 plugins = require('gulp-load-plugins')()
 rimraf = require('rimraf')
@@ -73,40 +72,6 @@ paths =
     icon: 'res/starmade'
     licenses:
       dir: 'res/licenses'
-  selfUpdater:
-    build:
-      dir: 'self-updater/build'
-      glob: 'self-updater/build/**/*'
-      lib:
-        dir: 'self-updater/build/lib'
-      static:
-        dir: 'self-updater/build/static'
-        glob: 'self-updater/build/static/**/*'
-        styles:
-          dir:
-            'self-updater/build/static/styles'
-    dist:
-      dir: 'self-updater/dist',
-      platform:
-        darwin:
-          x64: 'self-updater/dist/starmade-launcher-self-updater-darwin-x64/starmade-launcher-self-updater.app/Contents/MacOS'
-        linux:
-          ia32: 'self-updater/dist/starmade-launcher-self-updater-linux-ia32'
-          x64: 'self-updater/dist/starmade-launcher-self-updater-linux-x64'
-        win32:
-          ia32: 'self-updater/dist/starmade-launcher-self-updater-win32-ia32'
-          x64: 'self-updater/dist/starmade-launcher-self-updater-win32-x64'
-    package: './self-updater/package.json'
-    src:
-      dir: 'self-updater/src'
-      glob: 'self-updater/src/**/*.coffee'
-    static:
-      dir: 'self-updater/static'
-      entries: 'self-updater/static/*.js'
-      jade:
-        glob: 'self-updater/static/**/*.jade'
-      styles:
-        main: 'self-updater/static/styles/main.less'
   src:
     dir: 'src'
     glob: 'src/**/*.coffee'
@@ -188,8 +153,6 @@ gulp.task 'bootstrap', ['greenworks', 'java']
 
 gulp.task 'build', ['coffee', 'jade', 'less', 'copy', 'acknowledge']
 
-gulp.task 'self-updater:build', ['self-updater:coffee', 'self-updater:jade', 'self-updater:less', 'self-updater:copy']
-
 gulp.task 'coffee', ->
   gulp.src paths.src.glob
     .pipe plugins.coffee()
@@ -197,14 +160,8 @@ gulp.task 'coffee', ->
     .pipe plugins.sourcemaps.write()
     .pipe gulp.dest paths.build.lib.dir
 
-gulp.task 'self-updater:coffee', ->
-  gulp.src paths.selfUpdater.src.glob
-    .pipe plugins.coffee()
-      .on 'error', gutil.log
-    .pipe plugins.sourcemaps.write()
-    .pipe gulp.dest paths.selfUpdater.build.lib.dir
-
 gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
+  packager = require('electron-packager')
   packager
     dir: paths.build.dir
     out: 'dist'
@@ -221,25 +178,6 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
       LegalCopyright: 'Copyright (C) 2015 Schine GmbH'
       ProductName: 'StarMade Launcher'
       OriginalFilename: 'starmade-launcher.exe'
-  , callback
-
-gulp.task 'self-updater:electron-packager', ['self-updater:build'], (callback) ->
-  packager
-    dir: paths.selfUpdater.build.dir
-    out: 'self-updater/dist'
-    name: 'starmade-launcher-self-updater'
-    platform: targetPlatform
-    arch: targetArch
-    version: electronVersion
-    icon: paths.res.icon
-    overwrite: true
-    asar: true
-    'version-string':
-      FileDescription: 'StarMade Launcher Self Updater'
-      CompanyName: 'Schine GmbH'
-      LegalCopyright: 'Copyright (C) 2015 Schine GmbH'
-      ProductName: 'StarMade Launcher Self Updater'
-      OriginalFilename: 'starmade-launcher-self-updater.exe'
   , callback
 
 gulp.task 'greenworks', ->
@@ -270,21 +208,10 @@ gulp.task 'jade', ->
     .pipe wiredep()
     .pipe gulp.dest paths.build.static.dir
 
-gulp.task 'self-updater:jade', ->
-  gulp.src paths.selfUpdater.static.jade.glob
-    .pipe plugins.jade
-      pretty: true
-    .pipe gulp.dest paths.selfUpdater.build.static.dir
-
 gulp.task 'less', ->
   gulp.src paths.static.styles.main
     .pipe plugins.less()
     .pipe gulp.dest paths.build.static.styles.dir
-
-gulp.task 'self-updater:less', ->
-  gulp.src paths.selfUpdater.static.styles.main
-    .pipe plugins.less()
-    .pipe gulp.dest paths.selfUpdater.build.static.styles.dir
 
 copyTasks = [
   'copy-bower-components'
@@ -526,17 +453,6 @@ for name of bower.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'self-updater:copy-package', ->
-  gulp.src paths.selfUpdater.package
-    .pipe gulp.dest paths.selfUpdater.build.dir
-
-gulp.task 'self-updater:copy-static-entries', ->
-  gulp.src paths.selfUpdater.static.entries
-    .pipe gulp.dest paths.selfUpdater.build.static.dir
-
-
-gulp.task 'self-updater:copy', ['self-updater:copy-package', 'self-updater:copy-static-entries']
-
 gulp.task 'package', ['build', 'electron-packager', 'package-greenworks', 'package-java', 'package-redistributables', 'package-steam-appid']
 
 packageGreenworksTasks = [
@@ -661,27 +577,12 @@ gulp.task 'package-steam-appid', ['electron-packager'], ->
     .pipe gulp.dest paths.dist.platform.linux.x64
     .pipe gulp.dest paths.dist.platform.darwin.x64
 
-gulp.task 'self-updater:package', ['self-updater:electron-packager']
-
 gulp.task 'run', ['package'], ->
   appDir = paths.dist.platform[process.platform][process.arch]
   if process.platform == 'darwin'
     app = path.join appDir, 'Electron'
   else
     app = path.join appDir, 'starmade-launcher'
-    app += '.exe' if process.platform == 'win32'
-  app = path.resolve app
-
-  spawn app, [],
-    cwd: appDir
-    stdio: 'inherit'
-
-gulp.task 'self-updater:run', ->
-  appDir = paths.selfUpdater.dist.platform[process.platform][process.arch]
-  if process.platform == 'darwin'
-    app = path.join appDir, 'Electron'
-  else
-    app = path.join appDir, 'starmade-launcher-self-updater'
     app += '.exe' if process.platform == 'win32'
   app = path.resolve app
 
