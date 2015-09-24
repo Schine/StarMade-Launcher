@@ -49,7 +49,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $httpProvider.interceptors.push 'xmlHttpInterceptor'
   $httpProvider.interceptors.push 'tokenInterceptor'
 
-app.run ($q, $rootScope, $state, accessToken, api, refreshToken, updater) ->
+app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updater) ->
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
@@ -172,7 +172,10 @@ app.run ($q, $rootScope, $state, accessToken, api, refreshToken, updater) ->
                   $rootScope.launcherUpdating = false
                   $rootScope.startAuth()
           else
-            $rootScope.launcherUpdating = false
+            # Delay for a second to workaround RawChannel errors
+            $timeout ->
+              $rootScope.launcherUpdating = false
+            , 1000
             $rootScope.startAuth()
 
   $state.go 'news'
