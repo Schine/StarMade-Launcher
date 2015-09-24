@@ -4,11 +4,14 @@ ipc = require('ipc')
 path = require('path')
 remote = require('remote')
 shell = require('shell')
+spawn = require('child_process').spawn
 
 electronApp = remote.require('app')
 
 steam = require('./steam')
 util = require('./util')
+
+pkg = require(path.join(path.dirname(__dirname), 'package.json'))
 
 steam.init()
 
@@ -46,7 +49,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $httpProvider.interceptors.push 'xmlHttpInterceptor'
   $httpProvider.interceptors.push 'tokenInterceptor'
 
-app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
+app.run ($q, $rootScope, $state, accessToken, api, refreshToken, updater) ->
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
@@ -137,7 +140,40 @@ app.run ($q, $rootScope, $state, accessToken, api, refreshToken) ->
                 $rootScope.startAuth()
         getCurrentUser()
     else
-      $rootScope.startAuth()
+      # Check for updates to the launcher
+      $rootScope.launcherUpdating = true
+      updater.getVersions('launcher')
+        .then (versions) ->
+          if versions[0].version != pkg.version
+            console.info 'Updating launcher...'
+
+            launcherDir = process.cwd()
+            launcherExec = null
+            if process.platform == 'darwin'
+              launcherExec = path.join launcherDir, 'Electron'
+            else
+              launcherExec = path.join launcherDir, 'starmade-launcher'
+              launcherExec += '.exe' if process.platform == 'win32'
+
+            ipc.send 'open-updating'
+            ipc.once 'updating-opened', ->
+              updater.updateLauncher(versions[0], launcherDir)
+                .then ->
+                  console.info 'Launcher updated! Restarting...'
+                  child = spawn launcherExec, [],
+                    detach: true
+                  electronApp.quit()
+                , (err) ->
+                  console.error 'Updating the launcher failed!'
+                  console.error err
+                  remote.showErrorBox('Launcher update failed', 'The launcher failed to update.')
+                  ipc.send 'close-updating'
+
+                  $rootScope.launcherUpdating = false
+                  $rootScope.startAuth()
+          else
+            $rootScope.launcherUpdating = false
+            $rootScope.startAuth()
 
   $state.go 'news'
 

@@ -95,8 +95,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       else
         $scope.status = "You are up-to-date for v#{$scope.versions[selectedVersion].version}"
 
-  $scope.$watch 'branch', (newVal) ->
-    localStorage.setItem 'branch', newVal
+  branchChange = (newVal) ->
     $scope.switchingBranch = true
     updater.getVersions newVal
       .then (versions) ->
@@ -130,6 +129,14 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
         $scope.switchingBranch = false
         $scope.versions = []
         $scope.selectedVersion = null
+
+  $rootScope.$watch 'launcherUpdating', (updating) ->
+    branchChange($scope.branch) unless updating
+
+  $scope.$watch 'branch', (newVal) ->
+    return if $rootScope.launcherUpdating
+    localStorage.setItem 'branch', newVal
+    branchChange(newVal)
 
   $scope.$watch 'installDir', (newVal) ->
     localStorage.setItem 'installDir', newVal

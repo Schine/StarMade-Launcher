@@ -1,6 +1,7 @@
 'use strict'
 
 fs = require('fs')
+ipc = require('ipc')
 path = require('path')
 remote = require('remote')
 shell = require('shell')
@@ -11,13 +12,24 @@ close = document.getElementById 'close'
 footerLinks = document.getElementById 'footerLinks'
 currentStep = -1
 
+step0 = document.getElementById 'step0'
+step1 = document.getElementById 'step1'
+step2 = document.getElementById 'step2'
+step3 = document.getElementById 'step3'
+updating = document.getElementById 'updating'
+
 showLicenses = ->
   close.style.display = 'none'
   step0.style.display = 'block'
   step1.style.display = 'none'
   step2.style.display = 'none'
   step3.style.display = 'none'
+  updating.style.display = 'none'
   footerLinks.style.display = 'none'
+
+showUpdating = ->
+  step0.style.display = 'none'
+  updating.style.display = 'block'
 
 acceptEula = ->
   localStorage.setItem 'acceptedEula', true
@@ -41,11 +53,6 @@ acceptEula = ->
 close.addEventListener 'click', ->
   remote.require('app').quit()
 
-step0 = document.getElementById 'step0'
-step1 = document.getElementById 'step1'
-step2 = document.getElementById 'step2'
-step3 = document.getElementById 'step3'
-
 if localStorage.getItem('gotStarted')?
   if window.location.href.split('?')[1] == 'licenses'
     showLicenses()
@@ -55,6 +62,10 @@ if localStorage.getItem('gotStarted')?
     step0.style.display = 'none'
     step3.style.display = 'block'
     footerLinks.style.display = 'block'
+    remote.getCurrentWindow().show()
+  else if window.location.href.split('?')[1] == 'updating'
+    showUpdating()
+    ipc.send('updating-opened')
     remote.getCurrentWindow().show()
   else
     window.close()

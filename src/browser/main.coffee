@@ -1,7 +1,7 @@
 'use strict'
 
 # For some reason, windows open taller on OS X
-OSX_HEIGHT_OFFSET = 44
+OSX_HEIGHT_OFFSET = 21
 
 app = require('app')
 dialog = require('dialog')
@@ -33,6 +33,7 @@ staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
 authWindow = null
 mainWindow = null
 gettingStartedWindow = null
+updatingWindow = null
 
 authFinished = false
 quitting = false
@@ -50,6 +51,9 @@ else
 
 rimraf oldUserData, (err) ->
   console.warn "Unable to remove old user data directory: #{err}" if err
+
+# Disable caching so that files like the build index and checksums aren't cached
+app.commandLine.appendSwitch('disable-http-cache')
 
 openMainWindow = ->
   return if quitting
@@ -82,8 +86,6 @@ openMainWindow = ->
   #if argv.release
   #  mainWindow.webContents.executeJavaScript("localStorage.setItem('branch', 'release');")
 
-  mainWindow.openDevTools({detached: true})
-
   mainWindow.on 'closed', ->
     mainWindow = null
 
@@ -101,7 +103,6 @@ openGettingStartedWindow = (args) ->
     height: height
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
-  gettingStartedWindow.openDevTools({detached: true})
 
   gettingStartedWindow.on 'close', ->
     if authWindow?
@@ -130,6 +131,15 @@ app.on 'before-quit', ->
 
 ipc.on 'open-licenses', ->
   openGettingStartedWindow('licenses')
+
+ipc.on 'open-updating', ->
+  openGettingStartedWindow('updating')
+
+ipc.on 'updating-opened', ->
+  mainWindow.webContents.send('updating-opened')
+
+ipc.on 'close-updating', ->
+  gettingStartedWindow.close()
 
 ipc.on 'start-auth', ->
   height = 404

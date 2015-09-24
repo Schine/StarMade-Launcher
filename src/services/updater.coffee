@@ -2,16 +2,21 @@
 
 _ = require('underscore')
 async = require('async')
+fs = require('original-fs')
+ipc = require('ipc')
+request = require('request')
 
 app = angular.module 'launcher'
 
 app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
   BASE_URL = 'http://files.star-made.org'
+  LAUNCHER_BASE_URL = 'http://launcher-files-origin.star-made.org'
   BRANCH_INDEXES =
     pre: "#{BASE_URL}/prebuildindex"
     dev: "#{BASE_URL}/devbuildindex"
     release: "#{BASE_URL}/releasebuildindex"
     archive: "#{BASE_URL}/archivebuildindex"
+    launcher: "#{LAUNCHER_BASE_URL}/launcherbuildindex"
 
   @update = (version, installDir, checkOnly = false, force = false) ->
     return if updaterProgress.inProgress
@@ -76,6 +81,25 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
               updaterProgress.text = "Determining files to download... #{updaterProgress.calculatePercentage()}%  selected #{filesToDownload.length}/#{checksums.length} (#{updaterProgress.toMegabytes(totalSize)} MB)"
               updaterProgress.curValue++
               download()
+
+  @updateLauncher = (version, launcherDir) ->
+    $q (resolve, reject) ->
+      sourceFilePath = version.path
+      sourceFilePath = sourceFilePath.replace /\.\//g, ''
+
+      resourcesDir = null
+      if process.platform == 'darwin'
+        resourcesDir = path.join launcherDir, '..', 'Resources'
+      else
+        resourcesDir = path.join launcherDir, 'resources'
+      console.info resourcesDir
+
+      request("#{LAUNCHER_BASE_URL}/#{sourceFilePath}/app.asar")
+        .on 'error', (err) ->
+          reject(err)
+        .on 'end', ->
+          resolve()
+        .pipe(fs.createWriteStream(path.join(resourcesDir, 'app.asar')))
 
   @getChecksums = (path) ->
     $q (resolve, reject) ->
