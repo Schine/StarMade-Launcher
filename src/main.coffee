@@ -161,7 +161,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
                 .then ->
                   console.info 'Launcher updated! Restarting...'
                   child = spawn launcherExec, [],
-                    detach: true
+                    detached: true
                   electronApp.quit()
                 , (err) ->
                   console.error 'Updating the launcher failed!'
