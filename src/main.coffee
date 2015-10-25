@@ -8,12 +8,9 @@ spawn = require('child_process').spawn
 
 electronApp = remote.require('app')
 
-steam = require('./steam')
 util = require('./util')
 
 pkg = require(path.join(path.dirname(__dirname), 'package.json'))
-
-steam.init()
 
 app = angular.module 'launcher', [
   require('angular-moment')
