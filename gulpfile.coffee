@@ -198,7 +198,6 @@ downloadJavaTask = (platform) ->
   ->
     console.log "Testing java downloading: platform #{platform}"
     plugins.download(java.url[platform])
-      .pipe plumber()
       .pipe plugins.gunzip()
       .pipe untar()
       .pipe gulp.dest path.join(paths.dep.java.dir, platform)
