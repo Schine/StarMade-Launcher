@@ -13,9 +13,11 @@ gutil = require('gulp-util')
 path = require('path')
 plugins = require('gulp-load-plugins')()
 rimraf = require('rimraf')
+plumber = require('gulp-plumber')
 source = require('vinyl-source-stream')
 spawn = require('child_process').spawn
 wiredep = require('wiredep').stream
+untar = require('gulp-untar')
 
 util = require('./src/util')
 
@@ -187,11 +189,19 @@ gulp.task 'greenworks', ->
 
 javaTasks = []
 
+gulp.task 'test-java', ->
+  plugins.download("https://s3.amazonaws.com/sm-launcher/java/jre-7u80-windows-x64.tar.gz")
+    .pipe plugins.gunzip()
+    .pipe untar()
+    .pipe gulp.dest path.join(paths.dep.java.dir, "win64")
+
 downloadJavaTask = (platform) ->
   ->
+    console.log "Testing java downloading: platform #{platform}"
     plugins.download(java.url[platform])
+      .pipe plumber()
       .pipe plugins.gunzip()
-      .pipe plugins.untar()
+      .pipe untar()
       .pipe gulp.dest path.join(paths.dep.java.dir, platform)
 
 for platform, url of java.url
@@ -508,11 +518,14 @@ packageJavaTask = (platform, arch) ->
     javaDir = path.join(java.dir[platform][arch], util.getJreDirectory(javaVersion, platform))
     javaDir = path.join(javaDir, '..', '..') if platform == 'darwin'
 
+    console.log "JAVA DIRECTORY: #{javaDir}, Java Version: #{javaVersion}"
+
     if targetPlatform != 'all'
       return unless platform == targetPlatform
 
     if targetArch != 'all'
       return unless arch == targetArch
+
 
     gulp.src "#{javaDir}/**/*", {base: java.dir[platform][arch]}
       .pipe filter
