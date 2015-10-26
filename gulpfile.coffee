@@ -13,7 +13,6 @@ gutil = require('gulp-util')
 path = require('path')
 plugins = require('gulp-load-plugins')()
 rimraf = require('rimraf')
-plumber = require('gulp-plumber')
 source = require('vinyl-source-stream')
 spawn = require('child_process').spawn
 wiredep = require('wiredep').stream
