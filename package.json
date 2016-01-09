@@ -6,7 +6,6 @@
   "description": "Launcher for StarMade",
   "main": "lib/browser/main.js",
   "electronVersion": "0.30.7",
-  "greenworksVersion": "0.4.1",
   "javaVersion": "7u80",
   "devDependencies": {
     "coffee-script": "^1.9.2",

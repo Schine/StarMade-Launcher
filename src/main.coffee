@@ -84,23 +84,23 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
             scope.playerName = scope.currentUser.username
             localStorage.setItem 'playerName', scope.playerName
 
-            scope.steamAccountLinked = true if data.user.steam_link?
+            #scope.steamAccountLinked = true if data.user.steam_link?  ##x
 
-            if !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
-              steamId = steam.steamId().toString()
-              api.get "profiles/steam_links/#{steamId}"
-                .success ->
-                  # Current Steam account is already linked
-                  remote.getCurrentWindow().show()
-                .error (data, status) ->
-                  if status == 404
-                    # Steam account not linked
-                    ipc.send 'start-steam-link'
-                  else
-                    console.warn "Unable to determine status of Steam account: #{steamId}"
-                    remote.getCurrentWindow().show()
-            else
-              remote.getCurrentWindow().show()
+            #if !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
+            #  steamId = steam.steamId().toString()
+            #  api.get "profiles/steam_links/#{steamId}"
+            #    .success ->
+            #      # Current Steam account is already linked
+            #      remote.getCurrentWindow().show()
+            #    .error (data, status) ->
+            #      if status == 404
+            #        # Steam account not linked
+            #        ipc.send 'start-steam-link'
+            #      else
+            #        console.warn "Unable to determine status of Steam account: #{steamId}"
+            #        remote.getCurrentWindow().show()
+            #else
+            remote.getCurrentWindow().show()
 
   $rootScope.$on '$locationChangeStart', ->
     # Remove authentication information unless we are told to remember it

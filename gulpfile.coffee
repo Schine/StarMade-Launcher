@@ -1,6 +1,6 @@
 'use strict'
 
-GREENWORKS_URL = 'https://s3.amazonaws.com/sm-launcher/greenworks'
+# GREENWORKS_URL = 'https://s3.amazonaws.com/sm-launcher/greenworks'  ##x
 JAVA_URL = 'https://s3.amazonaws.com/sm-launcher/java'
 
 argv = require('minimist')(process.argv.slice(2))
@@ -45,11 +45,11 @@ paths =
       dir: 'dep/electron'
     java:
       dir: 'dep/java'
-    greenworks:
-      dir: 'dep/greenworks'
-      entry: 'dep/greenworks/greenworks.js'
-      lib:
-        dir: 'dep/greenworks/lib'
+    # greenworks:  ##x
+    #   dir: 'dep/greenworks'
+    #   entry: 'dep/greenworks/greenworks.js'
+    #   lib:
+    #     dir: 'dep/greenworks/lib'
     steamworksSdk:
       dir: 'dep/steamworks'
   dist:
@@ -92,7 +92,7 @@ paths =
 bower = require(paths.bower)
 pkg = require(paths.package)
 electronVersion = pkg.electronVersion
-greenworksVersion = pkg.greenworksVersion
+# greenworksVersion = pkg.greenworksVersion  ##x
 javaVersion = pkg.javaVersion
 
 targetPlatform = argv.platform || 'current'
@@ -104,12 +104,13 @@ if targetPlatform == 'current'
 if targetArch == 'current'
   targetArch = process.arch
 
-greenworks =
-  win32: "#{paths.dep.greenworks.dir}/lib/greenworks-win32.node"
-  win64: "#{paths.dep.greenworks.dir}/lib/greenworks-win64.node"
-  osx64: "#{paths.dep.greenworks.dir}/lib/greenworks-osx64.node"
-  linux32: "#{paths.dep.greenworks.dir}/lib/greenworks-linux32.node"
-  linux64: "#{paths.dep.greenworks.dir}/lib/greenworks-linux64.node"
+##x
+# greenworks =
+#   win32: "#{paths.dep.greenworks.dir}/lib/greenworks-win32.node"
+#   win64: "#{paths.dep.greenworks.dir}/lib/greenworks-win64.node"
+#   osx64: "#{paths.dep.greenworks.dir}/lib/greenworks-osx64.node"
+#   linux32: "#{paths.dep.greenworks.dir}/lib/greenworks-linux32.node"
+#   linux64: "#{paths.dep.greenworks.dir}/lib/greenworks-linux64.node"
 
 java =
   dir:
@@ -150,7 +151,7 @@ licenseOverrides =
 
 gulp.task 'default', ['run']
 
-gulp.task 'bootstrap', ['greenworks', 'java']
+gulp.task 'bootstrap', ['java']  ##x 'greenworks'
 
 gulp.task 'build', ['coffee', 'jade', 'less', 'copy', 'acknowledge']
 
@@ -181,10 +182,11 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
       OriginalFilename: 'starmade-launcher.exe'
   , callback
 
-gulp.task 'greenworks', ->
-  plugins.download(GREENWORKS_URL + "/greenworks-v#{greenworksVersion}-starmade-electron-#{electronVersion}.zip")
-    .pipe plugins.unzip()
-    .pipe gulp.dest paths.dep.greenworks.dir
+##x
+# gulp.task 'greenworks', ->
+#   plugins.download(GREENWORKS_URL + "/greenworks-v#{greenworksVersion}-starmade-electron-#{electronVersion}.zip")
+#     .pipe plugins.unzip()
+#     .pipe gulp.dest paths.dep.greenworks.dir
 
 javaTasks = []
 
@@ -264,7 +266,7 @@ acknowledgeTasks = [
   'acknowledge-java'
   'acknowledge-java-thirdparty'
   'acknowledge-java-thirdparty-javafx'
-  'acknowledge-greenworks'
+  ##x 'acknowledge-greenworks'
 ]
 
 gulp.task 'acknowledge-clear', (callback) ->
@@ -329,13 +331,14 @@ gulp.task 'acknowledge-java-thirdparty-javafx', ['acknowledge-clear', 'acknowled
       data.toString() + '\n'
     fs.appendFile licenses, data, callback
 
-gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
-  fs.readFile path.join(paths.res.licenses.dir, 'greenworks'), (err, data) ->
-    return callback(err) if err
-    data = 'greenworks\n' +
-      '--------------------------------------------------------------------------------\n' +
-      data.toString() + '\n'
-    fs.appendFile licenses, data, callback
+##x
+# gulp.task 'acknowledge-greenworks', ['acknowledge-clear', 'acknowledge-starmade'], (callback) ->
+#   fs.readFile path.join(paths.res.licenses.dir, 'greenworks'), (err, data) ->
+#     return callback(err) if err
+#     data = 'greenworks\n' +
+#       '--------------------------------------------------------------------------------\n' +
+#       data.toString() + '\n'
+#     fs.appendFile licenses, data, callback
 
 acknowledgeModuleTask = (name, dir = paths.nodeModules.dir) ->
   modulePkg = require(path.resolve(path.join(dir, name, 'package.json')))
@@ -461,50 +464,51 @@ for name of bower.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['build', 'electron-packager', 'package-greenworks', 'package-java', 'package-redistributables', 'package-steam-appid']
+gulp.task 'package', ['build', 'electron-packager', 'package-java', 'package-redistributables', 'package-steam-appid']  ##x 'package-greenworks' @3rd
 
-packageGreenworksTasks = [
-  'electron-packager'
-]
-
-packageGreenworksNativeTask = (platform) ->
-  ->
-    os = platform.slice(0, -2)
-    arch = platform.slice(-2)
-
-    switch os
-      when 'osx'
-        os = 'darwin'
-      when 'win'
-        os = 'win32'
-
-    switch arch
-      when '32'
-        arch = 'ia32'
-      when '64'
-        arch = 'x64'
-
-    if targetPlatform != 'all'
-      return unless os == targetPlatform
-
-    if targetArch != 'all'
-      return unless arch == targetArch
-
-    gulp.src greenworks[platform]
-      .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'greenworks', 'lib')
-
-for platform of greenworks
-  taskName = "package-greenworks-#{platform}"
-  gulp.task taskName, ['electron-packager'], packageGreenworksNativeTask(platform)
-  packageGreenworksTasks.push taskName
-
-gulp.task 'package-greenworks', packageGreenworksTasks, ->
-  gulp.src paths.dep.greenworks.entry
-    .pipe gulp.dest path.join(paths.dist.platform.win32.ia32, 'dep', 'greenworks')
-    .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'greenworks')
-    .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'greenworks')
-    .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'greenworks')
-    .pipe gulp.dest path.join(paths.dist.platform.darwin.x64, 'dep', 'greenworks')
+##x
+# packageGreenworksTasks = [
+#   'electron-packager'
+# ]
+#
+# packageGreenworksNativeTask = (platform) ->
+#   ->
+#     os = platform.slice(0, -2)
+#     arch = platform.slice(-2)
+#
+#     switch os
+#       when 'osx'
+#         os = 'darwin'
+#       when 'win'
+#         os = 'win32'
+#
+#     switch arch
+#       when '32'
+#         arch = 'ia32'
+#       when '64'
+#         arch = 'x64'
+#
+#     if targetPlatform != 'all'
+#       return unless os == targetPlatform
+#
+#     if targetArch != 'all'
+#       return unless arch == targetArch
+#
+#     gulp.src greenworks[platform]
+#       .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'greenworks', 'lib')
+#
+# for platform of greenworks
+#   taskName = "package-greenworks-#{platform}"
+#   gulp.task taskName, ['electron-packager'], packageGreenworksNativeTask(platform)
+#   packageGreenworksTasks.push taskName
+#
+# gulp.task 'package-greenworks', packageGreenworksTasks, ->
+#   gulp.src paths.dep.greenworks.entry
+#     .pipe gulp.dest path.join(paths.dist.platform.win32.ia32, 'dep', 'greenworks')
+#     .pipe gulp.dest path.join(paths.dist.platform.win32.x64, 'dep', 'greenworks')
+#     .pipe gulp.dest path.join(paths.dist.platform.linux.ia32, 'dep', 'greenworks')
+#     .pipe gulp.dest path.join(paths.dist.platform.linux.x64, 'dep', 'greenworks')
+#     .pipe gulp.dest path.join(paths.dist.platform.darwin.x64, 'dep', 'greenworks')
 
 packageJavaTasks = [
   'electron-packager'
@@ -571,7 +575,7 @@ packageRedistributablesTask = (platform) ->
       return unless arch == targetArch
 
     gulp.src redistributables[platform]
-      .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'greenworks', 'lib')
+      .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'lib')  ##x 'greenworks' @-2nd
 
 for platform of redistributables
   taskName = "package-redistributables-#{platform}"
