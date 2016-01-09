@@ -50,8 +50,8 @@ paths =
     #   entry: 'dep/greenworks/greenworks.js'
     #   lib:
     #     dir: 'dep/greenworks/lib'
-    steamworksSdk:
-      dir: 'dep/steamworks'
+    #steamworksSdk:
+    #  dir: 'dep/steamworks'
   dist:
     dir: 'dist',
     platform:
@@ -87,7 +87,7 @@ paths =
       glob: 'static/**/*.jade'
     styles:
       main: 'static/styles/main.less'
-  steamAppid: 'steam_appid.txt'
+  # steamAppid: 'steam_appid.txt'  ##x
 
 bower = require(paths.bower)
 pkg = require(paths.package)
@@ -129,12 +129,15 @@ java =
     linux32: "#{JAVA_URL}/jre-#{javaVersion}-linux-i586.tar.gz"
     linux64: "#{JAVA_URL}/jre-#{javaVersion}-linux-x64.tar.gz"
 
-redistributables =
-  win32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/steam_api.dll"
-  win64: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/win64/steam_api64.dll"
-  osx32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/osx32/libsteam_api.dylib"
-  linux32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/linux32/libsteam_api.so"
-  linux64: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/linux64/libsteam_api.so"
+
+redistributables = ['win32', 'win64', 'osx32', 'linux32', 'linux64']  ##+
+##x
+# redistributables =
+#   win32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/steam_api.dll"
+#   win64: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/win64/steam_api64.dll"
+#   osx32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/osx32/libsteam_api.dylib"
+#   linux32: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/linux32/libsteam_api.so"
+#   linux64: "#{paths.dep.steamworksSdk.dir}/sdk/redistributable_bin/linux64/libsteam_api.so"
 
 licenses = path.join paths.build.static.dir, 'licenses.txt'
 
@@ -464,7 +467,7 @@ for name of bower.dependencies
 gulp.task 'copy', copyTasks
 gulp.task 'acknowledge', acknowledgeTasks
 
-gulp.task 'package', ['build', 'electron-packager', 'package-java', 'package-redistributables', 'package-steam-appid']  ##x 'package-greenworks' @3rd
+gulp.task 'package', ['build', 'electron-packager', 'package-java', 'package-redistributables']  ##x 'package-steam-appid'@last  'package-greenworks'@3rd
 
 ##x
 # packageGreenworksTasks = [
@@ -574,8 +577,9 @@ packageRedistributablesTask = (platform) ->
     if targetArch != 'all'
       return unless arch == targetArch
 
-    gulp.src redistributables[platform]
-      .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'lib')  ##x 'greenworks' @-2nd
+    ##x
+    # gulp.src redistributables[platform]
+    #   .pipe gulp.dest path.join(paths.dist.platform[os][arch], 'dep', 'lib')  ##x 'greenworks' @-2nd
 
 for platform of redistributables
   taskName = "package-redistributables-#{platform}"
@@ -584,13 +588,14 @@ for platform of redistributables
 
 gulp.task 'package-redistributables', packageRedistributablesTasks
 
-gulp.task 'package-steam-appid', ['electron-packager'], ->
-  gulp.src paths.steamAppid
-    .pipe gulp.dest paths.dist.platform.win32.ia32
-    .pipe gulp.dest paths.dist.platform.win32.x64
-    .pipe gulp.dest paths.dist.platform.linux.ia32
-    .pipe gulp.dest paths.dist.platform.linux.x64
-    .pipe gulp.dest paths.dist.platform.darwin.x64
+##x
+# gulp.task 'package-steam-appid', ['electron-packager'], ->
+#   gulp.src paths.steamAppid
+#     .pipe gulp.dest paths.dist.platform.win32.ia32
+#     .pipe gulp.dest paths.dist.platform.win32.x64
+#     .pipe gulp.dest paths.dist.platform.linux.ia32
+#     .pipe gulp.dest paths.dist.platform.linux.x64
+#     .pipe gulp.dest paths.dist.platform.darwin.x64
 
 gulp.task 'run', ['package'], ->
   appDir = paths.dist.platform[process.platform][process.arch]
