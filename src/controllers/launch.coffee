@@ -19,7 +19,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken) ->
       initial: 256
       earlyGen: 64
     x64:
-      max: 1024
+      max: 1536
       initial: 512
       earlyGen: 128
 
