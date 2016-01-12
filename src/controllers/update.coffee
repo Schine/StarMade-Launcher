@@ -89,7 +89,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
     if $scope.updaterProgress.needsUpdating
       $scope.status = "You need to update for v#{$scope.versions[selectedVersion].version}"
+      $scope.status_updateWarning = "This will overwrite any installed mods."
     else
+      $scope.status_updateWarning = ""
       if selectedVersion == '0'
         $scope.status = 'You have the latest version for this Build Type'
       else
@@ -123,7 +125,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
                 # Quit when done
                 electronApp.quit() if !newVal
             else
-              updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
+              # Update only when selecting a different build version
+              $scope.updaterProgress.needsUpdating = ($scope.versions[$scope.selectedVersion].build != $scope.lastVersion)
+              # updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
       , ->
         $scope.status = 'You are offline.' unless navigator.onLine
         $scope.switchingBranch = false
@@ -133,7 +137,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   $rootScope.$watch 'launcherUpdating', (updating) ->
     branchChange($scope.branch) unless updating
 
-  $scope.$watch 'branch', (newVal) ->
+  $scope.$watch 'branch', (newVal) ->  ##
     return if $rootScope.launcherUpdating
     localStorage.setItem 'branch', newVal
     branchChange(newVal)

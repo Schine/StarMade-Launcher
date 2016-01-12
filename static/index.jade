@@ -140,7 +140,10 @@ html(ng-app='launcher')
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
               input(id='serverPort' ng-model='serverPort')
-        .status {{status}}
+        .status
+          {{status}}
+          br
+          {{status_updateWarning}}
         .update-bg(ng-class='{hover: updateHover}' ng-show='updaterProgress.needsUpdating && !updaterProgress.inProgress')
         a.update(ng-click='update()' ng-mouseenter='updateMouseEnter()' ng-mouseleave='updateMouseLeave()')
         
