@@ -156,7 +156,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     $scope.popupData.selectedVersion = newVal
     return unless $scope.versions[newVal]?
     return unless navigator.onLine
-    updater.update($scope.versions[newVal], $scope.installDir, true)
+    # Require an update when selecting a different version
+    $scope.updaterProgress.needsUpdating = ($scope.versions[newVal].build != $scope.lastVersion)
+    updateStatus(newVal)
 
   $scope.$watch 'updaterProgress.text', (newVal) ->
     if $scope.updaterProgress.inProgress
