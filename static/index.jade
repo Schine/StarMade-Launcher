@@ -118,7 +118,7 @@ html(ng-app='launcher')
                 select(id='popupBuildVersion' ng-model='popupData.selectedVersion' ng-disabled='updaterProgress.inProgress || switchingBranch')
                   option(ng-repeat="version in versions" value='{{$index}}')
                     | v{{version.version}} {{version.latest}}
-                button(ng-click='popupData.selectedVersion = 0' ng-disabled='updaterProgress.inProgress || switchingBranch') Select Newest
+                button(ng-click='selectNewestVersion()' ng-disabled='updaterProgress.inProgress || switchingBranch') Select Newest
                 button(ng-click='selectLastUsedVersion()' ng-disabled='updaterProgress.inProgress || switchingBranch') Select Last Used
               
               .field-group.download-options

@@ -134,6 +134,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
         $scope.versions = []
         $scope.selectedVersion = null
 
+  $scope.selectNewestVersion = () ->
+    $scope.popupData.selectedVersion = '0'  # selects the first item
+
   $rootScope.$watch 'launcherUpdating', (updating) ->
     branchChange($scope.branch) unless updating
 
