@@ -66,6 +66,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken) ->
       "-Xms#{$scope.memory.initial}M"
       "-Xmx#{$scope.memory.max}M"
       '-Xincgc'
+      '-server'
       '-jar'
       starmadeJar
       '-force' unless dedicatedServer
