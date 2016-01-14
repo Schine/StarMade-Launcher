@@ -114,68 +114,74 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       if !rememberMe || !refreshToken?
         $rootScope.startAuth()
       else
-        getCurrentUser = ->
-          api.getCurrentUser()
-            .success (data) ->
-              $rootScope.currentUser = data.user
-              $rootScope.playerName = $rootScope.currentUser.username
-              remote.getCurrentWindow().show()
-            .error (data, status) ->
-              if status == 401
-                refreshToken.refresh()
-                  .then (data) ->
-                    accessToken.set data.access_token
-                    refreshToken.set data.refresh_token
-
-                    # Try again
-                    getCurrentUser()
-                  , ->
-                    accessToken.delete()
-                    refreshToken.delete()
-                    $rootScope.startAuth()
-              else
-                $rootScope.startAuth()
         getCurrentUser()
     else
-      # Check for updates to the launcher
-      $rootScope.launcherUpdating = true
-      updater.getVersions('launcher')
-        .then (versions) ->
-          if versions[0].version != pkg.version
-            console.info 'Updating launcher...'
-
-            launcherDir = process.cwd()
-            launcherExec = null
-            if process.platform == 'darwin'
-              launcherExec = path.join launcherDir, 'Electron'
-            else
-              launcherExec = path.join launcherDir, 'starmade-launcher'
-              launcherExec += '.exe' if process.platform == 'win32'
-
-            ipc.send 'open-updating'
-            ipc.once 'updating-opened', ->
-              updater.updateLauncher(versions[0], launcherDir)
-                .then ->
-                  console.info 'Launcher updated! Restarting...'
-                  child = spawn launcherExec, [],
-                    detached: true
-                  electronApp.quit()
-                , (err) ->
-                  console.error 'Updating the launcher failed!'
-                  console.error err
-                  remote.showErrorBox('Launcher update failed', 'The launcher failed to update.')
-                  ipc.send 'close-updating'
-
-                  $rootScope.launcherUpdating = false
-                  $rootScope.startAuth()
-          else
-            # Delay for a second to workaround RawChannel errors
-            $timeout ->
-              $rootScope.launcherUpdating = false
-            , 1000
-            $rootScope.startAuth()
-
+      launcherAutoupdate()
   $state.go 'news'
+
+
+  getCurrentUser = ->
+    api.getCurrentUser()
+      .success (data) ->
+        $rootScope.currentUser = data.user
+        $rootScope.playerName = $rootScope.currentUser.username
+        remote.getCurrentWindow().show()
+      .error (data, status) ->
+        if status == 401
+          refreshToken.refresh()
+            .then (data) ->
+              accessToken.set data.access_token
+              refreshToken.set data.refresh_token
+
+              # Try again
+              getCurrentUser()
+            , ->
+              accessToken.delete()
+              refreshToken.delete()
+              $rootScope.startAuth()
+        else
+          $rootScope.startAuth()
+
+
+  launcherAutoupdate = ->
+    # Check for updates to the launcher
+    $rootScope.launcherUpdating = true
+    updater.getVersions('launcher')
+      .then (versions) ->
+        if versions[0].version != pkg.version
+          console.info 'Updating launcher...'
+
+          launcherDir = process.cwd()
+          launcherExec = null
+          if process.platform == 'darwin'
+            launcherExec = path.join launcherDir, 'Electron'
+          else
+            launcherExec = path.join launcherDir, 'starmade-launcher'
+            launcherExec += '.exe' if process.platform == 'win32'
+
+          ipc.send 'open-updating'
+          ipc.once 'updating-opened', ->
+            updater.updateLauncher(versions[0], launcherDir)
+              .then ->
+                console.info 'Launcher updated! Restarting...'
+                child = spawn launcherExec, [],
+                  detached: true
+                electronApp.quit()
+              , (err) ->
+                console.error 'Updating the launcher failed!'
+                console.error err
+                remote.showErrorBox('Launcher update failed', 'The launcher failed to update.')
+                ipc.send 'close-updating'
+
+                $rootScope.launcherUpdating = false
+                $rootScope.startAuth()
+        else
+          # Delay for a second to workaround RawChannel errors
+          $timeout ->
+            $rootScope.launcherUpdating = false
+          , 1000
+          $rootScope.startAuth()
+
 
 # Controllers
 require('./controllers/citizenBroadcast')
