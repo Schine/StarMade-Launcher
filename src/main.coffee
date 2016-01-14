@@ -116,7 +116,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       else
         getCurrentUser()
     else
-      launcherAutoupdate()
+      # launcherAutoupdate()
   $state.go 'news'
 
 
