@@ -70,57 +70,6 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
     $rootScope.launcherOptions = false
     $rootScope.startAuth()
 
-  ipc.on 'finish-auth', (args) ->
-    $rootScope.$apply (scope) ->
-      if args.playerName?
-        scope.playerName = args.playerName
-        localStorage.setItem 'playerName', scope.playerName
-        remote.getCurrentWindow().show()
-      else
-        accessToken.set args.access_token
-        refreshToken.set args.refresh_token
-        api.getCurrentUser()
-          .success (data) ->
-            scope.currentUser = data.user
-            scope.playerName = scope.currentUser.username
-            localStorage.setItem 'playerName', scope.playerName
-
-            scope.steamAccountLinked = true if data.user.steam_link?
-
-            if !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
-              steamId = steam.steamId().toString()
-              api.get "profiles/steam_links/#{steamId}"
-                .success ->
-                  # Current Steam account is already linked
-                  remote.getCurrentWindow().show()
-                .error (data, status) ->
-                  if status == 404
-                    # Steam account not linked
-                    ipc.send 'start-steam-link'
-                  else
-                    console.warn "Unable to determine status of Steam account: #{steamId}"
-                    remote.getCurrentWindow().show()
-            else
-              remote.getCurrentWindow().show()
-
-  $rootScope.$on '$locationChangeStart', ->
-    # Remove authentication information unless we are told to remember it
-    unless rememberMe
-      accessToken.delete()
-      refreshToken.delete()
-
-  $rootScope.nogui = argv.nogui
-  if !argv.nogui
-    if api.isAuthenticated()
-      if !rememberMe || !refreshToken?
-        $rootScope.startAuth()
-      else
-        getCurrentUser()
-    else
-      launcherAutoupdate()
-      $rootScope.startAuth()
-  $state.go 'news'
-
 
   getCurrentUser = ->
     api.getCurrentUser()
@@ -182,6 +131,59 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           $timeout ->
             $rootScope.launcherUpdating = false
           , 1000
+
+
+  ipc.on 'finish-auth', (args) ->
+    $rootScope.$apply (scope) ->
+      if args.playerName?
+        scope.playerName = args.playerName
+        localStorage.setItem 'playerName', scope.playerName
+        remote.getCurrentWindow().show()
+      else
+        accessToken.set args.access_token
+        refreshToken.set args.refresh_token
+        api.getCurrentUser()
+          .success (data) ->
+            scope.currentUser = data.user
+            scope.playerName = scope.currentUser.username
+            localStorage.setItem 'playerName', scope.playerName
+
+            scope.steamAccountLinked = true if data.user.steam_link?
+
+            if !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
+              steamId = steam.steamId().toString()
+              api.get "profiles/steam_links/#{steamId}"
+                .success ->
+                  # Current Steam account is already linked
+                  remote.getCurrentWindow().show()
+                .error (data, status) ->
+                  if status == 404
+                    # Steam account not linked
+                    ipc.send 'start-steam-link'
+                  else
+                    console.warn "Unable to determine status of Steam account: #{steamId}"
+                    remote.getCurrentWindow().show()
+            else
+              remote.getCurrentWindow().show()
+
+  $rootScope.$on '$locationChangeStart', ->
+    # Remove authentication information unless we are told to remember it
+    unless rememberMe
+      accessToken.delete()
+      refreshToken.delete()
+
+  $rootScope.nogui = argv.nogui
+  if !argv.nogui
+    if api.isAuthenticated()
+      if !rememberMe || !refreshToken?
+        $rootScope.startAuth()
+      else
+        getCurrentUser()
+    else
+      launcherAutoupdate()
+      $rootScope.startAuth()
+  $state.go 'news'
+
 
 
 # Controllers
