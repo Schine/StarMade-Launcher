@@ -1,5 +1,7 @@
 'use strict'
 
+version = "0.0.4"
+
 ipc = require('ipc')
 path = require('path')
 remote = require('remote')
@@ -50,6 +52,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
+  $rootScope.version = version
 
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'
@@ -180,7 +183,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       else
         getCurrentUser()
     else
-      launcherAutoupdate()
+      # launcherAutoupdate()
       $rootScope.startAuth()
   $state.go 'news'
 

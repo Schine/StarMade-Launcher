@@ -76,13 +76,15 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     $scope.installDir = $scope.popupData.installDir
     $scope.buildTypeOptions = false
 
-  $scope.selectLastUsedVersion = ->
+  $scope.getLastUsedVersion = ->
     for version, i in $scope.versions
       if version.build == $scope.lastVersion
-        $scope.selectedVersion = i.toString()
-        return
+        $scope.lastUsedVersion = version.version.toString()
+        return i.toString()
+    return '0'
 
-    $scope.selectedVersion = '0'
+  $scope.selectLastUsedVersion = ->
+    $scope.selectedVersion = $scope.getLastUsedVersion()
 
   updateStatus = (selectedVersion) ->
     return if $scope.versions.length == 0
@@ -93,7 +95,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     else
       $scope.status_updateWarning = ""
       if selectedVersion == '0'
-        $scope.status = 'You have the latest version for this Build Type'
+        $scope.status = 'You have the latest version for this build type'
       else
         $scope.status = "You are up-to-date for v#{$scope.versions[selectedVersion].version}"
 
@@ -202,4 +204,6 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   $scope.update = (force = false) ->
     version = $scope.versions[$scope.selectedVersion]
     $scope.lastVersion = version.build
+    $scope.getLastUsedVersion()  # update displayed 'Currently Installed' version
+    $scope.status_updateWarning = ""
     updater.update(version, $scope.installDir, false, force)

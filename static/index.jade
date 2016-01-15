@@ -132,6 +132,13 @@ html(ng-app='launcher')
                 button(ng-click='update(true)' ng-disabled='updaterProgress.inProgress || switchingBranch || popupData.deleting') Force Download All &amp; Overwrite
                 span.description
                   | Force re-download and replace of every file (takes longer)
+
+                label Currently Installed:
+                br
+                span.description
+                  | version: {{lastUsedVersion}}
+                  br
+                  | build:  {{lastVersion}}
             
             .field-group(ng-show='onDedicatedTab' ng-controller='LaunchCtrl')
               label(for='serverPort')
@@ -143,7 +150,8 @@ html(ng-app='launcher')
         .status
           {{status}}
           br
-          {{status_updateWarning}}
+          span(ng-hide:"updaterProgress.inProgress")
+            | {{status_updateWarning}}
         .update-bg(ng-class='{hover: updateHover}' ng-show='updaterProgress.needsUpdating && !updaterProgress.inProgress')
         a.update(ng-click='update()' ng-mouseenter='updateMouseEnter()' ng-mouseleave='updateMouseLeave()')
         
@@ -191,6 +199,8 @@ html(ng-app='launcher')
           button(ng-click='openDownloadPage()') Download Latest Launcher
           span.description
             | Download the latest launcher
+            br
+            | You have v{{version}} installed
           br
           button(ng-click='switchUser()') Switch User
           span.description

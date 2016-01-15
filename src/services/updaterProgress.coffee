@@ -20,7 +20,7 @@ app.service 'updaterProgress', ($rootScope) ->
     (value / 1024 / 1024).toFixed 1
 
   @updateText = ->
-    @text = "Downloading files #{@filesDone}/#{@filesCount} (#{@toMegabytes(@curValue)}MB/#{@toMegabytes(@maxValue)} MB) [#{@calculatePercentage()}%]"
+    @text = "Downloading files... #{@filesDone}/#{@filesCount} (#{@toMegabytes(@curValue)}MB/#{@toMegabytes(@maxValue)} MB) [#{@calculatePercentage()}%]"
 
     # Trick to get the progress bar to update quicker
     $rootScope.$digest() unless $rootScope.$$phase
