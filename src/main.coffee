@@ -50,6 +50,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
+
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'
 
@@ -117,6 +118,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
         getCurrentUser()
     else
       launcherAutoupdate()
+      $rootScope.startAuth()
   $state.go 'news'
 
 
@@ -180,7 +182,6 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           $timeout ->
             $rootScope.launcherUpdating = false
           , 1000
-          $rootScope.startAuth()
 
 
 # Controllers
