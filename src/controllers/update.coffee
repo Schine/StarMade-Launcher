@@ -1,9 +1,9 @@
 'use strict'
 
+fs     = require('fs')
 remote = require('remote')
 
 dialog = remote.require('dialog')
-
 electronApp = remote.require('app')
 
 app = angular.module 'launcher'
@@ -99,6 +99,27 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       else
         $scope.status = "You are up-to-date for v#{$scope.versions[selectedVersion].version}"
 
+    if !$scope.starmadeInstalled
+      $scope.status = "StarMade.jar missing; click to repair."
+      $scope.status_updateWarning = "This will overwrite any installed mods."
+
+
+
+
+  # Starmade Jar path
+  starmadeJarPath = ->
+    path.resolve "#{$scope.installDir}/StarMade.jar"
+
+  # check if StarMade is actually installed
+  bIsStarmadeInstalled = ->
+    try
+      # since Node changes the fs.exists() functions with every version
+      fs.closeSync( fs.openSync(starmadeJarPath(), "r") )
+      return $scope.starmadeInstalled = true
+    catch e
+      return $scope.starmadeInstalled = false
+
+
   branchChange = (newVal) ->
     $scope.switchingBranch = true
     updater.getVersions newVal
@@ -128,7 +149,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
                 electronApp.quit() if !newVal
             else
               # Update only when selecting a different build version
-              $scope.updaterProgress.needsUpdating = ($scope.versions[$scope.selectedVersion].build != $scope.lastVersion)
+              $scope.updaterProgress.needsUpdating = ($scope.versions[$scope.selectedVersion].build != $scope.lastVersion  ||  !bIsStarmadeInstalled())
               # updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
       , ->
         $scope.status = 'You are offline.' unless navigator.onLine
@@ -142,7 +163,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   $rootScope.$watch 'launcherUpdating', (updating) ->
     branchChange($scope.branch) unless updating
 
-  $scope.$watch 'branch', (newVal) ->  ##
+  $scope.$watch 'branch', (newVal) ->
     return if $rootScope.launcherUpdating
     localStorage.setItem 'branch', newVal
     branchChange(newVal)
@@ -166,7 +187,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     return unless $scope.versions[newVal]?
     return unless navigator.onLine
     # Require an update when selecting a different version
-    $scope.updaterProgress.needsUpdating = ($scope.versions[newVal].build != $scope.lastVersion)
+    $scope.updaterProgress.needsUpdating = ($scope.versions[newVal].build != $scope.lastVersion || !bIsStarmadeInstalled())
     updateStatus(newVal)
 
   $scope.$watch 'updaterProgress.text', (newVal) ->
@@ -206,4 +227,5 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     $scope.lastVersion = version.build
     $scope.getLastUsedVersion()  # update displayed 'Currently Installed' version
     $scope.status_updateWarning = ""
+    $scope.starmadeInstalled = true
     updater.update(version, $scope.installDir, false, force)
