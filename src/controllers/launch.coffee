@@ -57,7 +57,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken) ->
       appDir = path.dirname(process.execPath)
       javaBinDir = path.join path.dirname(path.dirname(path.dirname(path.dirname(path.dirname(process.execPath))))), 'MacOS', 'dep', 'java', javaJreDirectory, 'bin'
     else
-      javaBinDir = path.resolve "dep/java/#{javaJreDirectory}/bin"
+      javaBinDir = path.join path.dirname(process.execPath), "dep/java/#{javaJreDirectory}/bin"
     javaExec = path.join javaBinDir, 'java'
 
     child = spawn javaExec, [
