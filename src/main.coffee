@@ -175,7 +175,9 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       accessToken.delete()
       refreshToken.delete()
 
-  $rootScope.nogui = argv.nogui
+  $rootScope.nogui       =   argv.nogui
+  $rootScope.steamLaunch = !!argv.steam
+
   if !argv.nogui
     if api.isAuthenticated()
       if !rememberMe || !refreshToken?
