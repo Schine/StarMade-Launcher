@@ -153,28 +153,55 @@ body.getting_started {
 
       div.content {
 
+        h1 {
+          margin-top: 0
+        }
+
         input#installPath {
           display: block;
           width: 100%;
         }
 
         button#installBrowse {
+          float: left;
           margin-top: 0.5em;
+          z-index: 100;
+        }
+
+        span#linux_info {
+          float: left;
+          display: block;
+          width: 175px;
+          margin: 0.25em 0 0 1em;
+          font-size: 10px;
+          opacity: 0.5;
+        }
+
+
+      div#installContinueBg {
+          position: absolute;
+          top: 338px;
+          left: 0;
+          height: 166px;
+          width: 200px;
+          background-image: url(../images/getting_started/continue_btn.png);
+          background-repeat: no-repeat;
+          pointer-events: none;
+          z-index: 0;
+          transition: .3s;
+
+          &.hover {
+            background-image: url(../images/getting_started/continue_over.png)
+          }
         }
 
         a#installContinue {
-          background-image: url(../images/getting_started/continue_btn.png);
-          background-repeat: no-repeat;
-          left: 0;
-          height: 166px;
           position: absolute;
-          top: 338px;
-          width: 200px;
-          z-index: 0;
-
-          &:hover {
-            background-image: url(../images/getting_started/continue_over.png)
-          }
+          width: 108px;
+          height: 37px;
+          bottom: 60px;
+          left:   25px;
+          z-index: 1;
         }
 
       }

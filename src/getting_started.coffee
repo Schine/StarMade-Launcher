@@ -125,10 +125,21 @@ decline.addEventListener 'click', ->
 # Step 1 -- install directory
 #
 
-installPath     = document.getElementById 'installPath'
-installBrowse   = document.getElementById 'installBrowse'
-installContinue = document.getElementById 'installContinue'
+installPath       = document.getElementById 'installPath'
+installBrowse     = document.getElementById 'installBrowse'
+installContinue   = document.getElementById 'installContinue'
+installContinueBg = document.getElementById 'installContinueBg'
 
+if process.platform == 'linux'
+  document.getElementById("linux_info").className = ''  # remove .hidden from linux_info
+
+installContinue.addEventListener 'mouseenter', ->
+  installContinueBg.className = 'hover'
+
+installContinue.addEventListener 'mouseleave', ->
+  installContinueBg.className = ''
+
+# default install dir
 installPath.value = localStorage.getItem('installDir') || path.resolve(path.join(electronApp.getPath('userData'), '..'))
 
 installBrowse.addEventListener 'click', ->
