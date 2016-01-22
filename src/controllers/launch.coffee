@@ -12,7 +12,7 @@ javaJreDirectory = util.getJreDirectory javaVersion
 
 app = angular.module 'launcher'
 
-app.controller 'LaunchCtrl', ($scope, accessToken) ->
+app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
   defaults =
     ia32:
       max: 512
@@ -47,6 +47,9 @@ app.controller 'LaunchCtrl', ($scope, accessToken) ->
     localStorage.setItem 'initialMemory', $scope.memory.initial
     localStorage.setItem 'earlyGenMemory', $scope.memory.earlyGen
     $scope.closeClientOptions()
+
+  $scope.steamLaunch = ->
+    return $rootScope.steamLaunch
 
   $scope.launch = (dedicatedServer = false) ->
     loadClientOptions()

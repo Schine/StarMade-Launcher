@@ -52,7 +52,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
-  $rootScope.version = version
+  $rootScope.version     =   version
+  $rootScope.steamLaunch = !!argv.steam
 
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'
@@ -175,8 +176,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       accessToken.delete()
       refreshToken.delete()
 
-  $rootScope.nogui       =   argv.nogui
-  $rootScope.steamLaunch = !!argv.steam
+  $rootScope.nogui = argv.nogui
 
   if !argv.nogui
     if api.isAuthenticated()
