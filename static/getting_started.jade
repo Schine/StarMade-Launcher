@@ -5,6 +5,7 @@ html
     link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,700')
     link(rel='stylesheet' href='styles/main.css')
     script(src='getting_started.js')
+
   body.getting_started
     div.header
       img.logo(src='images/getting_started/GS_logo.png' alt='StarMade')
@@ -25,12 +26,23 @@ html
     div#step1.step
       div.side
       div.content
+        h1 Install directory
+        p
+          | Please select where you would like to install the game. It will be be installed in a StarMade subdirectory in the location you choose.
+        input(type='text' name='installPath' id='installPath' placeholder='install directory')
+        button(id="installBrowse") Browse
+        a#installContinue
+          span.hidden Continue
+
+    div#step2.step
+      div.side
+      div.content
         h1 Welcome to StarMade
         p
           | StarMade is a 3D voxel sandbox space shooter where players can
           | explore the universe, create and fly space ships, build space
           | stations, mine and craft resources, colonize planets, form
-          | alliances, fight for territories and more.
+          | alliances, fight for territories, and more.
         p
           | In this procedurally-generated universe of StarMade, you're only
           | limited by your imagination. Play on your own or with friends and
@@ -42,7 +54,7 @@ html
         #nextCoverBottom
         #nextCoverLeft
         
-    div#step2.step
+    div#step3.step
       div.side
       div.content
         h1 Join our Citizen Registry
@@ -67,7 +79,7 @@ html
         #skipBg
         a#skip
           span.hidden Skip
-    div#step3.step
+    div#step4.step
       div.side
       div.content
         h1 Link Steam Account?

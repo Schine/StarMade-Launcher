@@ -27,6 +27,26 @@ body.getting_started {
     }
   }
 
+
+    select, input {
+      background-color: #191F29;
+      border: 2px solid #30303C;
+      color: #FFFFFF;
+      font-family: 'Ubuntu';
+      font-size: 12px;
+      padding: 5px;
+    }
+
+    button {
+      background-color: #30303C;
+      border: 0;
+      color: #FFFFFF;
+      font-family: 'Ubuntu';
+      font-size: 12px;
+      padding: 5px 8px;
+      text-transform: uppercase;
+    }
+
   div.step {
     background-color: #0F0F13;
     background-image: url(../images/getting_started/GS_content_bg-topleft.png);
@@ -132,6 +152,42 @@ body.getting_started {
       display: none;
 
       div.content {
+
+        input#installPath {
+          display: block;
+          width: 100%;
+        }
+
+        button#installBrowse {
+          margin-top: 0.5em;
+        }
+
+        a#installContinue {
+          background-image: url(../images/getting_started/continue_btn.png);
+          background-repeat: no-repeat;
+          left: 0;
+          height: 166px;
+          position: absolute;
+          top: 338px;
+          width: 200px;
+          z-index: 0;
+
+          &:hover {
+            background-image: url(../images/getting_started/continue_over.png)
+          }
+        }
+
+      }
+
+      div.side {
+        background-image: url(../images/getting_started/GS_bg_01.jpg);
+      }
+    }
+
+    &#step2 {
+      display: none;
+
+      div.content {
         a#next {
           background-image: url(../images/getting_started/continue_btn.png);
           background-repeat: no-repeat;
@@ -189,7 +245,7 @@ body.getting_started {
       }
     }
 
-    &#step2 {
+    &#step3 {
       display: none;
 
       div.side {
@@ -276,7 +332,7 @@ body.getting_started {
       }
     }
 
-    &#step3 {
+    &#step4 {
       display: none;
 
       div.side {
