@@ -1,8 +1,10 @@
 'use strict'
 
 os = require('os')
+fs = require('fs')
 path = require('path')
 remote = require('remote')
+dialog = remote.require('dialog')
 spawn = require('child_process').spawn
 util = require('../util')
 
@@ -51,17 +53,70 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
   $scope.steamLaunch = ->
     return $rootScope.steamLaunch
 
+  $scope.launcherOptions = {}
+
+  $scope.$watch 'launcherOptions.javaPath', (newVal) ->
+    localStorage.setItem 'javaPath', newVal
+
+
+  $scope.$watch 'launcherOptions', (visible) ->
+    $scope.verifyJavaPath()  if visible
+
+  $scope.launcherOptions.javaPathBrowse = () ->
+    dialog.showOpenDialog remote.getCurrentWindow(),
+      title: 'Select Java Bin Directory'
+      properties: ['openDirectory']
+      defaultPath: $scope.launcherOptions.javaPath
+    , (newPath) ->
+      return unless newPath?
+      $scope.launcherOptions.javaPath = newPath[0]
+      $scope.verifyJavaPath()
+
+  $scope.verifyJavaPath = () ->
+    newPath = $scope.launcherOptions.javaPath
+    if !newPath  # blank path uses bundled java instead
+      $scope.launcherOptions.invalidJavaPath = false
+      $scope.launcherOptions.javaPathStatus = "-- Using bundled Java version --"
+      return
+    newPath = path.resolve($scope.launcherOptions.javaPath)
+
+    if fileExists( path.join(newPath, "java") )  || # osx+linux
+       fileExists( path.join(newPath, "java.exe") ) # windows
+      $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
+      $scope.launcherOptions.invalidJavaPath  = false
+      return
+    $scope.launcherOptions.invalidJavaPath = true
+
+  fileExists = (pathName) ->
+    pathName = path.resolve(pathName)
+    try
+      # since Node changes the fs.exists() functions with every version
+      fs.closeSync( fs.openSync(pathName, "r") )
+      return true
+    catch e
+      return false
+
+  $scope.launcherOptions.javaPath = localStorage.getItem('javaPath') || ""
+
+
+
   $scope.launch = (dedicatedServer = false) ->
     loadClientOptions()
+
+    customJavaPath = $scope.launcherOptions.javaPath
+    console.log("launch() javaPath: #{customJavaPath}")
 
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
     if process.platform == 'darwin'
       appDir = path.dirname(process.execPath)
-      javaBinDir = path.join path.dirname(path.dirname(path.dirname(path.dirname(path.dirname(process.execPath))))), 'MacOS', 'dep', 'java', javaJreDirectory, 'bin'
+      javaBinDir = customJavaPath || path.join path.dirname(path.dirname(path.dirname(path.dirname(path.dirname(process.execPath))))), 'MacOS', 'dep', 'java', javaJreDirectory, 'bin'
     else
-      javaBinDir = path.join path.dirname(process.execPath), "dep/java/#{javaJreDirectory}/bin"
+      javaBinDir = customJavaPath || path.join path.dirname(process.execPath), "dep/java/#{javaJreDirectory}/bin"
     javaExec = path.join javaBinDir, 'java'
+
+
+    console.log("| using java bin path: #{javaBinDir}")
 
     child = spawn javaExec, [
       '-Djava.net.preferIPv4Stack=true'
