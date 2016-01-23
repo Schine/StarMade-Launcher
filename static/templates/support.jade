@@ -14,18 +14,27 @@ div.support-content
   h1 Frequently Asked Questions
 
   ul.faq
-    faq-entry(question="First question")
-      | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-      | vehicula commodo nisl ac tempus. Integer mollis eleifend nisl, vitae
-      | condimentum odio commodo id. Sed lacus diam, dignissim volutpat justo
-      | non, luctus blandit quam. Sed eget venenatis purus. Cras nec erat
-      | venenatis, rutrum augue vehicula, vehicula mauris. Quisque non massa
-      | nisi. Morbi in est dapibus, pellentesque orci a, rutrum odio. In nisl
-      | nunc, condimentum sed eros eu, ultrices efficitur neque. Morbi non
-      | vestibulum risus. Curabitur semper eget tellus id pulvinar. Aliquam
-      | placerat nisi condimentum nisl feugiat, at interdum justo consequat.
-      | Etiam euismod bibendum efficitur. Aenean varius aliquet purus, vel
-      | semper dui semper ut. Fusce non eros ultrices, bibendum nunc non, 
-      | aliquet dui.
-    faq-entry(question="Second question")
-      | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vehicula commodo nisl ac tempus. Integer mollis eleifend nisl, vitae condimentum odio commodo id. Sed lacus diam, dignissim volutpat justo non, luctus blandit quam. Sed eget venenatis purus. Cras nec erat venenatis, rutrum augue vehicula, vehicula mauris. Quisque non massa nisi. Morbi in est dapibus, pellentesque orci a, rutrum odio. In nisl nunc, condimentum sed eros eu, ultrices efficitur neque. Morbi non vestibulum risus. Curabitur semper eget tellus id pulvinar. Aliquam placerat nisi condimentum nisl feugiat, at interdum justo consequat. Etiam euismod bibendum efficitur. Aenean varius aliquet purus, vel semper dui semper ut. Fusce non eros ultrices, bibendum nunc non, aliquet dui.
+    faq-entry(question="The game does not start after clicking on 'Launch' in the launcher. What should I do?")
+      | Browse to your starmade directory, and look into the folder named /logs, open the file named log.txt.0 with a text editor, and scroll to the bottom, this should give a hint on troubleshooting the startup process.
+      | We can also help with this issue via support, please create a ticket #[a.external(href='http://help.star-made.org/helpdesk/tickets/new') here]. if possible attach the log.txt.0 file to the ticket, we can directly look into the problem then.
+    faq-entry(question='I get the error "No Login name given" on trying to uplink.')
+      | You need to fill the field for the in-game-name before opening the uplink dialog.
+    faq-entry(question='How do I fix stuttering sound, or no sound at all?')
+      | Turn off the option "Use OpenAL" in the connection dialog.
+    faq-entry(question='(OSX Only) The game states: "You need the Java Runtime Environment to view this content", although it is installed.')
+      | For OSX (especially yosemite), you need to install the Java Development Kit (JDK) to have the system register the Java Runtime Environment (JRE).
+    faq-entry(question='I encounter unusual bad video performance, although my computer should perform better.')
+      | There are various reasons for the game performing not at full capacity. 
+      | #[strong 1)] Outdated video drivers, please visit the homepage of your computer manufacturer and video card manufacturer and look for updated drivers
+      | #[strong 2)] Multi-GPU systems, like notebooks, tend to run java with the powersaving GPU, right click the launcher executable and use the option: "Execute with: -> High performance GPU"
+    faq-entry(question='Can I change my registry password?')
+      | Log in to the registry, and click on your name in the top right corner. Use the "Edit profile" option and finally click on "update password".
+    faq-entry(question='Where can I look up if my account is limited (free-to-play) or upgraded (purchased)?')
+      | Log in to the registry, click on "Main menu" then on "Profile" (under "My Account"). The status shown in the field named "Account Status:" is either Upgraded or Limited, while Upgraded confirms you purchased the game.
+    faq-entry(question='I found a bug, where can I report it?')
+      | Please visit our #[a(href='http://phab.starma.de/w/create_bug_task/') bug tracker] to get instructions on how to report it.
+    faq-entry(question='My question is not answered by the FAQ, where can I get help?')
+      | There are many ways to get help:
+      | #[strong 1)] Check the FAQ on our helpdesk: #[a.external(href='http://help.star-made.org/support/solutions/5000059708') 'http://help.star-made.org/support/solutions/5000059708']
+      | #[strong 2)] Look in the game support forum: #[a.external(href='https://www.starmadedock.net/forums/gamesupport/') 'https://www.starmadedock.net/forums/gamesupport/']
+      | #[strong 3)] Create a support ticket: #[a.external(href='http://help.star-made.org/helpdesk/tickets/new') 'http://help.star-made.org/helpdesk/tickets/new']
