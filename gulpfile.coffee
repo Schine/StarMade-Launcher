@@ -162,6 +162,7 @@ gulp.task 'coffee', ->
     .pipe gulp.dest paths.build.lib.dir
 
 gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
+  git_hash = require('child_process').execSync('git rev-parse --short HEAD', { encoding: 'utf8' })
   packager = require('electron-packager')
   packager
     dir: paths.build.dir
@@ -173,6 +174,9 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
     icon: paths.res.icon
     overwrite: true
     asar: true
+    'app-category-type': 'public.app-category.games'
+    'app-version': '2.0.0'
+    'build-version' : git_hash
     'version-string':
       FileDescription: 'StarMade Launcher'
       CompanyName: 'Schine GmbH'
