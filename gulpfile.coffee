@@ -176,7 +176,7 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
     'version-string':
       FileDescription: 'StarMade Launcher'
       CompanyName: 'Schine GmbH'
-      LegalCopyright: 'Copyright (C) 2015 Schine GmbH'
+      LegalCopyright: 'Copyright (C) 2016 Schine GmbH'
       ProductName: 'StarMade Launcher'
       OriginalFilename: 'starmade-launcher.exe'
   , callback
