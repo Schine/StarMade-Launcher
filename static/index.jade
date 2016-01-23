@@ -206,7 +206,7 @@ html(ng-app='launcher')
           span.description
             | You are currently playing as {{playerName}}
 
-        .field-group.launcher-options(ng-if='currentUser')
+        .field-group.launcher-options(ng-if='currentUser' ng-hide="!steamLaunch")
           label Steam Settings
           br
           button(ng-if='!steamAccountLinked' ng-click='openSteamLink()') Link Registry Account to Steam

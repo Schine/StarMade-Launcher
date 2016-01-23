@@ -12,7 +12,7 @@ javaJreDirectory = util.getJreDirectory javaVersion
 
 app = angular.module 'launcher'
 
-app.controller 'LaunchCtrl', ($scope, accessToken) ->
+app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
   defaults =
     ia32:
       max: 512
@@ -48,6 +48,9 @@ app.controller 'LaunchCtrl', ($scope, accessToken) ->
     localStorage.setItem 'earlyGenMemory', $scope.memory.earlyGen
     $scope.closeClientOptions()
 
+  $scope.steamLaunch = ->
+    return $rootScope.steamLaunch
+
   $scope.launch = (dedicatedServer = false) ->
     loadClientOptions()
 
@@ -57,7 +60,7 @@ app.controller 'LaunchCtrl', ($scope, accessToken) ->
       appDir = path.dirname(process.execPath)
       javaBinDir = path.join path.dirname(path.dirname(path.dirname(path.dirname(path.dirname(process.execPath))))), 'MacOS', 'dep', 'java', javaJreDirectory, 'bin'
     else
-      javaBinDir = path.resolve "dep/java/#{javaJreDirectory}/bin"
+      javaBinDir = path.join path.dirname(process.execPath), "dep/java/#{javaJreDirectory}/bin"
     javaExec = path.join javaBinDir, 'java'
 
     child = spawn javaExec, [

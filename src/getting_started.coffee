@@ -4,6 +4,8 @@ fs = require('fs')
 ipc = require('ipc')
 path = require('path')
 remote = require('remote')
+dialog = remote.require('dialog')
+electronApp = remote.require('app')
 shell = require('shell')
 
 util = require('./util')
@@ -12,10 +14,12 @@ close = document.getElementById 'close'
 footerLinks = document.getElementById 'footerLinks'
 currentStep = -1
 
+
 step0 = document.getElementById 'step0'
 step1 = document.getElementById 'step1'
 step2 = document.getElementById 'step2'
 step3 = document.getElementById 'step3'
+step4 = document.getElementById 'step4'
 updating = document.getElementById 'updating'
 
 showLicenses = ->
@@ -24,6 +28,7 @@ showLicenses = ->
   step1.style.display = 'none'
   step2.style.display = 'none'
   step3.style.display = 'none'
+  step4.style.display = 'none'
   updating.style.display = 'none'
   footerLinks.style.display = 'none'
 
@@ -49,6 +54,10 @@ acceptEula = ->
     when 3
       step0.style.display = 'none'
       step3.style.display = 'block'
+    when 4
+      step0.style.display = 'none'
+      step4.style.display = 'block'
+
 
 close.addEventListener 'click', ->
   remote.require('app').quit()
@@ -58,7 +67,7 @@ if localStorage.getItem('gotStarted')?
     showLicenses()
     remote.getCurrentWindow().show()
   else if window.location.href.split('?')[1] == 'steam'
-    currentStep = 3
+    currentStep = 4
     step0.style.display = 'none'
     step3.style.display = 'block'
     footerLinks.style.display = 'block'
@@ -113,18 +122,56 @@ decline.addEventListener 'click', ->
   remote.require('app').quit()
 
 #
-# Step 1
+# Step 1 -- install directory
+#
+
+installPath       = document.getElementById 'installPath'
+installBrowse     = document.getElementById 'installBrowse'
+installContinue   = document.getElementById 'installContinue'
+installContinueBg = document.getElementById 'installContinueBg'
+
+if process.platform == 'linux'
+  document.getElementById("linux_info").className = ''  # remove .hidden from linux_info
+
+installContinue.addEventListener 'mouseenter', ->
+  installContinueBg.className = 'hover'
+
+installContinue.addEventListener 'mouseleave', ->
+  installContinueBg.className = ''
+
+# default install dir
+installPath.value = localStorage.getItem('installDir') || path.resolve(path.join(electronApp.getPath('userData'), '..'))
+
+installBrowse.addEventListener 'click', ->
+  dialog.showOpenDialog remote.getCurrentWindow(),
+    title: 'Select Installation Directory'
+    properties: ['openDirectory']
+    defaultPath: installPath.value
+  , (newPath) ->
+    return unless newPath?
+    newPath = path.join(newPath[0], 'StarMade')  if !newPath[0].endsWith(path.sep + "StarMade")
+    installPath.value = newPath
+
+installContinue.addEventListener 'click', ->
+  currentStep = 2
+  localStorage.setItem 'installDir', installPath.value
+  step1.style.display = 'none'
+  step2.style.display = 'block'
+
+
+#
+# Step 2
 #
 
 next = document.getElementById 'next'
 next.addEventListener 'click', ->
-  currentStep = 2
+  currentStep = 3
   localStorage.setItem 'gotStarted', true
-  step1.style.display = 'none'
-  step2.style.display = 'block'
+  step2.style.display = 'none'
+  step3.style.display = 'block'
 
 #
-# Step 2
+# Step 3
 #
 
 login = document.getElementById 'login'
@@ -166,7 +213,7 @@ skip.addEventListener 'click', ->
 
 
 #
-# Step 3
+# Step 4
 #
 
 link = document.getElementById 'link'

@@ -1,6 +1,6 @@
 'use strict'
 
-version = "0.0.4"
+version = "0.0.6"
 
 ipc = require('ipc')
 path = require('path')
@@ -52,7 +52,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
-  $rootScope.version = version
+  $rootScope.version     =   version
+  $rootScope.steamLaunch = !!argv.steam
 
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'
@@ -176,6 +177,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       refreshToken.delete()
 
   $rootScope.nogui = argv.nogui
+
   if !argv.nogui
     if api.isAuthenticated()
       if !rememberMe || !refreshToken?

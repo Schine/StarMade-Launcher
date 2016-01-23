@@ -27,6 +27,26 @@ body.getting_started {
     }
   }
 
+
+    select, input {
+      background-color: #191F29;
+      border: 2px solid #30303C;
+      color: #FFFFFF;
+      font-family: 'Ubuntu';
+      font-size: 12px;
+      padding: 5px;
+    }
+
+    button {
+      background-color: #30303C;
+      border: 0;
+      color: #FFFFFF;
+      font-family: 'Ubuntu';
+      font-size: 12px;
+      padding: 5px 8px;
+      text-transform: uppercase;
+    }
+
   div.step {
     background-color: #0F0F13;
     background-image: url(../images/getting_started/GS_content_bg-topleft.png);
@@ -132,6 +152,69 @@ body.getting_started {
       display: none;
 
       div.content {
+
+        h1 {
+          margin-top: 0
+        }
+
+        input#installPath {
+          display: block;
+          width: 100%;
+        }
+
+        button#installBrowse {
+          float: left;
+          margin-top: 0.5em;
+          z-index: 100;
+        }
+
+        span#linux_info {
+          float: left;
+          display: block;
+          width: 175px;
+          margin: 0.25em 0 0 1em;
+          font-size: 10px;
+          opacity: 0.5;
+        }
+
+
+      div#installContinueBg {
+          position: absolute;
+          top: 338px;
+          left: 0;
+          height: 166px;
+          width: 200px;
+          background-image: url(../images/getting_started/continue_btn.png);
+          background-repeat: no-repeat;
+          pointer-events: none;
+          z-index: 0;
+          transition: .3s;
+
+          &.hover {
+            background-image: url(../images/getting_started/continue_over.png)
+          }
+        }
+
+        a#installContinue {
+          position: absolute;
+          width: 108px;
+          height: 37px;
+          bottom: 60px;
+          left:   25px;
+          z-index: 1;
+        }
+
+      }
+
+      div.side {
+        background-image: url(../images/getting_started/GS_bg_01.jpg);
+      }
+    }
+
+    &#step2 {
+      display: none;
+
+      div.content {
         a#next {
           background-image: url(../images/getting_started/continue_btn.png);
           background-repeat: no-repeat;
@@ -189,7 +272,7 @@ body.getting_started {
       }
     }
 
-    &#step2 {
+    &#step3 {
       display: none;
 
       div.side {
@@ -276,7 +359,7 @@ body.getting_started {
       }
     }
 
-    &#step3 {
+    &#step4 {
       display: none;
 
       div.side {
