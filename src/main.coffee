@@ -7,6 +7,7 @@ path = require('path')
 remote = require('remote')
 shell = require('shell')
 spawn = require('child_process').spawn
+librato = require('librato-node')
 
 electronApp = remote.require('app')
 
@@ -51,6 +52,18 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
 app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updater) ->
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
+
+  # librato.configure
+  #   email: 'wedtm@star-made.org'
+  #   token: '7f547e30f827ca1596a5d141a77d4ff79f4536dd5d093b811ada82cc943d96d3'
+
+  # librato.on 'error', (error) -> console.log error
+
+  # process.once 'SIGINT', () -> librato.stop()
+  
+  # librato.start()
+
+  $rootScope.librato = librato
 
   $rootScope.version     =   version
   $rootScope.steamLaunch = !!argv.steam
@@ -185,7 +198,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       else
         getCurrentUser()
     else
-      launcherAutoupdate()
+        launcherAutoupdate()
       $rootScope.startAuth()
   $state.go 'news'
 
