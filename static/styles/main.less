@@ -431,6 +431,12 @@ div.launcher-options-popup {
       &.launcher-options {
         overflow: hidden; // clearfix
 
+
+        input {
+          float: left;
+          width: 231px;
+        }
+
         button {
           cursor: pointer;
           float: left;
@@ -445,6 +451,15 @@ div.launcher-options-popup {
           font-size: 10px;
           margin-left: 8px;
           width: 158px;
+          line-height: 110%;  // as linux-webkit has a different default
+
+          &.status {
+            margin-top: 0.5em;
+            color: #1f7282;
+          }
+          &.error {
+            color: #c80a0a;
+          }
 
           &:not(:last-child) {
             height: 36px;

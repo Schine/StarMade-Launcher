@@ -146,7 +146,7 @@ html(ng-app='launcher')
               br
               input(id='serverPort' ng-model='serverPort')
         .status
-          {{status}}
+          | {{status}}
           br
           span(ng-hide:"updaterProgress.inProgress")
             | {{status_updateWarning}}
@@ -190,7 +190,7 @@ html(ng-app='launcher')
         a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
 
     popup.launcher-options-popup(title='Launcher Options' type='settings' opened='launcherOptions')
-      form
+      form.popup-body
         .field-group.launcher-options
           label Launcher Settings
           br
@@ -209,3 +209,17 @@ html(ng-app='launcher')
           br
           button(ng-if='!steamAccountLinked' ng-click='openSteamLink()') Link Registry Account to Steam
           button(ng-if='steamAccountLinked' ng-disabled='true') Registry Account Linked to Steam
+
+        .field-group.launcher-options(ng-controller="LaunchCtrl")
+          label Java Settings
+          br
+          input(type="text" ng-model='launcherOptions.javaPath' ng-blur="verifyJavaPath()")
+          span.description
+            | Enter the path to your installed java, or
+            | leave blank to use the launcher's bundled version.
+          button(ng-click="launcherOptions.javaPathBrowse()") Browse
+          br
+          span.description.error(ng-show="launcherOptions.invalidJavaPath")
+            | There is no java executable in the specified path.
+          span.description.status(ng-hide="launcherOptions.invalidJavaPath")
+            | {{launcherOptions.javaPathStatus}}
