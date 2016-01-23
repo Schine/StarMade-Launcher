@@ -1,6 +1,6 @@
 'use strict'
 
-version = "0.0.6"
+version = "2.0.0"
 
 ipc = require('ipc')
 path = require('path')
