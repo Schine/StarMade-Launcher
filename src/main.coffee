@@ -1,7 +1,5 @@
 'use strict'
 
-version = "2.0.0"
-
 ipc = require('ipc')
 path = require('path')
 remote = require('remote')
@@ -52,7 +50,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
-  $rootScope.version     =   version
+  $rootScope.version     =   pkg.version
   $rootScope.steamLaunch = !!argv.steam
 
   $rootScope.openDownloadPage = ->
@@ -185,7 +183,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       else
         getCurrentUser()
     else
-      # launcherAutoupdate()
+      launcherAutoupdate()
       $rootScope.startAuth()
   $state.go 'news'
 
