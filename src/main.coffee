@@ -185,7 +185,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       else
         getCurrentUser()
     else
-      # launcherAutoupdate()
+      launcherAutoupdate()
       $rootScope.startAuth()
   $state.go 'news'
 
