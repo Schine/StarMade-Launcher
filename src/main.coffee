@@ -1,7 +1,5 @@
 'use strict'
 
-version = "2.0.0"
-
 ipc = require('ipc')
 path = require('path')
 remote = require('remote')
@@ -52,7 +50,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
 app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updater) ->
   argv = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
-
+  
   # librato.configure
   #   email: 'wedtm@star-made.org'
   #   token: '7f547e30f827ca1596a5d141a77d4ff79f4536dd5d093b811ada82cc943d96d3'
@@ -64,8 +62,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   # librato.start()
 
   $rootScope.librato = librato
-
-  $rootScope.version     =   version
+  $rootScope.version     =   pkg.version
   $rootScope.steamLaunch = !!argv.steam
 
   $rootScope.openDownloadPage = ->
@@ -167,7 +164,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
             scope.steamAccountLinked = true if data.user.steam_link?
 
-            if !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
+            if $rootScope.steamLaunch && !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
               steamId = steam.steamId().toString()
               api.get "profiles/steam_links/#{steamId}"
                 .success ->
