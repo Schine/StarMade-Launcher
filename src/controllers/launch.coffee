@@ -70,6 +70,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
     , (newPath) ->
       return unless newPath?
       $scope.launcherOptions.javaPath = newPath[0]
+      $scope.$apply()
       $scope.verifyJavaPath()
 
   $scope.verifyJavaPath = () ->
@@ -96,7 +97,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
     catch e
       return false
 
-  $scope.launcherOptions.javaPath = localStorage.getItem('javaPath') || ""
+  # $scope.launcherOptions.javaPath = localStorage.getItem('javaPath') || ""
 
 
 
