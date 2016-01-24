@@ -63,18 +63,19 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
   $scope.$watch 'launcherOptions', (visible) ->
     $scope.verifyJavaPath()  if visible
 
-  $scope.launcherOptions.javaPathBrowse = () ->
+  $scope.launcherOptions.javaPathBrowse = () =>
     dialog.showOpenDialog remote.getCurrentWindow(),
       title: 'Select Java Bin Directory'
       properties: ['openDirectory']
       defaultPath: $scope.launcherOptions.javaPath
-    , (newPath) ->
+    , (newPath) =>
       return unless newPath?
       $scope.launcherOptions.javaPath = newPath[0]
+      $rootScope.javaPath = newPath[0]
       $scope.$apply()
       $scope.verifyJavaPath()
 
-  $scope.verifyJavaPath = () ->
+  $scope.verifyJavaPath = () =>
     newPath = $scope.launcherOptions.javaPath
     console.log "verifyJavaPath: #{newPath}"
     if !newPath  # blank path uses bundled java instead
@@ -105,10 +106,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
 
 
 
-  $scope.launch = (dedicatedServer = false) ->
+  $scope.launch = (dedicatedServer = false) =>
     loadClientOptions()
 
-    customJavaPath = $scope.launcherOptions.javaPath
+    customJavaPath = $rootScope.javaPath || $scope.launcherOptions.javaPath
     console.log("launch() javaPath: #{customJavaPath}")
 
     installDir = path.resolve $scope.$parent.installDir
