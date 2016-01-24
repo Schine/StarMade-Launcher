@@ -56,6 +56,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
   $scope.launcherOptions = {}
 
   $scope.$watch 'launcherOptions.javaPath', (newVal) ->
+    console.log "$watch triggered, #{newVal}"
     localStorage.setItem 'javaPath', newVal
 
 
@@ -75,9 +76,11 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
 
   $scope.verifyJavaPath = () ->
     newPath = $scope.launcherOptions.javaPath
+    console.log "verifyJavaPath: #{newPath}"
     if !newPath  # blank path uses bundled java instead
       $scope.launcherOptions.invalidJavaPath = false
       $scope.launcherOptions.javaPathStatus = "-- Using bundled Java version --"
+      $scope.$apply()
       return
     newPath = path.resolve($scope.launcherOptions.javaPath)
 
@@ -85,6 +88,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
        fileExists( path.join(newPath, "java.exe") ) # windows
       $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
       $scope.launcherOptions.invalidJavaPath  = false
+      $scope.$apply()
       return
     $scope.launcherOptions.invalidJavaPath = true
 
