@@ -25,7 +25,11 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
       initial: 512
       earlyGen: 128
 
-  $scope.serverPort = localStorage.getItem('serverPort') || 4242
+  $scope.launcherOptions = {}
+
+  # restore previous settings, or use the defaults
+  $scope.serverPort               = localStorage.getItem('serverPort') || 4242
+  $scope.launcherOptions.javaPath = localStorage.getItem('javaPath')   || ""
 
   $scope.$watch 'serverPort', (newVal) ->
     localStorage.setItem 'serverPort', newVal
@@ -53,11 +57,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
   $scope.steamLaunch = ->
     return $rootScope.steamLaunch
 
-  $scope.launcherOptions = {}
 
   $scope.$watch 'launcherOptions.javaPath', (newVal) ->
-    console.log "$watch triggered, #{newVal}"
     localStorage.setItem 'javaPath', newVal
+    $rootScope.javaPath = newVal
 
 
   $scope.$watch 'launcherOptions', (visible) ->
@@ -71,25 +74,21 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
     , (newPath) =>
       return unless newPath?
       $scope.launcherOptions.javaPath = newPath[0]
-      $rootScope.javaPath = newPath[0]
       $scope.$apply()
       $scope.verifyJavaPath()
 
   $scope.verifyJavaPath = () =>
-    newPath = $scope.launcherOptions.javaPath
-    console.log "verifyJavaPath: #{newPath}"
+    newPath = $rootScope.javaPath
     if !newPath  # blank path uses bundled java instead
       $scope.launcherOptions.invalidJavaPath = false
       $scope.launcherOptions.javaPathStatus = "-- Using bundled Java version --"
-      $scope.$apply()
       return
-    newPath = path.resolve($scope.launcherOptions.javaPath)
+    newPath = path.resolve(newPath)
 
     if fileExists( path.join(newPath, "java") )  || # osx+linux
        fileExists( path.join(newPath, "java.exe") ) # windows
       $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
       $scope.launcherOptions.invalidJavaPath  = false
-      $scope.$apply()
       return
     $scope.launcherOptions.invalidJavaPath = true
 
@@ -102,15 +101,11 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
     catch e
       return false
 
-  # $scope.launcherOptions.javaPath = localStorage.getItem('javaPath') || ""
-
-
 
   $scope.launch = (dedicatedServer = false) =>
     loadClientOptions()
 
-    customJavaPath = $rootScope.javaPath || $scope.launcherOptions.javaPath
-    console.log("launch() javaPath: #{customJavaPath}")
+    customJavaPath = $rootScope.javaPath  # ($scope.launcherOptions.javaPath) isn't set right away.
 
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
