@@ -163,6 +163,7 @@ gulp.task 'coffee', ->
 
 gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
   git_hash = require('child_process').execSync('git rev-parse --short HEAD', { encoding: 'utf8' })
+  console.log "GIT HASH: #{git_hash}"
   packager = require('electron-packager')
   packager
     dir: paths.build.dir
