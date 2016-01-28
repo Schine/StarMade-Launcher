@@ -162,6 +162,7 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
 
             path = vPath[1]
 
+            return if (!version || !build)  # ignore malformed entries
             versions.push new Version(path, version, build)
 
           resolve versions
