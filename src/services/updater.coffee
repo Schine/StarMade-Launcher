@@ -6,6 +6,7 @@ fs = require('original-fs')
 ipc = require('ipc')
 request = require('request')
 
+
 app = angular.module 'launcher'
 
 app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
@@ -165,8 +166,17 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
             return if (!version || !build)  # ignore malformed entries
             versions.push new Version(path, version, build)
 
-          resolve versions
+          resolve uniqVersions(versions)
         .error (data, status, headers, config) ->
           reject data, status, headers, config
+
+  uniqVersions = (versions) ->
+    uniq = []
+    versions.forEach (version, index) ->
+      if JSON.stringify(versions[index+1]) == JSON.stringify(version)
+        return
+      uniq.push version
+    uniq
+
 
   return
