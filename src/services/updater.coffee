@@ -10,13 +10,13 @@ request = require('request')
 app = angular.module 'launcher'
 
 app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
-  BASE_URL = 'http://files-origin.star-made.org'
+  BASE_URL = 'http://files.star-made.org'
   LAUNCHER_BASE_URL = 'http://launcher-files-origin.star-made.org'
   BRANCH_INDEXES =
-    pre: "#{BASE_URL}/prebuildindex"
-    dev: "#{BASE_URL}/devbrokenindex"
-    release: "#{BASE_URL}/releasebuildindex"
-    archive: "#{BASE_URL}/archivebuildindex"
+    pre:      "#{BASE_URL}/prebuildindex"
+    dev:      "#{BASE_URL}/devbuildindex"
+    release:  "#{BASE_URL}/releasebuildindex"
+    archive:  "#{BASE_URL}/archivebuildindex"
     launcher: "#{LAUNCHER_BASE_URL}/launcherbuildindex"
 
   @update = (version, installDir, checkOnly = false, force = false) ->
@@ -155,23 +155,17 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
           lines.forEach (line) ->
             return if line == ''
 
-            vPath = line.split ' '
-            vBuild = vPath[0].split '#'
+            vPath   = line.split ' '
+            vBuild  = vPath[0].split '#'
 
             version = vBuild[0]
-            build = vBuild[1]
+            build   = vBuild[1]
 
-            path = vPath[1]
+            path    = vPath[1]
 
-            # ignore malformed entries
+            # ignore malformed entries:
             return if (!path || !version || !build)  # missing segments
             return if path.indexOf('#') >= 0         # two entries on a line
-
-            console.log "path:     #{path}"
-            console.log "version:  #{version}"
-            console.log "build:    #{build}"
-            console.log "--------------------------------------------------------------------------------"
-
 
             versions.push new Version(path, version, build)
 
