@@ -176,7 +176,7 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
     overwrite: true
     asar: true
     'app-category-type': 'public.app-category.games'
-    'app-version': '2.0.0'
+    'app-version': '2.0.1'
     'build-version' : git_hash
     'version-string':
       FileDescription: 'StarMade Launcher'
