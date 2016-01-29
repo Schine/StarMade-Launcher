@@ -10,11 +10,11 @@ request = require('request')
 app = angular.module 'launcher'
 
 app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
-  BASE_URL = 'http://files.star-made.org'
+  BASE_URL = 'http://files-origin.star-made.org'
   LAUNCHER_BASE_URL = 'http://launcher-files-origin.star-made.org'
   BRANCH_INDEXES =
     pre: "#{BASE_URL}/prebuildindex"
-    dev: "#{BASE_URL}/devbuildindex"
+    dev: "#{BASE_URL}/devbrokenindex"
     release: "#{BASE_URL}/releasebuildindex"
     archive: "#{BASE_URL}/archivebuildindex"
     launcher: "#{LAUNCHER_BASE_URL}/launcherbuildindex"
@@ -163,7 +163,16 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
 
             path = vPath[1]
 
-            return if (!path || !version || !build)  # ignore malformed entries
+            # ignore malformed entries
+            return if (!path || !version || !build)  # missing segments
+            return if path.indexOf('#') >= 0         # two entries on a line
+
+            console.log "path:     #{path}"
+            console.log "version:  #{version}"
+            console.log "build:    #{build}"
+            console.log "--------------------------------------------------------------------------------"
+
+
             versions.push new Version(path, version, build)
 
           resolve uniqVersions(versions)

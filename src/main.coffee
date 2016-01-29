@@ -65,6 +65,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.version     =   pkg.version
   $rootScope.steamLaunch = !!argv.steam
 
+  console.log "----- Debug build (devbrokenindex) -----"
+
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'
 
@@ -195,7 +197,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       else
         getCurrentUser()
     else
-      launcherAutoupdate()
+      # launcherAutoupdate()
       $rootScope.startAuth()
   $state.go 'news'
 
