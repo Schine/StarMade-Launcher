@@ -64,6 +64,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.librato     =   librato
   $rootScope.version     =   pkg.version
   $rootScope.steamLaunch = !!argv.steam
+  $rootScope.attach      = !!argv.attach
 
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'

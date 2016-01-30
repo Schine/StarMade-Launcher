@@ -116,8 +116,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
       javaBinDir = customJavaPath || path.join path.dirname(process.execPath), "dep/java/#{javaJreDirectory}/bin"
     javaExec = path.join javaBinDir, 'java'
 
+    detach = !$rootScope.attach
 
     console.log("| using java bin path: #{javaBinDir}")
+    console.log("child process: " + if detach then 'detached' else 'attached')
 
     child = spawn javaExec, [
       '-Djava.net.preferIPv4Stack=true'
@@ -136,6 +138,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
     ],
       cwd: installDir
       stdio: 'inherit'
+      detached: detach
+
+    remote.require('app').quit()  if detach
 
     child.on 'close', ->
       remote.require('app').quit()
