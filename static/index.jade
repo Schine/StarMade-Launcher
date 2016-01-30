@@ -29,7 +29,7 @@ html(ng-app='launcher')
             a(ui-sref='support') Support
         ul.nav.nav-right
           li
-            a(ng-click='launcherOptions = true')
+            a(ng-click='launcherOptionsWindow = true')
               span.nav-options-gear
               span.nav-options-gear.hover
               | Options
@@ -189,7 +189,7 @@ html(ng-app='launcher')
         .launch-bg(ng-class='{hover: launchHover}' ng-hide='updaterProgress.needsUpdating || updaterProgress.inProgress')
         a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
 
-    popup.launcher-options-popup(title='Launcher Options' type='settings' opened='launcherOptions')
+    popup.launcher-options-popup(title='Launcher Options' type='settings' opened='launcherOptionsWindow')
       form.popup-body
         .field-group.launcher-options
           label Launcher Settings

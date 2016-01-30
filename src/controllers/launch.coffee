@@ -42,11 +42,11 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
 
   $scope.openClientOptions = ->
     loadClientOptions()
-
     $scope.clientMemoryOptions = true
 
   $scope.closeClientOptions = ->
     $scope.clientMemoryOptions = false
+
 
   $scope.saveClientOptions = ->
     localStorage.setItem 'maxMemory', $scope.memory.max
@@ -63,7 +63,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
     $rootScope.javaPath = newVal
 
 
-  $scope.$watch 'launcherOptions', (visible) ->
+  $scope.$watch 'launcherOptionsWindow', (visible) ->
     $scope.verifyJavaPath()  if visible
 
   $scope.launcherOptions.javaPathBrowse = () =>
@@ -128,11 +128,11 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
       '-server'
       '-jar'
       starmadeJar
-      '-force' unless dedicatedServer
-      '-server' if dedicatedServer
-      '-gui' if dedicatedServer
+      '-force'   unless dedicatedServer
+      '-server'      if dedicatedServer
+      '-gui'         if dedicatedServer
       "-port:#{$scope.serverPort}"
-      "-auth #{accessToken.get()}" if accessToken.get()?
+      "-auth #{accessToken.get()}"  if accessToken.get()?
     ],
       cwd: installDir
       stdio: 'inherit'

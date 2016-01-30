@@ -61,11 +61,9 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   
   # librato.start()
 
-  $rootScope.librato = librato
+  $rootScope.librato     =   librato
   $rootScope.version     =   pkg.version
   $rootScope.steamLaunch = !!argv.steam
-
-  console.log "----- Debug build (devbrokenindex) -----"
 
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'
@@ -83,7 +81,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
     ipc.send 'start-auth'
 
   $rootScope.switchUser = ->
-    $rootScope.launcherOptions = false
+    $rootScope.launcherOptionsWindow = false
     $rootScope.startAuth()
 
 
