@@ -64,7 +64,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.librato     =   librato
   $rootScope.version     =   pkg.version
   $rootScope.steamLaunch = !!argv.steam
-  $rootScope.attach      = !!argv.attach
+  $rootScope.attach      = !!argv.attach  # attach the game process; default behavior with   --steam
+  $rootScope.detach      = !!argv.detach  # detach the game process; default behavior witout --steam
 
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'

@@ -116,7 +116,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
       javaBinDir = customJavaPath || path.join path.dirname(process.execPath), "dep/java/#{javaJreDirectory}/bin"
     javaExec = path.join javaBinDir, 'java'
 
-    detach = !$rootScope.attach
+    # attach with --steam or --attach; --detach overrides
+    detach = (!$rootScope.steamLaunch && !$rootScope.attach) || $rootScope.detach
 
     console.log("| using java bin path: #{javaBinDir}")
     console.log("child process: " + if detach then 'detached' else 'attached')
