@@ -1,6 +1,6 @@
 'use strict'
 
-LauncherVersion = '2.0.3.0'
+LauncherVersion = '2.0.3.1'
 
 GREENWORKS_URL = 'https://s3.amazonaws.com/sm-launcher/greenworks'
 JAVA_URL = 'https://s3.amazonaws.com/sm-launcher/java'

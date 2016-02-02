@@ -191,13 +191,13 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.nogui = argv.nogui
 
   if !argv.nogui
+    launcherAutoupdate()
     if api.isAuthenticated()
       if !rememberMe || !refreshToken?
         $rootScope.startAuth()
       else
         getCurrentUser()
     else
-      launcherAutoupdate()
       $rootScope.startAuth()
   $state.go 'news'
 
