@@ -1,5 +1,7 @@
 'use strict'
 
+LauncherVersion = '2.0.2.8'
+
 GREENWORKS_URL = 'https://s3.amazonaws.com/sm-launcher/greenworks'
 JAVA_URL = 'https://s3.amazonaws.com/sm-launcher/java'
 
@@ -162,27 +164,32 @@ gulp.task 'coffee', ->
     .pipe gulp.dest paths.build.lib.dir
 
 gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
-  git_hash = require('child_process').execSync('git rev-parse --short HEAD', { encoding: 'utf8' })
-  console.log "GIT HASH: #{git_hash}"
+  git_hash = require('child_process').execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
   packager = require('electron-packager')
+  console.log "GIT HASH: #{git_hash}"
+  
   packager
-    dir: paths.build.dir
-    out: 'dist'
-    name: 'starmade-launcher'
-    platform: targetPlatform
-    arch: targetArch
-    version: electronVersion
-    icon: paths.res.icon
+    dir:       paths.build.dir
+    out:       'dist'
+    name:      'starmade-launcher'
+    platform:  targetPlatform
+    arch:      targetArch
+    version:   electronVersion
+    icon:      paths.res.icon
     overwrite: true
-    asar: true
+    asar:      true
+    
+    # Must set all four version strings when using Electron v0.30.7
+    'app-version':   "#{LauncherVersion}"
+    'build-version': "#{LauncherVersion}"
     'app-category-type': 'public.app-category.games'
-    'app-version': '2.0.2'
-    'build-version' : git_hash
     'version-string':
-      FileDescription: 'StarMade Launcher'
-      CompanyName: 'Schine GmbH'
-      LegalCopyright: 'Copyright (C) 2016 Schine GmbH'
-      ProductName: 'StarMade Launcher'
+      FileVersion:      "#{LauncherVersion}"
+      ProductVersion:   "#{LauncherVersion}"
+      FileDescription:  "StarMade Launcher (build #{git_hash})"
+      CompanyName:      'Schine GmbH'
+      LegalCopyright:   'Copyright (C) 2016 Schine GmbH'
+      ProductName:      'StarMade Launcher'
       OriginalFilename: 'starmade-launcher.exe'
   , callback
 
