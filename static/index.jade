@@ -194,11 +194,11 @@ html(ng-app='launcher')
         .field-group.launcher-options
           label Launcher Settings
           br
-          button(ng-click='openDownloadPage()') Download Latest Launcher
+          button(ng-click='openDownloadPage()') Launcher Download Page
           span.description
-            | Download the latest launcher
-            br
             | You have v{{version}} installed
+            br
+            | (build {{buildHash}})
           br
           button(ng-click='switchUser()') Switch User
           span.description

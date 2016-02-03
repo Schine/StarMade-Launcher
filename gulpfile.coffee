@@ -1,7 +1,5 @@
 'use strict'
 
-LauncherVersion = '2.0.3.1'
-
 GREENWORKS_URL = 'https://s3.amazonaws.com/sm-launcher/greenworks'
 JAVA_URL = 'https://s3.amazonaws.com/sm-launcher/java'
 
@@ -16,11 +14,14 @@ path = require('path')
 plugins = require('gulp-load-plugins')()
 rimraf = require('rimraf')
 source = require('vinyl-source-stream')
-spawn = require('child_process').spawn
+cp = require('child_process')
+spawn = cp.spawn
 wiredep = require('wiredep').stream
 untar = require('gulp-untar')
 
 util = require('./src/util')
+
+build_hash  = ""
 
 paths =
   bower: './bower.json'
@@ -154,7 +155,15 @@ gulp.task 'default', ['run']
 
 gulp.task 'bootstrap', ['greenworks', 'java']
 
-gulp.task 'build', ['coffee', 'jade', 'less', 'copy', 'acknowledge']
+gulp.task 'build', ['build-hash', 'coffee', 'jade', 'less', 'copy', 'acknowledge']
+
+gulp.task 'build-hash', ->
+  build_hash = cp.execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
+  # Write a js module containing the latest git short-hash for the launcher to include
+  buildHashJS = "exports.buildHash = '#{build_hash}';"
+  fs.writeFileSync(path.join(paths.build.lib.dir, "buildHash.js"), buildHashJS)
+  console.log "BUILD HASH: #{build_hash}"
+
 
 gulp.task 'coffee', ->
   gulp.src paths.src.glob
@@ -164,9 +173,7 @@ gulp.task 'coffee', ->
     .pipe gulp.dest paths.build.lib.dir
 
 gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
-  git_hash = require('child_process').execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim()
   packager = require('electron-packager')
-  console.log "GIT HASH: #{git_hash}"
   
   packager
     dir:       paths.build.dir
@@ -179,14 +186,13 @@ gulp.task 'electron-packager', ['build', 'acknowledge'], (callback) ->
     overwrite: true
     asar:      true
     
-    # Must set all four version strings when using Electron v0.30.7
-    'app-version':   "#{LauncherVersion}"
-    'build-version': "#{LauncherVersion}"
+    # The launcher's autoupdate does not replace the executable,
+    # meaning it is counterproductive to include the launcher version.
+    # including the build hash, however, could be useful.
+
     'app-category-type': 'public.app-category.games'
     'version-string':
-      FileVersion:      "#{LauncherVersion}"
-      ProductVersion:   "#{LauncherVersion}"
-      FileDescription:  "StarMade Launcher (build #{git_hash})"
+      FileDescription:  "StarMade Launcher (build #{build_hash})"
       CompanyName:      'Schine GmbH'
       LegalCopyright:   'Copyright (C) 2016 Schine GmbH'
       ProductName:      'StarMade Launcher'

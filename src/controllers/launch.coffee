@@ -56,6 +56,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
 
   $scope.steamLaunch = ->
     return $rootScope.steamLaunch
+  $scope.buildVersion = ->
+    return $rootScope.buildVersion
 
 
   $scope.$watch 'launcherOptions.javaPath', (newVal) ->

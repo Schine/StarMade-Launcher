@@ -9,6 +9,7 @@ librato = require('librato-node')
 
 electronApp = remote.require('app')
 
+buildHash = require('./buildHash.js').buildHash
 util = require('./util')
 
 pkg = require(path.join(path.dirname(__dirname), 'package.json'))
@@ -61,8 +62,11 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   
   # librato.start()
 
+  console.log("Launcher v#{pkg.version} build #{buildHash}")
+
   $rootScope.librato     =   librato
   $rootScope.version     =   pkg.version
+  $rootScope.buildHash   =   buildHash
   $rootScope.steamLaunch = !!argv.steam
   $rootScope.attach      = !!argv.attach  # attach the game process; default behavior with   --steam
   $rootScope.detach      = !!argv.detach  # detach the game process; default behavior witout --steam
