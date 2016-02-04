@@ -154,6 +154,7 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
           lines = data.split '\n'
           lines.forEach (line) ->
             return if line == ''
+            return if line.substring(0,1) == '#'  # commented version entry
 
             vPath   = line.split ' '
             vBuild  = vPath[0].split '#'
