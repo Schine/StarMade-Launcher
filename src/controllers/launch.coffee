@@ -14,16 +14,32 @@ javaJreDirectory = util.getJreDirectory javaVersion
 
 app = angular.module 'launcher'
 
+app.directive 'stringToNumber', ->
+  {
+    require: 'ngModel'
+    link: (scope, element, attrs, ngModel) ->
+      ngModel.$parsers.push (value) ->
+        '' + value
+      ngModel.$formatters.push (value) ->
+        parseFloat value, 10
+      return
+  }
+
+
+
 app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
+  totalRam = Math.floor( os.totalmem()/1024/1024 )  # bytes -> mb
   defaults =
     ia32:
-      max: 512
-      initial: 256
-      earlyGen: 64
+      earlyGen:   64
+      initial:   256
+      max:       512      # slider value
+      ceiling:  2048      # slider max
     x64:
-      max: 1536
-      initial: 512
-      earlyGen: 128
+      earlyGen:  128
+      initial:   512
+      max:      1536      # slider value
+      ceiling:  totalRam  # slider max
 
   $scope.launcherOptions = {}
 
@@ -34,14 +50,45 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
   $scope.$watch 'serverPort', (newVal) ->
     localStorage.setItem 'serverPort', newVal
 
-  loadClientOptions = ->
+  $scope.$watch 'memory.earlyGen', (newVal) ->
+    return  if (typeof $scope.memory == "undefined")
+    updateMemorySlider(newVal, $scope.memory.initial)
+  $scope.$watch 'memory.initial', (newVal) ->
+    return  if (typeof $scope.memory == "undefined")
+    updateMemorySlider($scope.memory.earlyGen, newVal)
+
+  # ensure Max >= initial+earlyGen
+  updateMemorySlider = (earlyGen, initial) ->
+    console.log("updateMemorySlider(): earlyGen = #{earlyGen} (#{$scope.memory.earlyGen})")
+    console.log("updateMemorySlider(): initial  = #{initial}  (#{$scope.memory.initial})")
+
+    earlyGen = $scope.memory.earlyGen  if typeof earlyGen == "undefined"
+    initial  = $scope.memory.initial   if typeof initial  == "undefined"
+
+    updateMemoryFloor()  # update floor whenever initial/earlyGen change
+    console.log("Memory: #{$scope.memory.floor} <= #{$scope.memory.max} <= #{$scope.memory.ceiling}")
+    return  if earlyGen + initial <= $scope.memory.max
+    $scope.memory.max = Math.max(earlyGen + initial,  $scope.memory.floor)
+    console.log("Memory: updated max to #{$scope.memory.max}")
+
+
+  # max memory should be >= early+initial, and a multiple of 256
+  updateMemoryFloor = () ->
+    min = $scope.memory.earlyGen + $scope.memory.initial
+    $scope.memory.floor = Math.ceil(min/256)*256 || 256  # 256 minimum
+
+  # Load memory settings from storage or set the defaults
+  loadMemorySettings = ->
     $scope.memory =
-      max: localStorage.getItem('maxMemory') || defaults[os.arch()].max
-      initial: localStorage.getItem('initialMemory') || defaults[os.arch()].initial
-      earlyGen: localStorage.getItem('earlyGenMemory') || defaults[os.arch()].earlyGen
+      max:      Number(localStorage.getItem('maxMemory'))      || Number(defaults[os.arch()].max)
+      initial:  Number(localStorage.getItem('initialMemory'))  || Number(defaults[os.arch()].initial)
+      earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
+      ceiling:  Number( defaults[os.arch()].ceiling )
+    # $scope.memory.floor = Math.ceil(($scope.memory.earlyGen + $scope.memory.initial)/256)*256 || 256  # 256 minimum
+    updateMemorySlider() # Fix the zero'd slider knob bug
 
   $scope.openClientOptions = ->
-    loadClientOptions()
+    loadMemorySettings()
     $scope.clientMemoryOptions = true
 
   $scope.closeClientOptions = ->
@@ -49,13 +96,15 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
 
 
   $scope.saveClientOptions = ->
-    localStorage.setItem 'maxMemory', $scope.memory.max
-    localStorage.setItem 'initialMemory', $scope.memory.initial
+    localStorage.setItem 'maxMemory',      $scope.memory.max
+    localStorage.setItem 'initialMemory',  $scope.memory.initial
     localStorage.setItem 'earlyGenMemory', $scope.memory.earlyGen
     $scope.closeClientOptions()
 
+
   $scope.steamLaunch = ->
     return $rootScope.steamLaunch
+
   $scope.buildVersion = ->
     return $rootScope.buildVersion
 
@@ -105,7 +154,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
 
 
   $scope.launch = (dedicatedServer = false) =>
-    loadClientOptions()
+    loadMemorySettings()
 
     customJavaPath = $rootScope.javaPath  # ($scope.launcherOptions.javaPath) isn't set right away.
 

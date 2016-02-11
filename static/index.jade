@@ -163,25 +163,29 @@ html(ng-app='launcher')
               | than 1024.
             
             form.side-by-side
-              .field-group
+              .field-group.primary
                 label(for='maxMemory')
-                  | Maximal Memory (MB)
-                br
-                input(id='maxMemory' ng-model='memory.max')
+                  | Maximum Memory (MB):
+                input.slider-group(id='maxMemoryInput' type="number" ng-model='memory.max' string-to-number min="{{memory.floor}}" max='{{memory.ceiling}}' step="256")
+                input.wide.slider-group(id='maxMemorySlider' type="range"  ng-model="memory.max" string-to-number min="{{memory.floor}}" max='{{memory.ceiling}}' step="256")
               
-              .field-group
-                label(for='initialMemory')
-                  | Initial Memory (MB)
-                br
-                input(id='initialMemory' ng-model='memory.initial')
-                
-              .field-group
-                label(for='earlyGenMemory')
-                  | Early Gen Memory
-                br
-                input(id='earlyGenMemory' ng-model='memory.earlyGen')
+              a(href="#" ng-click="launcherOptions.showAdvancedMemory = true" ng-hide="launcherOptions.showAdvancedMemory")
+                | Show advanced options
+
+              div.advanced-memory(ng-show="launcherOptions.showAdvancedMemory")
+                .field-group
+                  label(for='initialMemory')
+                    | Initial Memory (MB):
+                  br
+                  input(id='initialMemory' type="number" ng-model='memory.initial' min="0")
                   
-              .field-group.block
+                .field-group
+                  label(for='earlyGenMemory')
+                    | Early Gen Memory:
+                  br
+                  input(id='earlyGenMemory' type="number" ng-model='memory.earlyGen' min="0")
+                    
+              .field-group.block.right
                 button(ng-click='saveClientOptions()') Save
                 button(ng-click='closeClientOptions()') Cancel
 

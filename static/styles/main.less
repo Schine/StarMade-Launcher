@@ -1,4 +1,5 @@
 @import 'fonts.less';
+@import 'slider.less';
 
 @contentBackground: #15151A;
 @contentBorder: #393942;
@@ -84,46 +85,104 @@ code {
 	background-color: #9CA1A7;
 }
 
+
+.right {
+  float: right !important;
+}
+
+
 form {
   margin-top: 10px;
+
+
+  div.advanced-memory {
+    .field-group {
+      &:first {
+        margin-left: 0px !important;
+        background-color: cyan !important;
+      }
+      margin-top:  16px !important;
+    }
+  }
 
   .field-group {
     float: left;
     margin-left: 16px;
 
-    label {
-      color: #A1A6Ac;
-      font-size: 12px;
-      font-family: 'Ubuntu';
+    &.block {
+      clear: both;
+    }
 
-      sup {
-        cursor: pointer;
-        margin-left: 4px;
+    &.primary {
+      width: 100%;
+      clear: both;
+      margin-bottom: 16px;
+
+      label {
+        display: block !important;
+        width:   100%  !important;
+      }
+
+      input.slider-group {
+        float:  left;
+        height: 2.5em;
+        text-align: center;
+
+        &.wide {
+          width: 80% !important;
+        }
+      }
+      input[type="number"].slider-group {
+        width: 6em !important;
+      }
+      input[type="range"].slider-group {
+        height: 2em !important;
       }
     }
+  }
 
-    select, input {
-      background-color: #191F29;
-      border: 2px solid #30303C;
-      color: #FFFFFF;
-      font-family: 'Ubuntu';
-      font-size: 12px;
-      padding: 5px;
+
+  label {
+    color: #A1A6Ac;
+    font-size: 12px;
+    font-family: 'Ubuntu';
+
+    sup {
+      cursor: pointer;
+      margin-left: 4px;
+    }
+  }
+
+  select, input {
+    background-color: #191F29;
+    border: 2px solid #30303C;
+    color: #FFFFFF;
+    font-family: 'Ubuntu';
+    font-size: 12px;
+    padding: 5px;
+
+    &.wide {
+      width: 70%;
     }
 
-    input {
-      width: 80px;
+    &.inline-slider {
+      float: left;
+      height: 2.5em;
     }
+  }
 
-    button {
-      background-color: #30303C;
-      border: 0;
-      color: #FFFFFF;
-      font-family: 'Ubuntu';
-      font-size: 12px;
-      padding: 5px 8px;
-      text-transform: uppercase;
-    }
+  input {
+    width: 80px;
+  }
+
+  button {
+    background-color: #30303C;
+    border: 0;
+    color: #FFFFFF;
+    font-family: 'Ubuntu';
+    font-size: 12px;
+    padding: 5px 8px;
+    text-transform: uppercase;
   }
 }
 

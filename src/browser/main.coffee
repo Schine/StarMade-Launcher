@@ -69,7 +69,7 @@ openMainWindow = ->
     height: height
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
-  # mainWindow.openDevTools()
+  mainWindow.openDevTools()
 
   #if argv['install-dir']?
   #  escapedInstallDir = path.resolve(argv['install-dir']).replace(/\\/g, '\\\\')
