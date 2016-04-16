@@ -2,7 +2,7 @@
   "name": "starmade-launcher",
   "productName": "StarMade Launcher",
   "private": true,
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Launcher for StarMade",
   "main": "lib/browser/main.js",
   "electronVersion": "0.30.7",
@@ -33,10 +33,10 @@
     "wiredep": "^3.0.0-beta"
   },
   "dependencies": {
-    "angular": "^1.4.6",
-    "angular-moment": "^0.10.1",
-    "angular-resource": "^1.4.6",
-    "angular-ui-router": "^0.2.14",
+    "angular": "^1.5.3",
+    "angular-moment": "^0.10.3",
+    "angular-resource": "^1.5.3",
+    "angular-ui-router": "^0.2.18",
     "async": "^0.9.0",
     "bignumber.js": "^2.0.7",
     "librato-node": "^4.0.2",

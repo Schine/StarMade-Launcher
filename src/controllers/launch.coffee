@@ -26,26 +26,26 @@ app.directive 'stringToNumber', ->
   }
 
 
-
-app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
+app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   totalRam = Math.floor( os.totalmem()/1024/1024 )  # bytes -> mb
   defaults =
     ia32:
       earlyGen:   64
       initial:   256
-      max:       512      # slider value
-      ceiling:  2048      # slider max
+      max:       512      # initial memory.max value
+      ceiling:  2048      # maximum value allowed
     x64:
       earlyGen:  128
       initial:   512
-      max:      1536      # slider value
-      ceiling:  totalRam  # slider max
+      max:      2048      # initial memory.max value
+      ceiling:  totalRam  # maximum value allowed
 
   $scope.launcherOptions = {}
 
   # restore previous settings, or use the defaults
   $scope.serverPort               = localStorage.getItem('serverPort') || 4242
   $scope.launcherOptions.javaPath = localStorage.getItem('javaPath')   || ""
+
 
   $scope.$watch 'serverPort', (newVal) ->
     localStorage.setItem 'serverPort', newVal
@@ -57,25 +57,124 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
     return  if (typeof $scope.memory == "undefined")
     updateMemorySlider($scope.memory.earlyGen, newVal)
 
-  # ensure Max >= initial+earlyGen
-  updateMemorySlider = (earlyGen, initial) ->
-    console.log("updateMemorySlider(): earlyGen = #{earlyGen} (#{$scope.memory.earlyGen})")
-    console.log("updateMemorySlider(): initial  = #{initial}  (#{$scope.memory.initial})")
 
+  # Update slider when memory.max changes via textbox
+  $scope.set_memory_slider_value = (newVal) ->
+    $scope.memory.slider = newVal
+
+  # Called by slider updates
+  $scope.snap_memory_to_nearest_pow2 = (newVal) ->
+    $scope.memory.max    = nearestPow2(newVal)
+    $scope.memory.slider = $scope.memory.max
+    # console.log("Snapping from #{newVal} to #{$scope.memory.max}")
+
+
+  nearestPow2_clear_bounds = () ->
+    # Leaving the stored bounds intact does not cause incorrect results.
+    # clearing them, however, slightly speeds up any subsequent calls with too-far-out-of-bounds values (>=1 power in either direction)
+    #   ex: nearestPow2(255)  then  nearestPow2(1023)
+    pow2_lower_bound = null
+    pow2_upper_bound = null
+
+
+  # As this is kind of hard to read, I've added comments describing the bitwise math I've used.
+  # Works for up values up to 30 bits (javascript limitation)
+  # Undefined behavior for values < 1
+  nearestPow2 = (val) ->
+    # Memoize
+    if typeof pow2_lower_bound == "number"  &&  typeof pow2_upper_bound == "number"  # Skip entire block if bounds are undefined/incorrect
+      # no change?
+      return pow2_current_power  if val == pow2_current_power
+
+      # Prev/Next powers are guaranteed powers of 2, so simply return them.
+      if val == pow2_next_power
+        nearestPow2_clear_bounds() # Clear bounds to speed up the next call
+        return pow2_next_power
+      if val == pow2_prev_power
+        nearestPow2_clear_bounds()
+        return pow2_prev_power
+
+      # Halfway bounds allow quick rounding:
+      #  - Within bounds
+      if (val > pow2_current_power  &&  val < pow2_upper_bound)  ||  (val < pow2_current_power  && val >= pow2_lower_bound)
+        return pow2_current_power
+
+      #  - Between upper bound and next power
+      if (val >= pow2_upper_bound && val <= pow2_next_power)
+        nearestPow2_clear_bounds()
+        return pow2_next_power
+
+      #  - Between lower bound and previous power
+      if (val <  pow2_lower_bound && val >= pow2_prev_power)
+        nearestPow2_clear_bounds()
+        return pow2_prev_power
+
+
+    # Already a power of 2? simply return it.
+    # (As this scenario is rare, checking likely lowers performance)
+    return val  if (val & (val-1)) == 0  # This will be nonzero (and therefore fail) if there are multiple bits set.
+
+
+    # Round to nearest power of 2 using bitwise math:
+    val         = ~~val  # Fast floor via double bitwise not
+    val_copy    = val
+    shift_count = 0
+    # Count the number of bits to the right of the most-significant bit:  111011 -> 5
+    while val_copy > 1
+      val_copy = val_copy >>> 1   # >>> left-fills with zeros
+      shift_count++
+
+    # If the value's second-most-significant bit is set (meaning it's halfway to the next power), add a shift to round up
+    if val & (1 << (shift_count - 1))
+      shift_count++
+
+    # Construct the power by left-shifting  --  much faster than Math.pow(2, shift_count)
+    val = 1 << shift_count
+
+    # ... and memoize by storing halfway bounds and the next/prev powers
+    pow2_next_power    = val <<  1
+    pow2_upper_bound   = val + (val >>> 1)          # Halfway up   (x*1.5)
+    pow2_current_power = val
+    pow2_lower_bound   = (val >>> 1) + (val >>> 2)  # Halfway down (x/2 + x/4)
+    pow2_prev_power    = val >>> 1
+
+    # Return our shiny new power of 2 (:
+    return val
+
+
+
+  # ensure Max >= initial+earlyGen; update slider's value
+  updateMemorySlider = (earlyGen, initial) ->
     earlyGen = $scope.memory.earlyGen  if typeof earlyGen == "undefined"
     initial  = $scope.memory.initial   if typeof initial  == "undefined"
 
     updateMemoryFloor()  # update floor whenever initial/earlyGen change
-    console.log("Memory: #{$scope.memory.floor} <= #{$scope.memory.max} <= #{$scope.memory.ceiling}")
-    return  if earlyGen + initial <= $scope.memory.max
-    $scope.memory.max = Math.max(earlyGen + initial,  $scope.memory.floor)
-    console.log("Memory: updated max to #{$scope.memory.max}")
+
+    $scope.memory.max    = Math.max($scope.memory.floor, $scope.memory.max)
+    $scope.memory.slider = $scope.memory.max
+
+    # Workaround for Angular's range bug  (https://github.com/angular/angular.js/issues/6726)
+    $timeout ->
+      document.getElementById("maxMemorySlider").value = $scope.memory.max
+    
+    # knob solution: https://github.com/angular/angular.js/issues/6726#issuecomment-41274206
 
 
-  # max memory should be >= early+initial, and a multiple of 256
+
+  # max memory should be >= early+initial, and a power of 2
   updateMemoryFloor = () ->
-    min = $scope.memory.earlyGen + $scope.memory.initial
-    $scope.memory.floor = Math.ceil(min/256)*256 || 256  # 256 minimum
+    # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
+    val = Math.max(256, $scope.memory.earlyGen + $scope.memory.initial)
+
+    # Next power of 2 (ceil)
+    val--  # allows powers of 2
+    min = 2
+    # left-shift `min` the number of bits in `val`, plus 1 (next power of 2)
+    while val >>= 1
+      min <<= 1
+
+    $scope.memory.floor = Math.max(min, 256)  # 256 minimum
+
 
   # Load memory settings from storage or set the defaults
   loadMemorySettings = ->
@@ -84,14 +183,16 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, accessToken) ->
       initial:  Number(localStorage.getItem('initialMemory'))  || Number(defaults[os.arch()].initial)
       earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
       ceiling:  Number( defaults[os.arch()].ceiling )
-    # $scope.memory.floor = Math.ceil(($scope.memory.earlyGen + $scope.memory.initial)/256)*256 || 256  # 256 minimum
-    updateMemorySlider() # Fix the zero'd slider knob bug
+      step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
+    updateMemorySlider()
+
 
   $scope.openClientOptions = ->
     loadMemorySettings()
     $scope.clientMemoryOptions = true
 
   $scope.closeClientOptions = ->
+    $scope.memory.step = 1    # AngularJS workaround: specifying non-multiples of {{step}} throws an error upon hiding the control.  hacky workaround.
     $scope.clientMemoryOptions = false
 
 
