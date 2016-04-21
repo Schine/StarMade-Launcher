@@ -70,6 +70,11 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.steamLaunch = !!argv.steam
   $rootScope.attach      = !!argv.attach  # attach the game process; default behavior with   --steam
   $rootScope.detach      = !!argv.detach  # detach the game process; default behavior witout --steam
+  $rootScope.noUpdate    = !!argv.noupdate
+
+
+  printf("Why hello there\n\n\n what's up\n\n here's another line\n\nyep.\n")
+
 
   $rootScope.openDownloadPage = ->
     shell.openExternal 'http://star-made.org/download'
@@ -195,7 +200,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.nogui = argv.nogui
 
   if !argv.nogui
-    # launcherAutoupdate()
+    launcherAutoupdate()  if !$rootScope.noUpdate
     if api.isAuthenticated()
       if !rememberMe || !refreshToken?
         $rootScope.startAuth()
