@@ -62,7 +62,9 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   
   # librato.start()
 
-  console.log("Launcher v#{pkg.version} build #{buildHash}")
+
+  $rootScope.development =   true
+  console.log("Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else ""))
 
   $rootScope.librato     =   librato
   $rootScope.version     =   pkg.version
@@ -70,10 +72,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.steamLaunch = !!argv.steam
   $rootScope.attach      = !!argv.attach  # attach the game process; default behavior with   --steam
   $rootScope.detach      = !!argv.detach  # detach the game process; default behavior witout --steam
-  $rootScope.noUpdate    = !!argv.noupdate
-
-
-  printf("Why hello there\n\n\n what's up\n\n here's another line\n\nyep.\n")
+  $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.development
 
 
   $rootScope.openDownloadPage = ->

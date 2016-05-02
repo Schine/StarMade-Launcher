@@ -90,6 +90,52 @@ code {
   float: right !important;
 }
 
+.clearfix {
+  clear: both;
+}
+
+
+div.clientMemoryOptions {
+  .field-group {
+    label {
+      &.right {
+        text-align: right;
+      }
+
+      &.power-of-2 {
+        color: #00542f;
+      }
+
+      &.non-power-of-2 {
+        color: #075465;
+      }
+    }
+
+    input.slider-group {
+      float:  left;
+      height: 2.5em;
+      text-align: center;
+
+      &.wide {
+        width: 80% !important;
+      }
+    }
+    input[type="number"].slider-group {
+      width: 6em !important;
+    }
+    input[type="range"].slider-group {
+      height: 2em !important;
+    }
+  }
+
+  hr {
+    margin-bottom: 3px;
+    border-bottom: 1px solid rgba(255,255,255, 0.1);
+  }
+  
+}
+
+
 
 form {
   margin-top: 10px;
@@ -119,24 +165,8 @@ form {
       margin-bottom: 16px;
 
       label {
-        display: block !important;
+        display: block;
         width:   100%  !important;
-      }
-
-      input.slider-group {
-        float:  left;
-        height: 2.5em;
-        text-align: center;
-
-        &.wide {
-          width: 80% !important;
-        }
-      }
-      input[type="number"].slider-group {
-        width: 6em !important;
-      }
-      input[type="range"].slider-group {
-        height: 2em !important;
       }
     }
   }

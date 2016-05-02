@@ -155,7 +155,7 @@ html(ng-app='launcher')
         
         progress-bar(ng-show='updaterProgress.inProgress' cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}')
 
-        div(ng-controller='LaunchCtrl')
+        div.clientMemoryOptions(ng-controller='LaunchCtrl')
           popup(title='Client Memory Settings' type='settings' opened='clientMemoryOptions')
             p
               | Please keep in mind that 32-bit OS's have a limit of allocated
@@ -167,8 +167,15 @@ html(ng-app='launcher')
                 label(for='maxMemory')
                   | Maximum Memory (MB):
                 input.slider-group(name="maxMemoryInput" id="maxMemoryInput" type="number" ng-model="memory.max" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" step="{{memory.step}}" ng-change="set_memory_slider_value(memory.max)")
-                input.wide.slider-group(name="maxMemorySlider" id="maxMemorySlider" type="range"  ng-model="memory.slider" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" ng-change="snap_memory_to_nearest_pow2(memory.slider)")
-              
+                input.wide.slider-group(name="maxMemorySlider" id="maxMemorySlider" type="range"  ng-model="memory.slider" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" ng-change="snap_memory(memory.slider)")
+                br
+                label.right.non-power-of-2(ng-hide="memory.power_of_2")
+                  | Some Java versions require max memory to be a power of 2
+                label.right.power-of-2(ng-show="memory.power_of_2")
+                  | Max memory is a power of 2
+
+              br.clearfix
+              hr(ng-hide="launcherOptions.showAdvancedMemory")
               a(name="__advClick" href="#" ng-click="launcherOptions.showAdvancedMemory = true" ng-hide="launcherOptions.showAdvancedMemory")
                 | Show advanced options
 
