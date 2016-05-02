@@ -61,12 +61,34 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   # Update slider when memory.max changes via textbox
   $scope.set_memory_slider_value = (newVal) ->
     $scope.memory.slider = newVal
+    update_slider_class()
 
   # Called by slider updates
-  $scope.snap_memory_to_nearest_pow2 = (newVal) ->
-    $scope.memory.max    = nearestPow2(newVal)
+  $scope.snap_memory = (newVal) ->
+    # nearest pow2 or memory ceiling (round down)
+    $scope.memory.max = Math.min(nearestPow2(newVal), $scope.memory.ceiling)
+
+    # Allow snapping to end of slider, power of 2 or not
+    if $scope.memory.max != $scope.memory.ceiling
+      if newVal >= ($scope.memory.max + $scope.memory.ceiling) / 2
+        $scope.memory.max = $scope.memory.ceiling
+
+
     $scope.memory.slider = $scope.memory.max
+    update_slider_class()
     # console.log("Snapping from #{newVal} to #{$scope.memory.max}")
+
+
+  update_slider_class = () ->
+    # ensure there's only one bit set:
+    # (nonzero, no bits match val-1)
+    val  = $scope.memory.slider
+    pow2 = val && !(val & (val-1))
+
+    # Set flag and update class
+    $scope.memory.power_of_2 = pow2
+    document.getElementById("maxMemorySlider").classList.add("power-of-2")     if  pow2
+    document.getElementById("maxMemorySlider").classList.remove("power-of-2")  if !pow2
 
 
   nearestPow2_clear_bounds = () ->
@@ -75,7 +97,6 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     #   ex: nearestPow2(255)  then  nearestPow2(1023)
     pow2_lower_bound = null
     pow2_upper_bound = null
-
 
   # As this is kind of hard to read, I've added comments describing the bitwise math I've used.
   # Works for up values up to 30 bits (javascript limitation)
@@ -152,13 +173,11 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     $scope.memory.max    = Math.max($scope.memory.floor, $scope.memory.max)
     $scope.memory.slider = $scope.memory.max
+    update_slider_class() # toggles green and labels when at a power of 2
 
     # Workaround for Angular's range bug  (https://github.com/angular/angular.js/issues/6726)
     $timeout ->
       document.getElementById("maxMemorySlider").value = $scope.memory.max
-    
-    # knob solution: https://github.com/angular/angular.js/issues/6726#issuecomment-41274206
-
 
 
   # max memory should be >= early+initial, and a power of 2
