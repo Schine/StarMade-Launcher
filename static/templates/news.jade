@@ -1,6 +1,6 @@
-ul.side
-  li(ng-repeat='entry in sidebarEntries' ng-style="{'background': 'url({{entry.news_sidebar_entry.image_url}})'}")
-    external-link(href='{{entry.news_sidebar_entry.url}}')
+ul.side(ng-show='sidebarEntries.length > 0')
+  li(ng-repeat='entry in sidebarEntries' ng-style="{'background': 'url({{entry.launcher_news_sidebar_entry.image_url}})'}")
+    external-link(href='{{entry.launcher_news_sidebar_entry.url}}')
   // Placeholders for when the content is still loading
 ul.side(ng-hide='sidebarEntries.length > 0')
   li
