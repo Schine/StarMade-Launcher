@@ -130,6 +130,8 @@ installBrowse     = document.getElementById 'installBrowse'
 installContinue   = document.getElementById 'installContinue'
 installContinueBg = document.getElementById 'installContinueBg'
 
+steamLaunch       = remote.getCurrentWindow().steamLaunch
+
 if process.platform == 'linux'
   document.getElementById("linux_info").className = ''  # remove .hidden from linux_info
 
@@ -139,8 +141,79 @@ installContinue.addEventListener 'mouseenter', ->
 installContinue.addEventListener 'mouseleave', ->
   installContinueBg.className = ''
 
+
+
 # default install dir
-installPath.value = localStorage.getItem('installDir') || path.resolve(path.join(electronApp.getPath('userData'), '..'))
+installPath.value = localStorage.getItem('installDir') ||
+                    path.resolve(path.join(electronApp.getPath('userData'), '..'))
+
+# Try to automatically determine the correct install path
+# (as greenworks.getCurrentGameInstallDir() is not yet implemented)
+if steamLaunch
+  cwd = __dirname.toLowerCase().split(path.sep)
+
+  pos_steamapps = cwd.indexOf("steamapps")
+  pos_common    = cwd.indexOf("common")
+  pos_starmade  = cwd.indexOf("starmade")
+
+  automatic_path = ""
+
+  console.log("Determining Steam install path...")  ##debug
+
+  # Does the path conform to Steam's standard directory structure?
+  # The path should always include "SteamApps/common" somewhere
+  if (pos_steamapps>0 && pos_steamapps<pos_common)
+    console.log("> SteamApps/common exists")  ##debug
+    # with "StarMade" following it
+    if (pos_starmade == pos_common + 1)
+      console.log("> SteamApps/common immediately preceeds StarMade")  ##debug
+
+      # If so, slice the existing path up to (and including) "StarMade"
+      # append another "StarMade" directory for the game to live in, and clean it.
+      automatic_path = __dirname.split(path.sep).slice(0, pos_starmade+1).join(path.sep)
+      automatic_path = path.normalize( path.join(automatic_path, "StarMade") )
+      console.log("| automatic path: #{automatic_path}")  ##debug
+
+    else
+      console.log("> StarMade does not exist, or is in an unexpected place")  ##debug
+      # No? Someone likely just renamed StarMade to something else, or moved it to a subfolder. (why?)
+      # So instead we'll discover the correct directory by working backwards.
+      
+      # Slice up to and including "app.asar"
+      pos_asar = cwd.indexOf("app.asar")
+
+      # This should always happen
+      if (pos_asar>0)
+        # navigate backwards from "app.asar" to "resources" to the launcher directory
+        # append a "StarMade" directory for the game to live in, then condense and clean
+        automatic_path  = __dirname.split(path.sep).slice(0, pos_asar+1).join(path.sep)
+        automatic_path = path.normalize( path.join(automatic_path, "..", "..", "StarMade") )
+
+        console.log("| automatic path: #{automatic_path}")  ##debug
+      else
+        # This should never happen. (where exactly is this code running?)
+        console.error("Unexpected runtime path: #{__dirname}")
+        # Fallback to the default install folder
+        console.log("| using fallback path")  ##debug
+        automatic_path = installPath.value
+  else
+    console.log("Steam folder structure not found.")
+
+  if automatic_path != ""
+    console.log("> using automatic path")  ##debug
+
+    # Automatically set the path and move onto the next step
+    installPath.value = path.resolve( automatic_path )
+    step1.style.display = 'none'
+    step2.style.display = 'block'
+    currentStep = 2
+
+  # automatic path
+# steamLaunch
+
+
+console.log("Install path: #{installPath.value}")  ##debug
+
 
 installBrowse.addEventListener 'click', ->
   dialog.showOpenDialog remote.getCurrentWindow(),

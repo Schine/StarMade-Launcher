@@ -69,7 +69,7 @@ openMainWindow = ->
     height: height
 
   mainWindow.loadUrl "file://#{staticDir}/index.html"
-  mainWindow.openDevTools()
+  # mainWindow.openDevTools()
 
   #if argv['install-dir']?
   #  escapedInstallDir = path.resolve(argv['install-dir']).replace(/\\/g, '\\\\')
@@ -102,6 +102,9 @@ openGettingStartedWindow = (args) ->
     show: false
     width: 650
     height: height
+
+  # Pass steam flag for automated install directory selection
+  gettingStartedWindow.steamLaunch = !!argv.steam
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
 
