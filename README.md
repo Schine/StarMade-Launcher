@@ -19,7 +19,10 @@ And to run the launcher afterward, simply run: `gulp`
 ------
 
 ### Fixes
-There are currently two out-of-box issues with the launcher.  Here are the steps to remedy them:
+There are currently three out-of-box issues with the launcher.  Here are the steps to remedy them:
+
+#### buildHash.js
+create a blank file here:  build/lib/buildHash.js
 
 #### License error for json-schema:
 copy the contents of https://raw.githubusercontent.com/dojo/dojox/master/LICENSE to `launcher/node_modules/request/node_modules/http-signature/node_modules/jsprim/node_modules/json-schema/LICENSE`
