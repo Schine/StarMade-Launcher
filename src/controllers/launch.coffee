@@ -294,26 +294,26 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     console.log("child process: " + if detach then 'detached' else 'attached')
 
 
-    command = javaExec + " " + [
-      '-Djava.net.preferIPv4Stack=true'
-      "-Xmn#{$scope.memory.earlyGen}M"
-      "-Xms#{$scope.memory.initial}M"
-      "-Xmx#{$scope.memory.max}M"
-      '-Xincgc'
-      '-server'
-      '-jar'
-      starmadeJar
-      '-force'   unless dedicatedServer
-      '-server'      if dedicatedServer
-      '-gui'         if dedicatedServer
-      "-port:#{$scope.serverPort}"
-      "-auth #{accessToken.get()}"  if accessToken.get()?
-    ].join(" ");
+    # command = javaExec + " " + [
+    #   '-Djava.net.preferIPv4Stack=true'
+    #   "-Xmn#{$scope.memory.earlyGen}M"
+    #   "-Xms#{$scope.memory.initial}M"
+    #   "-Xmx#{$scope.memory.max}M"
+    #   '-Xincgc'
+    #   '-server'  if (os.arch() == "x64")
+    #   '-jar'
+    #   starmadeJar
+    #   '-force'   unless dedicatedServer
+    #   '-server'      if dedicatedServer
+    #   '-gui'         if dedicatedServer
+    #   "-port:#{$scope.serverPort}"
+    #   "-auth #{accessToken.get()}"  if accessToken.get()?
+    # ].join(" ");
     
-    console.log("command: #{command}")
-    console.log(" | cwd: #{installDir}")
-    console.log(" | stdio: 'inherit'")
-    console.log(" | detached: #{detach}")
+    # console.log("command: #{command}")
+    # console.log(" | cwd: #{installDir}")
+    # console.log(" | stdio: 'inherit'")
+    # console.log(" | detached: #{detach}")
 
 
 
