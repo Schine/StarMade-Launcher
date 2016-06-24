@@ -191,6 +191,9 @@ html(ng-app='launcher')
                     | Early Gen Memory:
                   br
                   input(name="earlyGenMemory" id='earlyGenMemory' type="number" ng-model='memory.earlyGen' min="64")
+
+                br.clearfix
+                p(ng-show='memory.initial < 256') Note: Setting initial memory below 256mb may cause problems
                     
               .field-group.block.right
                 button(ng-click='saveClientOptions()') Save
