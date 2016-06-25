@@ -290,8 +290,32 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     # attach with --steam or --attach; --detach overrides
     detach = (!$rootScope.steamLaunch && !$rootScope.attach) || $rootScope.detach
 
-    console.log("| using java bin path: #{javaBinDir}")
+    console.log("using java bin path: #{javaBinDir}")
     console.log("child process: " + if detach then 'detached' else 'attached')
+
+
+    # command = javaExec + " " + [
+    #   '-Djava.net.preferIPv4Stack=true'
+    #   "-Xmn#{$scope.memory.earlyGen}M"
+    #   "-Xms#{$scope.memory.initial}M"
+    #   "-Xmx#{$scope.memory.max}M"
+    #   '-Xincgc'
+    #   '-server'  if (os.arch() == "x64")
+    #   '-jar'
+    #   starmadeJar
+    #   '-force'   unless dedicatedServer
+    #   '-server'      if dedicatedServer
+    #   '-gui'         if dedicatedServer
+    #   "-port:#{$scope.serverPort}"
+    #   "-auth #{accessToken.get()}"  if accessToken.get()?
+    # ].join(" ");
+    
+    # console.log("command: #{command}")
+    # console.log(" | cwd: #{installDir}")
+    # console.log(" | stdio: 'inherit'")
+    # console.log(" | detached: #{detach}")
+
+
 
     child = spawn javaExec, [
       '-Djava.net.preferIPv4Stack=true'
@@ -299,7 +323,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       "-Xms#{$scope.memory.initial}M"
       "-Xmx#{$scope.memory.max}M"
       '-Xincgc'
-      '-server'
+      '-server'  if (os.arch() == "x64")
       '-jar'
       starmadeJar
       '-force'   unless dedicatedServer
