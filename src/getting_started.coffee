@@ -299,7 +299,7 @@ installBrowse.addEventListener 'click', ->
     defaultPath: installPath.value
   , (newPath) ->
     return unless newPath?
-    newPath = path.join(newPath[0], 'StarMade')  if !(newPath[0].endsWith(path.sep + "StarMade")
+    newPath = path.join(newPath[0], 'StarMade')  if !(newPath[0].endsWith(path.sep + "StarMade"))
     installPath.value = newPath
 
 installContinue.addEventListener 'click', ->
