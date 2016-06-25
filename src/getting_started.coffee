@@ -171,6 +171,12 @@ close.addEventListener 'click', ->
 
 console.log("[Root]")  ##~
 console.log(" | localStorage: #{JSON.stringify(localStorage)}")  ##~
+unless localStorage.getItem('gotStarted')?
+  # If the user has not finished the initial setup, restart it and present the EULA again.
+  console.log(" ! User did not finish previous setup; restarting")
+  localStorage.removeItem('acceptedEula')
+  # This also prevents a race condition between a) showing the window and b) updating the install directory textbox
+  # -- The events required to solve this race condition [getCurrentWindow.on('show' / 'ready-to-show')] currently do not fire.
 console.log(" | currentStep: #{currentStep}")  ##~
 console.log(" | step0: #{step0.style.display}")  ##~
 console.log(" | step1: #{step1.style.display}")  ##~
