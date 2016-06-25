@@ -70,7 +70,7 @@ determineInstallDirectory = ->
     # navigate backwards from "app.asar" to "resources" to the launcher directory
     # append a "StarMade" directory for the game to live in, then condense and clean
     suggested_path = __dirname.split(path.sep).slice(0, pos_asar+1).join(path.sep)
-    suggested_path = path.normalize( path.join(suggested_path, "..", "..", "game") )
+    suggested_path = path.normalize( path.join(suggested_path, "..", "..", "StarMade") )
 
     console.log("   | Suggested path: #{suggested_path}")  ##~
   else
@@ -299,7 +299,7 @@ installBrowse.addEventListener 'click', ->
     defaultPath: installPath.value
   , (newPath) ->
     return unless newPath?
-    newPath = path.join(newPath[0], 'StarMade')  if !(newPath[0].endsWith(path.sep + "StarMade") || newPath[0].endsWith(path.sep + "game"))
+    newPath = path.join(newPath[0], 'StarMade')  if !(newPath[0].endsWith(path.sep + "StarMade")
     installPath.value = newPath
 
 installContinue.addEventListener 'click', ->
