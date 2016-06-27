@@ -275,8 +275,16 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   $scope.launch = (dedicatedServer = false) =>
     loadMemorySettings()
+    $scope.verifyJavaPath()
 
-    customJavaPath = $rootScope.javaPath  # ($scope.launcherOptions.javaPath) isn't set right away.
+    customJavaPath = null
+
+    # Use the custom java path if it's set and valid
+    if $rootScope.javaPath && not $scope.launcherOptions.invalidJavaPath
+      customJavaPath = $rootScope.javaPath  # ($scope.launcherOptions.javaPath) isn't set right away.
+      console.log "Using custom java path"
+    else
+      console.log "Using bundled java"
 
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
