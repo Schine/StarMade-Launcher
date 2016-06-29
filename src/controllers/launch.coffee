@@ -66,12 +66,14 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   # Called by slider updates
   $scope.snap_memory = (newVal) ->
     # nearest pow2 or memory ceiling (round down)
-    $scope.memory.max = Math.min(nearestPow2(newVal), $scope.memory.ceiling)
+    $scope.memory.max = Math.min(Math.max($scope.memory.floor, nearestPow2(newVal)), $scope.memory.ceiling)
 
     # Allow snapping to end of slider, power of 2 or not
     if $scope.memory.max != $scope.memory.ceiling
       if newVal >= ($scope.memory.max + $scope.memory.ceiling) / 2
         $scope.memory.max = $scope.memory.ceiling
+
+
 
 
     $scope.memory.slider = $scope.memory.max
@@ -180,19 +182,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       document.getElementById("maxMemorySlider").value = $scope.memory.max
 
 
-  # max memory should be >= early+initial, and a power of 2
+  # max memory should be >= early+initial
   updateMemoryFloor = () ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
-    val = Math.max(256, $scope.memory.earlyGen + $scope.memory.initial)
-
-    # Next power of 2 (ceil)
-    val--  # allows powers of 2
-    min = 2
-    # left-shift `min` the number of bits in `val`, plus 1 (next power of 2)
-    while val >>= 1
-      min <<= 1
-
-    $scope.memory.floor = Math.max(min, 256)  # 256 minimum
+    $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
 
 
   # Load memory settings from storage or set the defaults
