@@ -72,7 +72,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.steamLaunch = !!argv.steam
   $rootScope.attach      = !!argv.attach  # attach the game process; default behavior with   --steam
   $rootScope.detach      = !!argv.detach  # detach the game process; default behavior witout --steam
-  $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.development
+  $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.steam || $rootScope.development
 
 
   $rootScope.openDownloadPage = ->
