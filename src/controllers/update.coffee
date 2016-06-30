@@ -90,14 +90,14 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     return if $scope.versions.length == 0
 
     if $scope.updaterProgress.needsUpdating
-      $scope.status = "You need to update for v#{$scope.versions[selectedVersion].version}"
+      $scope.status = "You need to update for v#{$scope.versions[selectedVersion].version}#{$scope.versions[selectedVersion].hotfix || ""}"
       $scope.status_updateWarning = "This will overwrite any installed mods."
     else
       $scope.status_updateWarning = ""
       if selectedVersion == '0'
         $scope.status = 'You have the latest version for this build type'
       else
-        $scope.status = "You are up-to-date for v#{$scope.versions[selectedVersion].version}"
+        $scope.status = "You are up-to-date for v#{$scope.versions[selectedVersion].version}#{$scope.versions[selectedVersion].hotfix || ""}"
 
     if !$scope.starmadeInstalled
       $scope.status = "StarMade.jar missing; click to repair."
@@ -126,6 +126,30 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       .then (versions) ->
         $scope.switchingBranch = false
         $scope.versions = $filter('orderBy')(versions, '-build')
+
+        # Add hotfix indicators to duplicate version entries
+        index            = $scope.versions.length - 1
+        previous_version = null
+        hotfix_counter   = 0
+
+        # Work backwards through the list
+        while index >= 0
+          if index-1 >= 0  # all but the last entry
+            if $scope.versions[index].version == previous_version
+              # and add hotfix indicators to the second, third, etc. matching entries
+              $scope.versions[index].hotfix = String.fromCharCode(97 + hotfix_counter++)
+              ##! This will cause problems in the unlikely event there are >26 hotfixes for the same version
+            else
+              previous_version = $scope.versions[index].version
+              hotfix_counter   = 0
+          else  # last entry
+            if $scope.versions[index].version == previous_version
+              $scope.versions[index].hotfix = String.fromCharCode(97 + hotfix_counter++)
+          index--
+        # end hotfix indicators
+
+
+        # Add Latest indicator
         $scope.versions[0].latest = '(Latest)'
 
         # Workaround for when ngRepeat hasn't processed the versions yet

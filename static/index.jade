@@ -105,7 +105,7 @@ html(ng-app='launcher')
               br
               select(id='buildVersion' ng-model='selectedVersion' ng-disabled='updaterProgress.inProgress || switchingBranch')
                 option(ng-repeat="version in versions" value='{{$index}}')
-                  | v{{version.version}} {{version.latest}}
+                  | v{{version.version}}{{version.hotfix}} {{version.latest}}
               a.gear(ng-click="openOptions('buildVersion')") &nbsp;
             
             popup.build-version-popup(title='Build Version Options' type='settings' opened='buildVersionOptions')
@@ -115,7 +115,7 @@ html(ng-app='launcher')
                 br
                 select(id='popupBuildVersion' ng-model='popupData.selectedVersion' ng-disabled='updaterProgress.inProgress || switchingBranch')
                   option(ng-repeat="version in versions" value='{{$index}}')
-                    | v{{version.version}} {{version.latest}}
+                    | v{{version.version}}{{version.hotfix}} {{version.latest}}
                 button(ng-click='selectNewestVersion()' ng-disabled='updaterProgress.inProgress || switchingBranch') Select Newest
                 button(ng-click='selectLastUsedVersion()' ng-disabled='updaterProgress.inProgress || switchingBranch') Select Last Used
               
