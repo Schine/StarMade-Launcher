@@ -63,16 +63,24 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   # librato.start()
 
 
-  $rootScope.development =   true
-  console.log("Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else ""))
-
   $rootScope.librato     =   librato
   $rootScope.version     =   pkg.version
   $rootScope.buildHash   =   buildHash
   $rootScope.steamLaunch = !!argv.steam
   $rootScope.attach      = !!argv.attach  # attach the game process; default behavior with   --steam
   $rootScope.detach      = !!argv.detach  # detach the game process; default behavior witout --steam
+  $rootScope.development =   argv.development == "here be dragons"
+  $rootScope.debugging   = !!argv.debugging  &&  $rootScope.development  # debug only with --development
+  console.log argv.debugging
   $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.steam || $rootScope.development
+
+  console.log("Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else ""))
+  console.log "Steam?  #{$rootScope.steamLaunch}"
+  console.log "Dev?    #{$rootScope.development}"
+  console.log "Debug?  #{$rootScope.debugging}"
+  # attach with --steam or --attach; --detach overrides
+  console.log "Attach? #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  # migrate to using this in launch.coffee
+
 
 
   $rootScope.openDownloadPage = ->

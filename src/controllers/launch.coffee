@@ -291,30 +291,35 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     # attach with --steam or --attach; --detach overrides
     detach = (!$rootScope.steamLaunch && !$rootScope.attach) || $rootScope.detach
 
+    # Standard IO:  pipe if debugging and attaching to the process
+    stdio  = 'inherit'
+    stdio  = 'pipe' if ($rootScope.development && $rootScope.debugging && !detach)
+
     console.log("using java bin path: #{javaBinDir}")
     console.log("child process: " + if detach then 'detached' else 'attached')
 
 
-    # command = javaExec + " " + [
-    #   '-Djava.net.preferIPv4Stack=true'
-    #   "-Xmn#{$scope.memory.earlyGen}M"
-    #   "-Xms#{$scope.memory.initial}M"
-    #   "-Xmx#{$scope.memory.max}M"
-    #   '-Xincgc'
-    #   '-server'  if (os.arch() == "x64")
-    #   '-jar'
-    #   starmadeJar
-    #   '-force'   unless dedicatedServer
-    #   '-server'      if dedicatedServer
-    #   '-gui'         if dedicatedServer
-    #   "-port:#{$scope.serverPort}"
-    #   "-auth #{accessToken.get()}"  if accessToken.get()?
-    # ].join(" ");
-    
-    # console.log("command: #{command}")
-    # console.log(" | cwd: #{installDir}")
-    # console.log(" | stdio: 'inherit'")
-    # console.log(" | detached: #{detach}")
+    if $rootScope.debugging
+      command = javaExec + " " + [
+        '-Djava.net.preferIPv4Stack=true'
+        "-Xmn#{$scope.memory.earlyGen}M"
+        "-Xms#{$scope.memory.initial}M"
+        "-Xmx#{$scope.memory.max}M"
+        '-Xincgc'
+        '-server'  if (os.arch() == "x64")
+        '-jar'
+        starmadeJar
+        '-force'   unless dedicatedServer
+        '-server'      if dedicatedServer
+        '-gui'         if dedicatedServer
+        "-port:#{$scope.serverPort}"
+        "-auth #{accessToken.get()}"  if accessToken.get()?
+      ].join(" ");
+      
+      console.log("command: #{command}")
+      console.log(" | cwd: #{installDir}")
+      console.log(" | stdio: #{stdio}")
+      console.log(" | detached: #{detach}")
 
 
 
@@ -333,13 +338,23 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       "-port:#{$scope.serverPort}"
       "-auth #{accessToken.get()}"  if accessToken.get()?
     ],
-      cwd: installDir
-      stdio: 'inherit'
+      cwd:      installDir
+      stdio:    stdio
       detached: detach
 
     remote.require('app').quit()  if detach
 
     child.on 'close', ->
       remote.require('app').quit()
+
+
+    if ($rootScope.development && $rootScope.debugging && !detach)
+      console.log "Monitoring game output"
+      child.stdout.on 'data', (data)->
+        str = ""
+        str += String.fromCharCode(char) for char in data
+        console.log str
+
+
 
     remote.getCurrentWindow().hide()
