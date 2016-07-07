@@ -63,23 +63,38 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   # librato.start()
 
 
-  $rootScope.librato     =   librato
-  $rootScope.version     =   pkg.version
-  $rootScope.buildHash   =   buildHash
-  $rootScope.steamLaunch = !!argv.steam
-  $rootScope.attach      = !!argv.attach  # attach the game process; default behavior with   --steam
-  $rootScope.detach      = !!argv.detach  # detach the game process; default behavior witout --steam
-  $rootScope.development =   argv.development == "here be dragons"
-  $rootScope.debugging   = !!argv.debugging  &&  $rootScope.development  # debug only with --development
-  console.log argv.debugging
-  $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.steamLaunch || $rootScope.development
+  tester_build = false
 
-  console.log("Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else ""))
-  console.log "Steam?  #{$rootScope.steamLaunch}"
-  console.log "Dev?    #{$rootScope.development}"
-  console.log "Debug?  #{$rootScope.debugging}"
-  # attach with --steam or --attach; --detach overrides
-  console.log "Attach? #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  # migrate to using this in launch.coffee
+
+  $rootScope.librato     =    librato
+  $rootScope.version     =    pkg.version
+  $rootScope.buildHash   =    buildHash
+  $rootScope.steamLaunch =  !!argv.steam
+  $rootScope.attach      =  !!argv.attach  # attach the game process; default behavior with   --steam
+  $rootScope.detach      =  !!argv.detach  # detach the game process; default behavior witout --steam
+  $rootScope.development =   (argv.development == "here be dragons")     || tester_build
+  $rootScope.debugging   = (!!argv.debugging && $rootScope.development)  || tester_build  # debug only with --development
+  $rootScope.verbose     = (!!argv.verbose   && $rootScope.debugging)                     # verbose debugging
+  $rootScope.noUpdate    =  !!argv.noupdate  || $rootScope.steamLaunch || $rootScope.development
+
+  console.log "Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else "")
+  if !!argv.help
+    console.log "Available options:                                                               "
+    console.log " --noupdate  Skips the autoupdate process                                      "
+    console.log " --nogui     Update to the newest version of the game and launch it immediately"
+    console.log " --steam     Runs in Steam mode            (implies attaching)                 "
+    console.log " --attach    Attaches to the game process  (launcher does not exit)            "
+    console.log " --detach    Attaches to the game process  (launcher exits upon launching game)"
+    remote.require('app').quit()
+
+
+  if $rootScope.debugging
+    console.log "Debugging: enabled" + (if $rootScope.verbose then " (verbose)" else "")
+    console.log "Steam:     #{$rootScope.steamLaunch}"
+    # attach with --steam or --attach; --detach overrides
+    console.log "Attach:    #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  ##TODO: migrate to using this in launch.coffee
+
+
 
 
 

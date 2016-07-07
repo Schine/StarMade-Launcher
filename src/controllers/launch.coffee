@@ -299,45 +299,43 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     console.log("child process: " + if detach then 'detached' else 'attached')
 
 
+    # Argument builder
+    args = []
+    args.push('-verbose:jni')                    if $rootScope.verbose
+    args.push('-Djava.net.preferIPv4Stack=true')
+    args.push("-Xmn#{$scope.memory.earlyGen}M")
+    args.push("-Xms#{$scope.memory.initial}M")
+    args.push("-Xmx#{$scope.memory.max}M")
+    args.push('-Xincgc')
+    args.push('-server')                         if (os.arch() == "x64")
+    args.push('-jar')
+    args.push(starmadeJar)
+    args.push('-force')                      unless dedicatedServer
+    args.push('-server')                         if dedicatedServer
+    args.push('-gui')                            if dedicatedServer
+    args.push("-port:#{$scope.serverPort}")
+    args.push("-auth #{accessToken.get()}")      if accessToken.get()?
+
+
+    # Debug output
     if $rootScope.debugging
-      command = javaExec + " " + [
-        '-Djava.net.preferIPv4Stack=true'
-        "-Xmn#{$scope.memory.earlyGen}M"
-        "-Xms#{$scope.memory.initial}M"
-        "-Xmx#{$scope.memory.max}M"
-        '-Xincgc'
-        '-server'  if (os.arch() == "x64")
-        '-jar'
-        starmadeJar
-        '-force'   unless dedicatedServer
-        '-server'      if dedicatedServer
-        '-gui'         if dedicatedServer
-        "-port:#{$scope.serverPort}"
-        "-auth #{accessToken.get()}"  if accessToken.get()?
-      ].join(" ");
-      
-      console.log("command: #{command}")
+      console.log("command:")
+      command = javaExec + " " + args.join(" ")
+      console.log " | " + cmd_slice  for cmd_slice in command.match /.{1,128}/g
+
+      console.log("options:")
       console.log(" | cwd: #{installDir}")
       console.log(" | stdio: #{stdio}")
       console.log(" | detached: #{detach}")
 
+      if $rootScope.verbose
+        console.log("Environment:")
+        console.log "  #{envvar} = #{process.env[envvar]}"  for envvar in Object.keys(process.env)
+        console.log "--- End Environment ---"
 
 
-    child = spawn javaExec, [
-      '-Djava.net.preferIPv4Stack=true'
-      "-Xmn#{$scope.memory.earlyGen}M"
-      "-Xms#{$scope.memory.initial}M"
-      "-Xmx#{$scope.memory.max}M"
-      '-Xincgc'
-      '-server'  if (os.arch() == "x64")
-      '-jar'
-      starmadeJar
-      '-force'   unless dedicatedServer
-      '-server'      if dedicatedServer
-      '-gui'         if dedicatedServer
-      "-port:#{$scope.serverPort}"
-      "-auth #{accessToken.get()}"  if accessToken.get()?
-    ],
+    # Spawn game process
+    child = spawn javaExec, args,
       cwd:      installDir
       stdio:    stdio
       detached: detach
@@ -352,9 +350,14 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       console.log "Monitoring game output"
       child.stdout.on 'data', (data)->
         str = ""
-        str += String.fromCharCode(char) for char in data
+        str += String.fromCharCode(char)  for char in data
         console.log str
 
+      child.stderr.on 'data', (data) =>
+        console.log "Game error: #{data}"
+
+      child.on 'close', (code) =>
+        console.log "Game process exited with code #{code}"
 
 
     remote.getCurrentWindow().hide()
