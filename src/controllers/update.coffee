@@ -70,6 +70,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   $scope.popupBuildTypeSave = ->
     if $scope.branch == $scope.popupData.branch && $scope.installDir != $scope.popupData.installDir
       # Scan the new install directroy
+      $scope.status_updateWarning = ""  # Remove the warning, if present
+      ##TODO make this actually read the installed version from the new directory
       updater.update($scope.versions[$scope.selectedVersion], $scope.popupData.installDir, true)
 
     $scope.branch = $scope.popupData.branch
