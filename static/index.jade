@@ -199,7 +199,7 @@ html(ng-app='launcher')
                 button(ng-click='saveClientOptions()') Save
                 button(ng-click='closeClientOptions()') Cancel
 
-          a.gear.gear-launch(ng-click="openClientOptions()") &nbsp;
+          a.gear.gear-memory(ng-click="openClientMemoryOptions()") &nbsp;
         .launch-bg(ng-class='{hover: launchHover}' ng-hide='updaterProgress.needsUpdating || updaterProgress.inProgress')
         a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
 

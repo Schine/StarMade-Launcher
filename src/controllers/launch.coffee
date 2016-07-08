@@ -199,7 +199,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     updateMemorySlider()
 
 
-  $scope.openClientOptions = ->
+  $scope.openClientMemoryOptions = ->
     loadMemorySettings()
     $scope.clientMemoryOptions = true
 
