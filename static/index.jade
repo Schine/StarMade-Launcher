@@ -210,13 +210,20 @@ html(ng-app='launcher')
           br
           button(ng-click='openDownloadPage()') Launcher Download Page
           span.description
-            | You have v{{version}} installed
+            | Launcher 
+            span.highlight v{{version}} 
+            | installed
             br
-            | (build {{buildHash}})
+            | (build 
+            span.highlight {{buildHash}}
+            | )
           br
           button(ng-click='switchUser()') Switch User
           span.description
-            | You are currently playing as {{playerName}}
+            | You are currently logged in as:
+            br
+            span.highlight {{playerName}}
+
 
         .field-group.launcher-options(ng-if='currentUser' ng-hide="!steamLaunch")
           label Steam Settings
