@@ -58,9 +58,23 @@ div.support-content {
       p {
         font-size: 12px;
         padding: 0 8px;
+        text-align: justify;
+        color: #91A6BC;
 
         &:first-child {
           padding-top: 0;
+        }
+
+        // numbered lists within answers
+        ol {
+          margin-left: -1em;
+
+          li {
+            width:  100%;
+            border: none;
+            text-align: justify;
+            color: #91A6BC;
+          }
         }
       }
     }

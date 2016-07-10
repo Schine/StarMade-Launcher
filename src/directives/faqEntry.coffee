@@ -9,5 +9,6 @@ app.directive 'faqEntry', ->
   templateUrl: 'templates/faqEntry.html'
   scope:
     question: '@'
+    note: '@'
   link: (scope) ->
     scope.expanded = false

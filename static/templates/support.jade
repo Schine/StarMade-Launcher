@@ -15,25 +15,44 @@ div.support-content
 
   ul.faq
     faq-entry(question="The game does not start after clicking on 'Launch' in the launcher. What should I do?")
-      | Browse to your starmade directory, and look into the folder named /logs, open the file named log.txt.0 with a text editor, and scroll to the bottom, this should give a hint on troubleshooting the startup process.
-      | We can also help with this issue via support, please create a ticket #[external-link(href='http://help.star-made.org/helpdesk/tickets/new') here]. if possible attach the log.txt.0 file to the ticket, we can directly look into the problem then.
-    faq-entry(question='I get the error "No Login name given" on trying to uplink.')
-      | You need to fill the field for the in-game-name before opening the uplink dialog.
-    faq-entry(question='How do I fix stuttering sound, or no sound at all?')
-      | Turn off the option "Use OpenAL" in the connection dialog.
-    faq-entry(question='(OSX Only) The game states: "You need the Java Runtime Environment to view this content", although it is installed.')
+      | Browse to your StarMade game (usually StarMade/StarMade) directory, and look in the folder named /logs. Open the file named log.txt.0 with a text editor, and scroll to the bottom. This should help you troubleshoot the issue.
+      | We can also help via support, if needed.  Create a ticket #[external-link(href='http://help.star-made.org/helpdesk/tickets/new') here], and be sure to attach the log.txt.0 file, as the info it contains is invaluable in helping locate the cause.
+    faq-entry(note='(Windows Only)' question='The intro movie is painfully slow, and the sound stutters after launching the game. Help!')
+      | The overwhelming cause of this is having the 32bit version of the launcher installed on a 64bit system.  Please verify that you have the correct version installed! If you're still having the issue (or if the game is installed via Steam, as it handles the selection for you), it could be due to something else. Please make a support ticket, and we will do our best to help.
+    faq-entry(note='(OSX Only)' question='The game states: "You need the Java Runtime Environment to view this content", although it is installed.')
       | For OSX (especially yosemite), you need to install the Java Development Kit (JDK) to have the system register the Java Runtime Environment (JRE).
-    faq-entry(question='I encounter unusual bad video performance, although my computer should perform better.')
-      | There are various reasons for the game performing not at full capacity. 
-      | #[strong 1)] Outdated video drivers, please visit the homepage of your computer manufacturer and video card manufacturer and look for updated drivers
-      | #[strong 2)] Multi-GPU systems, like notebooks, tend to run java with the powersaving GPU, right click the launcher executable and use the option: "Execute with: -> High performance GPU"
-    faq-entry(question='Can I change my registry password?')
-      | Log in to the registry, and click on your name in the top right corner. Use the "Edit profile" option and finally click on "update password".
+    faq-entry(question="I'm encountering terrible graphics performance, and computer should perform better. What gives?")
+      | There are various reasons for lower game performance.  The most common reasons are:
+      ol
+        li Outdated video drivers. Please look for updated drivers on your video card manufacturer's
+          br
+          | (and your computer manufacturer's) websites.
+        li Multi-GPU systems, like notebooks, tend to run java with the powersaving GPU.
+          br
+          | Right click the launcher executable and use the option: "Execute with: -> High performance GPU"
+        li Try increasing the amount of RAM available to the game.
+          br
+          | You can find the memory settings button to the left of the 
+          span(style="color: cyan") [LAUNCH] 
+          | button below.
+        li Try decreasing the "Max View Segments" option within the game's settings.
+          br
+          | This has a small effect on the game's graphics, but can have a large impact on framerate.
+    faq-entry(question='How do I fix stuttering sound, or having no sound at all?')
+      | Turn off the option "Use OpenAL" in the connection dialog.
+    faq-entry(question='I get the error "No Login name given" on trying to uplink.')
+      | You need to fill in the field for the in-game-name before opening the uplink dialog.
+    faq-entry(question='Can I change my password?')
+      | Of course! Log in to the registry, and click on your name in the top right corner. Use the "Edit profile" option and finally click on "update password".
     faq-entry(question='Where can I look up if my account is limited (free-to-play) or upgraded (purchased)?')
-      | Log in to the registry, click on "Main menu" then on "Profile" (under "My Account"). The status shown in the field named "Account Status:" is either Upgraded or Limited, while Upgraded confirms you purchased the game.
-    faq-entry(question='I found a bug, where can I report it?')
+      | Log in to the registry, click on "Main menu" then on "Profile" (under "My Account"). The status shown in the field named "Account Status:" is either Upgraded or Limited, with "Upgraded" confirming you have purchased the game.
+    faq-entry(question="Hey! Your game is pretty awesome.")
+      span(style="color: mediumvioletred") Why thanks!
+        br
+        | We do our best. ^^
+    faq-entry(question='I found a bug! Where can I report it?')
       | Please visit our #[a(href='http://phab.starma.de/w/create_bug_task/') bug tracker] to get instructions on how to report it.
-    faq-entry(question='My question is not answered by the FAQ, where can I get help?')
+    faq-entry(question='My question is not listed in the FAQ.  Where can I get help?')
       | There are many ways to get help:
       | #[strong 1)] Check the FAQ on our helpdesk: #[external-link(href='http://help.star-made.org/support/solutions/5000059708') 'http://help.star-made.org/support/solutions/5000059708']
       | #[strong 2)] Look in the game support forum: #[external-link(href='https://www.starmadedock.net/forums/gamesupport/') 'https://www.starmadedock.net/forums/gamesupport/']
