@@ -79,12 +79,12 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
   console.log "Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else "")
   if !!argv.help
-    console.log "Available options:                                                               "
-    console.log " --noupdate  Skips the autoupdate process                                      "
+    console.log "Available options:                                                             "
+    console.log " --noupdate  Skip the autoupdate process                                       "
     console.log " --nogui     Update to the newest version of the game and launch it immediately"
-    console.log " --steam     Runs in Steam mode            (implies attaching)                 "
-    console.log " --attach    Attaches to the game process  (launcher does not exit)            "
-    console.log " --detach    Attaches to the game process  (launcher exits upon launching game)"
+    console.log " --steam     Run in Steam mode            (implies attaching)                  "
+    console.log " --attach    Attach to the game process   (launcher does not exit)             "
+    console.log " --detach    Attach to the game process   (launcher exits upon launching game) "
     remote.require('app').quit()
 
 
