@@ -63,7 +63,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   # librato.start()
 
 
-  tester_build = true
+  tester_build = false
 
 
   $rootScope.librato     =    librato
