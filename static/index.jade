@@ -75,7 +75,7 @@ html(ng-app='launcher')
                 option(value='archive') Archive
               a.gear(ng-click="openOptions('buildType')") &nbsp;
             
-            popup(title='Build Type Options' type='settings' opened='buildTypeOptions')
+            popup.build-type-popup(title='Build Type Options' type='settings' opened='buildTypeOptions')
               .field-group
                 label(for='popupBuildType')
                   | Build Type
@@ -89,6 +89,7 @@ html(ng-app='launcher')
               .field-group
                 label(for='popupInstallDir')
                   | Installation Directory
+                  span.error(ng-show="!!popupData.installDir_error") {{popupData.installDir_error}}
                 br
                 input.wide(ng-model='popupData.installDir' ng-disabled='updaterProgress.inProgress || switchingBranch')
                 button(ng-click='browseInstallDir()' ng-disabled='updaterProgress.inProgress || switchingBranch') Browse
