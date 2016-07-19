@@ -151,6 +151,34 @@ licenseOverrides =
     license: 'MIT'
     source: 'README.md'
 
+
+onError = (error) ->
+  gutil.log "Error:  #{error.name}"
+  gutil.log " File:  #{error.filename.replace( process.cwd() + path.sep, '' )}  @ Line #{error.location.first_line}, Cols #{error.location.first_column} to #{error.location.last_column}"
+  gutil.log " Desc:  #{error.message}"
+
+  _code       = error.code.split("\n")
+  _code_begin = Math.max(0,            error.location.first_line-3)
+  _code_end   = Math.min(_code.length, error.location.first_line+3)
+  _code       = _code.slice(_code_begin, _code_end)
+
+
+  gutil.log " Code:"
+  for _source_line, index in _code
+    _line  = "  #{_code_begin+index+1}"
+    if _code_begin+index == error.location.first_line
+      _line += ">"
+    else
+      _line += ":"
+    _line += "   #{_source_line}"
+    gutil.log _line
+  process.exit(1)
+
+onWarning = (error) ->
+  gutil.log "Warning: " + error.message
+
+
+
 gulp.task 'default', ['run']
 
 gulp.task 'bootstrap', ['greenworks', 'java']
@@ -168,7 +196,7 @@ gulp.task 'build-hash', ->
 gulp.task 'coffee', ->
   gulp.src paths.src.glob
     .pipe plugins.coffee()
-      .on 'error', gutil.log
+      .on 'error', onError
     .pipe plugins.sourcemaps.write()
     .pipe gulp.dest paths.build.lib.dir
 
