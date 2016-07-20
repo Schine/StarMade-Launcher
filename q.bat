@@ -10,6 +10,10 @@
 ::       to keep it as clean and easy-to-read as possible.  Enjoy!
 
 
+:: Required to enable `set` within if blocks; usage requires !varname! format
+setlocal EnableDelayedExpansion
+
+
 :begin
   if "%1" == ""  goto :help
   set _package=
@@ -28,9 +32,9 @@
   set _dest=
 
   :: set _steam_path=f:\Steam\SteamApps\common\StarMade
-  set _vm_path=C:\Users\Terra\Desktop\shared vm
+  set _vm_path="C:\Users\Terra\Desktop\shared vm"
   set _winrar_path=C:\Program Files\WinRAR\winrar.exe
-  set _starmade_cache_path=C:/Users/Terra/AppData/Roaming/StarMade/Launcher
+  set _cache_backup_path=.\.cache
 goto :parse
 
 
@@ -41,7 +45,8 @@ goto :parse
   echo    p ^| package       Packages the launcher for the current platform
   echo   pa ^| package-all   Packages the launcher (all platforms)
   echo      ^|
-  echo    c ^| clean         Clears the launcher cache to simulate a fresh install
+  echo    c ^| clean         Clears the  launcher cache to simulate a fresh install
+  echo   cc ^| clear-cache   Clears both launcher and backup caches
   echo      ^|
   echo    l ^| launch        Runs the launcher with any passed flags
   echo      ^|                 - dest:steam modifies the launch directory
@@ -98,6 +103,15 @@ goto :eof
 
   if "%1"=="v"             set _development=--development="here be dragons"
   if "%1"=="development"   set _development=--development="here be dragons"
+
+
+  set _or=0
+    if "%1"=="cc"            set _or=1
+    if "%1"=="clear-cache"   set _or=1
+    if "%_or%"=="1" (
+      set _clear_cache=1
+      set _clean=1
+    )
 
   set _or=0
     if "%1"=="vv"            set _or=1
@@ -191,34 +205,71 @@ goto :parse
     xcopy .\dist\*.zip "%_vm_path%" /V /Q
   )
 
+  if "%_clear_cache%"=="1" (
+    echo Clearing backup cache
+    rm -rf "%_cache_backup_path%"
+  )
+
 
   if "%_clean%"=="1" (
-    echo Cleaning
-    rm -rf "%_starmade_cache_path%"
+    if "%_arch%"=="64" (
+      echo Clearing launcher cache ^(x64^)
+      rm -rf .\dist\starmade-launcher-win32-x64\.cache
+      rmdir  .\dist\starmade-launcher-win32-x64\.cache 2> nul
+    ) else (
+      echo Clearing launcher cache ^(ia32^)
+      rm -rf .\dist\starmade-launcher-win32-ia32\.cache
+      rmdir  .\dist\starmade-launcher-win32-ia32\.cache 2> nul
+    )
   )
 
 
   if "%_launch%"=="1" (
     if "%_dest%"=="steam" (
+      set _launch_dir=f:\Steam\SteamApps\common\StarMade
       echo Launching Steam build
-      echo f:\Steam\SteamApps\common\StarMade\starmade-launcher.exe    %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
-      echo.
-      f:\Steam\SteamApps\common\StarMade\starmade-launcher.exe         %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
     ) else (
       if "%_arch%"=="64" (
+        set _launch_dir=.\dist\starmade-launcher-win32-x64
         echo Launching ^(x64^)
-        echo .\dist\starmade-launcher-win32-x64\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
-        echo.
-        .\dist\starmade-launcher-win32-x64\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
       ) else (
+        set _launch_dir=.\dist\starmade-launcher-win32-ia32
         echo Launching ^(ia32^)
-        echo .\dist\starmade-launcher-win32-ia32\starmade-launcher.exe %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
-        echo.
-        .\dist\starmade-launcher-win32-ia32\starmade-launcher.exe      %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
       )
     )
+    if not "%_clean%"=="1"  call :cache_restore
+
+    echo !_launch_dir!\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_development% %_debugging%    
+    echo.
+    !_launch_dir!\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
+    echo.
+    if not "%_clean%"=="1"  goto :cache_save
   )
 goto :cleanup
+
+
+:cache_save
+  echo Saving cache
+  if not exist "!_launch_dir!\.cache" (
+    echo No cache found
+    echo.
+  ) else (
+    if not exist "%_cache_backup_path%"  mkdir "%_cache_backup_path%"
+    xcopy "!_launch_dir!\.cache\*"  "%_cache_backup_path%"  /E /V /H /Q /Y > nul
+    echo.
+  )
+goto :cleanup
+
+:cache_restore
+  echo Restoring cache
+  if not exist "%_cache_backup_path%" (
+    echo No cache found
+    echo.
+  ) else (
+    xcopy "%_cache_backup_path%"  "!_launch_dir!\.cache\*"  /E /V /H /Q /Y > nul
+    echo.
+  )
+goto :eof
 
 
 :package_failed
@@ -231,6 +282,7 @@ goto :cleanup
 
   set _clean=
   set _launch=
+  set _launch_dir=
 
   set _steam=
   set _attach=
@@ -243,7 +295,7 @@ goto :cleanup
   set _steam_path=
   set _vm_path=
   set _winrar_path=
-  set _starmade_cache_path=
+  set _cache_backup_path=
 
   set _or=
 
