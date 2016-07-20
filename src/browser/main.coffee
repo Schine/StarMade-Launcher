@@ -13,6 +13,30 @@ BrowserWindow = require('browser-window')
 
 argv = require('minimist')(process.argv.slice(1))
 
+
+
+### Update Electron's cache location ###
+
+# Get the current running dir, slicing off everything after "app.asar"
+_cwd       = __dirname.split(path.sep)
+_pos_asar = __dirname.toLowerCase().split(path.sep).indexOf("app.asar")
+_cwd       = _cwd.slice(0, _pos_asar+1).join(path.sep)
+
+# Backtrack from "app.asar" to the launcher directory, and resolve to an absolute path
+_cwd = path.resolve( path.normalize( path.join(_cwd, "..", "..") ) )  # Two steps back  (launcher/resources/app.asar)
+
+# Join the new cache directory
+cache_path = path.resolve( path.join(_cwd, ".cache") )
+
+# Update cache locations
+app.setPath("appData",  cache_path)
+app.setPath("userData", path.join(cache_path, 'userData'))
+
+### End ###
+
+
+
+
 # Handle certain single dash arguments
 process.argv.slice(1).forEach (arg, index) ->
   argv.archive = true if arg == '-archive'
