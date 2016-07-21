@@ -31,6 +31,9 @@ setlocal EnableDelayedExpansion
 
   set _dest=
 
+  set _args=
+  set _getting_args=0
+
   :: set _steam_path=f:\Steam\SteamApps\common\StarMade
   set _vm_path="C:\Users\Terra\Desktop\shared vm"
   set _winrar_path=C:\Program Files\WinRAR\winrar.exe
@@ -41,7 +44,7 @@ goto :parse
 :help
   echo Quick launch utility
   echo.
-  echo Usage: q [option [option [...]]] [dest:(steam^|vm)]
+  echo Usage: q [option [option [...]]]  [dest:(steam^|vm)]  [args: [args to pass verbatim]]
   echo    p ^| package       Packages the launcher for the current platform
   echo   pa ^| package-all   Packages the launcher (all platforms)
   echo      ^|
@@ -74,6 +77,24 @@ goto :eof
 
 :parse
   if "%1"==""  goto :run
+
+
+  :: Collect the remainder as verbatim args
+
+  if "%1"=="args:" (
+    set _getting_args=1
+    shift
+  )
+
+  if "%_getting_args%"=="1" (
+    set _args=%_args% %1
+    shift
+    goto :parse
+  )
+
+
+  :: Collect normal options
+
   if "%1"=="p"             set _package=win64
   if "%1"=="package"       set _package=win64
 
@@ -239,9 +260,9 @@ goto :parse
     )
     if not "%_clean%"=="1"  call :cache_restore
 
-    echo !_launch_dir!\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_development% %_debugging%    
+    echo !_launch_dir!\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_development% %_debugging% %_args%
     echo.
-    !_launch_dir!\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_development% %_debugging%
+    !_launch_dir!\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_development% %_debugging% %_args%
     echo.
     if not "%_clean%"=="1"  goto :cache_save
   )
@@ -296,6 +317,9 @@ goto :cleanup
   set _vm_path=
   set _winrar_path=
   set _cache_backup_path=
+
+  set _args=
+  set _getting_args=
 
   set _or=
 
