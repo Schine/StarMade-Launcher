@@ -31,6 +31,9 @@ cache_path = path.resolve( path.join(_cwd, ".cache") )
 # Update cache locations
 app.setPath("appData",  cache_path)
 app.setPath("userData", path.join(cache_path, 'userData'))
+if !!argv.verbose
+  console.log "Set appData  cache path to: #{cache_path}"
+  console.log "Set userData cache path to: #{path.join(cache_path, 'userData')}"
 
 ### End ###
 
