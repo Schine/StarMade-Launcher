@@ -42,14 +42,31 @@ if !!argv.verbose
 
 # Handle certain single dash arguments
 process.argv.slice(1).forEach (arg, index) ->
-  argv.archive = true if arg == '-archive'
-  argv.dev = true if arg == '-dev'
-  argv.latest = true if arg == '-latest'
-  argv.nogui = true if arg == '-nogui'
-  argv.pre = true if arg == '-pre'
-  argv.release = true if arg == '-release'
+  argv.archive = true  if arg == '-archive'
+  argv.dev     = true  if arg == '-dev'
+  argv.latest  = true  if arg == '-latest'
+  argv.nogui   = true  if arg == '-nogui'
+  argv.pre     = true  if arg == '-pre'
+  argv.release = true  if arg == '-release'
+  argv.help    = true  if arg == '-help'
 
 global.argv = argv
+
+
+
+
+if !!argv.help
+  console.log "Available options:"
+  console.log " --noupdate  Skip the autoupdate process"
+  console.log " --nogui     Update to the newest version of the game and launch it immediately"
+  console.log " --steam     Run in Steam mode            (implies attaching)"
+  console.log " --attach    Attach to the game process   (launcher does not exit)"
+  console.log " --detach    Attach to the game process   (launcher exits upon launching game)"
+  process.exit(0)
+
+
+
+
 
 if process.platform == 'darwin' && process.cwd() == '/'
   # Change working directory
