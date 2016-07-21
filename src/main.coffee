@@ -149,7 +149,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
         if versions[0].version != pkg.version
           console.info 'Updating launcher...'
 
-          launcherDir = process.cwd()
+          launcherDir = process.cwd()  ##! This resolves to the directory the launcher was run from, e.g. C:\ in this scenario: C:\> X:\path\to\starmade-launcher.exe
           launcherExec = null
           if process.platform == 'darwin'
             launcherExec = path.join launcherDir, 'Electron'
