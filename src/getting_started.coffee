@@ -252,8 +252,25 @@ installBrowse.addEventListener 'click', ->
     defaultPath: installPath.value
   , (newPath) ->
     return unless newPath?
-    newPath = path.join(newPath[0], 'StarMade')  if !(newPath[0].endsWith(path.sep + "StarMade"))
-    installPath.value = newPath
+    newPath = newPath[0]
+
+    # Scenario: existing install
+    if fs.existsSync( path.join(newPath, "StarMade.jar") )
+      # console.log "installBrowse(): Found StarMade.jar here:  #{path.join(newPath, "StarMade.jar")}"
+      installPath.value = newPath
+      return
+
+    # Scenario: StarMade/StarMade
+    if (path.basename(             newPath.toLowerCase())  == "starmade" &&
+        path.basename(path.dirname(newPath.toLowerCase())) == "starmade" )  # ridiculous, but functional
+      # console.log "installBrowse(): Path ends in StarMade/StarMade  (path: #{newPath})"
+      installPath.value = newPath
+      return
+
+    # Default: append StarMade
+    installPath.value = path.join(newPath, 'StarMade')
+    # console.log "installBrowse(): installing to #{installPath.value}"
+
 
 installContinue.addEventListener 'click', ->
   # console.log("> using manual path (#{installPath.value})")  ##~
