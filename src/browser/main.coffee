@@ -25,6 +25,11 @@ _cwd       = _cwd.slice(0, _pos_asar+1).join(path.sep)
 # Backtrack from "app.asar" to the launcher directory, and resolve to an absolute path
 _cwd = path.resolve( path.normalize( path.join(_cwd, "..", "..") ) )  # Two steps back  (launcher/resources/app.asar)
 
+# Account for the differing folder structure on OSX
+# placing it here: starmade-launcher.app\Contents\MacOS
+if process.platform == 'darwin'
+  _cwd = path.join(_cwd, "MacOS")
+
 # Join the new cache directory
 cache_path = path.resolve( path.join(_cwd, ".cache") )
 
