@@ -1,6 +1,7 @@
 'use strict'
 
 fs     = require('fs')
+path   = require('path')
 remote = require('remote')
 
 dialog = remote.require('dialog')
@@ -63,9 +64,26 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     dialog.showOpenDialog remote.getCurrentWindow(),
       title: 'Select Installation Directory'
       properties: ['openDirectory']
-    , (path) ->
-      return unless path?
-      $scope.popupData.installDir = path[0]
+    , (newPath) ->
+      return unless newPath?
+      newPath = path.resolve(newPath[0])
+
+      # Scenario: existing install
+      if fs.existsSync( path.join(newPath, "StarMade.jar") )
+        # console.log "installBrowse(): Found StarMade.jar here:  #{path.join(newPath, "StarMade.jar")}"
+        $scope.popupData.installDir = newPath
+        return
+
+      # Scenario: StarMade/StarMade
+      if (path.basename(             newPath.toLowerCase())  == "starmade" &&
+          path.basename(path.dirname(newPath.toLowerCase())) == "starmade" )  # ridiculous, but functional
+        # console.log "installBrowse(): Path ends in StarMade/StarMade  (path: #{newPath})"
+        $scope.popupData.installDir = newPath
+        return
+
+      # Default: append StarMade
+      $scope.popupData.installDir = path.join(newPath, 'StarMade')
+
 
   $scope.popupBuildTypeSave = ->
     if $scope.branch == $scope.popupData.branch && $scope.installDir != $scope.popupData.installDir
