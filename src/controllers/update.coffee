@@ -1,8 +1,10 @@
 'use strict'
 
-fs     = require('fs')
-path   = require('path')
-remote = require('remote')
+fs       = require('fs')
+os       = require('os')
+path     = require('path')
+remote   = require('remote')
+sanitize = require('sanitize-filename')
 
 dialog = remote.require('dialog')
 electronApp = remote.require('app')
@@ -48,7 +50,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       when 'buildType'
         $scope.buildTypeOptions = true
         $scope.popupData.branch = $scope.branch
-        $scope.popupData.installDir = $scope.installDir
+        $scope.popupData.installDir = path.resolve( $scope.installDir )
       when 'buildVersion'
         $scope.buildVersionOptions = true
 
@@ -86,15 +88,69 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
 
   $scope.popupBuildTypeSave = ->
+    if $scope.popupData.installDir.trim() == ""
+      $scope.popupData.installDir_error = "Install path cannot be blank."
+      return
+
+    $scope.popupData.installDir_error = ""
+
     if $scope.branch == $scope.popupData.branch && $scope.installDir != $scope.popupData.installDir
       # Scan the new install directroy
       $scope.status_updateWarning = ""  # Remove the warning, if present
       ##TODO make this actually read the installed version from the new directory
-      updater.update($scope.versions[$scope.selectedVersion], $scope.popupData.installDir, true)
+      updater.update($scope.versions[$scope.selectedVersion], sanitizePath($scope.popupData.installDir), true)
 
-    $scope.branch = $scope.popupData.branch
-    $scope.installDir = $scope.popupData.installDir
+
+    if $rootScope.verbose
+      console.log "------Sanitizing path------"
+      console.log " | From: #{$scope.popupData.installDir}"
+      console.log " | To:   #{sanitizePath( $scope.popupData.installDir )}"
+      console.log "------      End      ------"
+
+
+    $scope.branch           = $scope.popupData.branch
+    $scope.installDir       = sanitizePath( $scope.popupData.installDir )
     $scope.buildTypeOptions = false
+
+
+  # Cross-platform path sanitizing
+  # Relies on the `sanitize-filename` npm package
+  ##! Possible issues:
+  #     * (Win32)  A malformed drive letter causes the malformed path to be treated as relative to the current directory.  This is due to the initial `path.resolve()`
+  sanitizePath = (str) ->
+    # Resolve into an absolute path first
+    str = path.resolve(str)
+    # and split the resulting path into tokens
+    tokens = str.split(path.sep)
+
+    # For Win32, retain the root drive
+    root = null
+    if os.platform() == "win32"
+      root = tokens.shift()
+      # Sanitize it, and add the ":" back
+      root = sanitize(root) + ":"
+
+    # Sanitize each token in turn
+    for token, index in tokens
+      tokens[index] = sanitize(token)
+
+    # Remove all empty elements
+    tokens.filter (n) ->
+      n != ""
+
+    # Rebuild array
+    new_path = tokens.join( path.sep )
+
+    # Restore the root of the path
+    if os.platform() == "win32"
+      new_path = path.join(root, new_path)  # Win32: drive letter
+    else
+      new_path = path.sep + new_path        # POSIX: leading /
+
+    # And return our new, sparkling-clean path
+    new_path
+
+
 
   $scope.getLastUsedVersion = ->
     for version, i in $scope.versions
