@@ -171,11 +171,22 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     earlyGen = $scope.memory.earlyGen  if typeof earlyGen == "undefined"
     initial  = $scope.memory.initial   if typeof initial  == "undefined"
 
+    # Still invalid?  bypass updating until they're set.
+    return  if typeof earlyGen == "undefined"
+    return  if typeof initial  == "undefined"
+
+    # console.log "updateMemorySlider():"
+    # console.log "| earlyGen: #{earlyGen}     "
+    # console.log "| initial:  #{initial}      "
+
     updateMemoryFloor()  # update floor whenever initial/earlyGen change
 
     $scope.memory.max    = Math.max($scope.memory.floor, $scope.memory.max)
     $scope.memory.slider = $scope.memory.max
     update_slider_class() # toggles green and labels when at a power of 2
+
+    # console.log "| max:      #{$scope.memory.max}"
+    # console.log "| slider:   #{$scope.memory.slider}"
 
     # Workaround for Angular's range bug  (https://github.com/angular/angular.js/issues/6726)
     $timeout ->
@@ -186,6 +197,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   updateMemoryFloor = () ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
     $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
+    # console.log "updateMemoryFloor(): setting memory.floor to #{$scope.memory.floor}"
 
 
   # Load memory settings from storage or set the defaults
