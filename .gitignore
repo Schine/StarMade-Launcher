@@ -6,6 +6,7 @@ dist/
 lib/
 node_modules/
 npm-debug.log
+launcher.log
 misc/
 launcherbuildindex
 StarMade/
