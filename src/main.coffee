@@ -1,10 +1,11 @@
 'use strict'
 
-ipc = require('ipc')
-path = require('path')
-remote = require('remote')
-shell = require('shell')
-spawn = require('child_process').spawn
+os      = require('os')
+ipc     = require('ipc')
+path    = require('path')
+remote  = require('remote')
+shell   = require('shell')
+spawn   = require('child_process').spawn
 librato = require('librato-node')
 
 electronApp = remote.require('app')
@@ -77,16 +78,22 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.verbose     = (!!argv.verbose   && $rootScope.debugging)                     # verbose debugging
   $rootScope.noUpdate    =  !!argv.noupdate  || $rootScope.steamLaunch || $rootScope.development
 
-  console.log "Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else "")
+  $rootScope.log         = require('./log.js')
+  $rootScope.log.set_level($rootScope.log.levels.debug)    if $rootScope.debugging
+  $rootScope.log.set_level($rootScope.log.levels.verbose)  if $rootScope.verbose
+
+
+  $rootScope.log.info "Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else "")
+  $rootScope.log.info "OS: #{process.platform} (#{os.arch()})"
+
 
   if $rootScope.debugging
-    console.log "Debugging: enabled" + (if $rootScope.verbose then " (verbose)" else "")
-    console.log "Steam:     #{$rootScope.steamLaunch}"
+    $rootScope.log.indent()
+    $rootScope.log.debug "Debugging: enabled" + (if $rootScope.verbose then " (verbose)" else "")
+    $rootScope.log.debug "Steam:     #{$rootScope.steamLaunch}"
     # attach with --steam or --attach; --detach overrides
-    console.log "Attach:    #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  ##TODO: migrate to using this in launch.coffee
-
-
-
+    $rootScope.log.debug "Attach:    #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  ##TODO: migrate to using this in launch.coffee
+    $rootScope.log.outdent()
 
 
   $rootScope.openDownloadPage = ->
