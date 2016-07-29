@@ -9,7 +9,7 @@ request = require('request')
 
 app = angular.module 'launcher'
 
-app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
+app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgress) ->
   BASE_URL = 'http://files.star-made.org'
   LAUNCHER_BASE_URL = 'http://launcher-files-origin.star-made.org'
   BRANCH_INDEXES =
@@ -22,9 +22,18 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
   @update = (version, installDir, checkOnly = false, force = false) ->
     return if updaterProgress.inProgress
 
+    $rootScope.log.entry "Updating game..."
+
+    $rootScope.log.indent()
+    $rootScope.log.info  "(checkOnly)"  if checkOnly
+    $rootScope.log.info  "(forced)"     if force
+    $rootScope.log.outdent()
+
+
     updaterProgress.curValue = 0
     updaterProgress.inProgress = true
     updaterProgress.text = 'Getting checksums'
+    $rootScope.log.entry "Getting checksums"
 
     @getChecksums(version.path)
       .then (checksums) ->
@@ -35,6 +44,8 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
             updaterProgress.text = 'Up to date'
             updaterProgress.needsUpdating = false
             updaterProgress.inProgress = false
+            $rootScope.log.entry "Up to date"
+            # $rootScope.log.outdent()
             return
 
           downloadSize = 0
@@ -58,14 +69,18 @@ app.service 'updater', ($q, $http, Checksum, Version, updaterProgress) ->
             updaterProgress.text = 'All files downloaded'
             updaterProgress.inProgress = false
             updaterProgress.needsUpdating = false
+            $rootScope.log.entry "All files downloaded"
+            # $rootScope.log.outdent()
 
           if checkOnly
             updaterProgress.needsUpdating = true
             updaterProgress.inProgress = false
+            # $rootScope.log.outdent()
           else
             filesToDownload.forEach (checksum) ->
               q.push checksum, (err) ->
-                console.error err if err
+                $rootScope.log.error err if err
+            # $rootScope.log.outdent()
 
         updaterProgress.text = 'Determining files to download...'
         updaterProgress.curValue = 0

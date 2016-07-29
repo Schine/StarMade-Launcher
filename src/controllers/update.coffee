@@ -101,11 +101,11 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       updater.update($scope.versions[$scope.selectedVersion], sanitizePath($scope.popupData.installDir), true)
 
 
-    if $rootScope.verbose
-      console.log "------Sanitizing path------"
-      console.log " | From: #{$scope.popupData.installDir}"
-      console.log " | To:   #{sanitizePath( $scope.popupData.installDir )}"
-      console.log "------      End      ------"
+    $rootScope.log.important("Sanitizing path", $rootScope.log.levels.debug)
+    $rootScope.log.indent( 1, $rootScope.log.levels.debug)
+    $rootScope.log.debug "From: #{$scope.popupData.installDir}"
+    $rootScope.log.debug "To:   #{sanitizePath( $scope.popupData.installDir )}"
+    $rootScope.log.outdent(1, $rootScope.log.levels.debug)
 
 
     $scope.branch           = $scope.popupData.branch

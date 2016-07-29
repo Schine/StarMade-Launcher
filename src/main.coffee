@@ -64,7 +64,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   # librato.start()
 
 
-  tester_build = true
+  tester_build = false
 
 
   $rootScope.librato     =    librato
@@ -79,12 +79,18 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.noUpdate    =  !!argv.noupdate  || $rootScope.steamLaunch || $rootScope.development
 
   $rootScope.log         = require('./log.js')
-  $rootScope.log.set_level($rootScope.log.levels.debug)    if $rootScope.debugging
-  $rootScope.log.set_level($rootScope.log.levels.verbose)  if $rootScope.verbose
+
+  log_level = $rootScope.log.levels.game      # Default
+  log_level = $rootScope.log.levels.debug    if $rootScope.debugging
+  log_level = $rootScope.log.levels.verbose  if $rootScope.verbose
+
+  $rootScope.log.set_level(log_level)
 
 
-  $rootScope.log.info "Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else "")
-  $rootScope.log.info "OS: #{process.platform} (#{os.arch()})"
+  $rootScope.log.raw "Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else "") + "\n"
+  $rootScope.log.info "OS:  #{process.platform} (#{os.arch()})"
+  ##TODO: add java 32/64 info here
+  $rootScope.log.info "RAM: #{Math.floor( os.totalmem()/1024/1024 )}mb"
 
 
   if $rootScope.debugging
@@ -97,15 +103,19 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
 
   $rootScope.openDownloadPage = ->
+    $rootScope.log.entry "Opening download page"
     shell.openExternal 'http://star-made.org/download'
 
   $rootScope.openLicenses = ->
+    $rootScope.log.entry "Displaying licenses"
     ipc.send 'open-licenses'
 
   $rootScope.openSteamLink = ->
+    $rootScope.log.entry "opening: https://registry.star-made.org/profile/steam_link"
     shell.openExternal 'https://registry.star-made.org/profile/steam_link'
 
   $rootScope.startAuth = ->
+    $rootScope.log.entry "Displaying auth"
     $rootScope.currentUser = null
     accessToken.delete()
     refreshToken.delete()
@@ -113,6 +123,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
   $rootScope.switchUser = ->
     $rootScope.launcherOptionsWindow = false
+    $rootScope.log.entry "Switching user"
     $rootScope.startAuth()
 
 
@@ -121,9 +132,13 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       .success (data) ->
         $rootScope.currentUser = data.user
         $rootScope.playerName = $rootScope.currentUser.username
+        $rootScope.log.entry "Using saved credentials"
+        $rootScope.log.info  "Username: #{$rootScope.playerName}"
         remote.getCurrentWindow().show()
       .error (data, status) ->
         if status == 401
+          $rootScope.log.entry "Using saved credentials"
+          $rootScope.log.entry "Requesting auth token"
           refreshToken.refresh()
             .then (data) ->
               accessToken.set data.access_token
@@ -145,7 +160,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
     updater.getVersions('launcher')
       .then (versions) ->
         if versions[0].version != pkg.version
-          console.info 'Updating launcher...'
+          $rootScope.log.entry 'Updating launcher...'
 
           launcherDir = process.cwd()  ##! This resolves to the directory the launcher was run from, e.g. C:\ in this scenario: C:\> X:\path\to\starmade-launcher.exe
           launcherExec = null
@@ -159,13 +174,13 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           ipc.once 'updating-opened', ->
             updater.updateLauncher(versions[0], launcherDir)
               .then ->
-                console.info 'Launcher updated! Restarting...'
+                $rootScope.log.end 'Launcher updated! Restarting...'
                 child = spawn launcherExec, [],
                   detached: true
                 electronApp.quit()
               , (err) ->
-                console.error 'Updating the launcher failed!'
-                console.error err
+                $rootScope.log.error 'Updating the launcher failed!'
+                $rootScope.log.raw err
                 remote.showErrorBox('Launcher update failed', 'The launcher failed to update.')
                 ipc.send 'close-updating'
 
@@ -206,7 +221,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
                     # Steam account not linked
                     ipc.send 'start-steam-link'
                   else
-                    console.warn "Unable to determine status of Steam account: #{steamId}"
+                    $rootScope.log.warning "Unable to determine status of Steam account: #{steamId}"
                     remote.getCurrentWindow().show()
             else
               remote.getCurrentWindow().show()

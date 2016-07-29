@@ -78,7 +78,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     $scope.memory.slider = $scope.memory.max
     update_slider_class()
-    # console.log("Snapping from #{newVal} to #{$scope.memory.max}")
+    $rootScope.log.verbose "Slider: Snapping from #{newVal} to #{$scope.memory.max}"
 
 
   update_slider_class = () ->
@@ -175,18 +175,21 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     return  if typeof earlyGen == "undefined"
     return  if typeof initial  == "undefined"
 
-    # console.log "updateMemorySlider():"
-    # console.log "| earlyGen: #{earlyGen}     "
-    # console.log "| initial:  #{initial}      "
+    $rootScope.log.verbose "updateMemorySlider():"
+    $rootScope.log.indent()
+    $rootScope.log.verbose "earlyGen: #{earlyGen}     "
+    $rootScope.log.verbose "initial:  #{initial}      "
 
     updateMemoryFloor()  # update floor whenever initial/earlyGen change
+
 
     $scope.memory.max    = Math.max($scope.memory.floor, $scope.memory.max)
     $scope.memory.slider = $scope.memory.max
     update_slider_class() # toggles green and labels when at a power of 2
 
-    # console.log "| max:      #{$scope.memory.max}"
-    # console.log "| slider:   #{$scope.memory.slider}"
+    $rootScope.log.verbose "max:      #{$scope.memory.max}"
+    $rootScope.log.verbose "slider:   #{$scope.memory.slider}"
+    $rootScope.log.outdent()
 
     # Workaround for Angular's range bug  (https://github.com/angular/angular.js/issues/6726)
     $timeout ->
@@ -197,7 +200,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   updateMemoryFloor = () ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
     $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
-    # console.log "updateMemoryFloor(): setting memory.floor to #{$scope.memory.floor}"
+    $rootScope.log.verbose "updateMemoryFloor():"
+    $rootScope.log.indent()
+    $rootScope.log.verbose "setting memory.floor to #{$scope.memory.floor}"
+    $rootScope.log.outdent()
 
 
   # Load memory settings from storage or set the defaults
@@ -208,6 +214,15 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
       ceiling:  Number( defaults[os.arch()].ceiling )
       step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
+
+    $rootScope.log.entry "Loading memory settings"
+    $rootScope.log.indent()
+    $rootScope.log.entry "maxMemory:      #{$scope.memory.max}"
+    $rootScope.log.entry "initialMemory:  #{$scope.memory.initial}"
+    $rootScope.log.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
+    $rootScope.log.entry "ceiling:        #{$scope.memory.ceiling}"
+    $rootScope.log.outdent()
+
     updateMemorySlider()
 
 
@@ -224,6 +239,14 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     localStorage.setItem 'maxMemory',      $scope.memory.max
     localStorage.setItem 'initialMemory',  $scope.memory.initial
     localStorage.setItem 'earlyGenMemory', $scope.memory.earlyGen
+
+    $rootScope.log.entry "Saving memory settings"
+    $rootScope.log.indent()
+    $rootScope.log.entry "maxMemory:      #{$scope.memory.max}"
+    $rootScope.log.entry "initialMemory:  #{$scope.memory.initial}"
+    $rootScope.log.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
+    $rootScope.log.outdent()
+
     $scope.closeClientOptions()
 
 
@@ -240,33 +263,56 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
   $scope.$watch 'launcherOptionsWindow', (visible) ->
+    $rootScope.log.important "launcherOptionsWindow visible? #{visible}", $rootScope.log.levels.verbose
+    $rootScope.log.indent(1,  $rootScope.log.levels.verbose)
     $scope.verifyJavaPath()  if visible
+    $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
 
   $scope.launcherOptions.javaPathBrowse = () =>
+    $rootScope.log.verbose "Browsing for custom java path"
+    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
     dialog.showOpenDialog remote.getCurrentWindow(),
       title: 'Select Java Bin Directory'
       properties: ['openDirectory']
       defaultPath: $scope.launcherOptions.javaPath
     , (newPath) =>
-      return unless newPath?
+      if newPath?
+        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+        return
       $scope.launcherOptions.javaPath = newPath[0]
       $scope.$apply()
       $scope.verifyJavaPath()
+      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+
 
   $scope.verifyJavaPath = () =>
     newPath = $rootScope.javaPath
+    $rootScope.log.verbose "verifyJavaPath()"
+    $rootScope.log.indent()
+    $rootScope.log.verbose "javaPath: #{newPath}"
+
     if !newPath  # blank path uses bundled java instead
       $scope.launcherOptions.invalidJavaPath = false
       $scope.launcherOptions.javaPathStatus = "-- Using bundled Java version --"
+
+      $rootScope.log.verbose "Blank path; using bundled Java version"
+      $rootScope.log.outdent()
       return
+
     newPath = path.resolve(newPath)
 
     if fileExists( path.join(newPath, "java") )  || # osx+linux
        fileExists( path.join(newPath, "java.exe") ) # windows
       $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
       $scope.launcherOptions.invalidJavaPath  = false
+      $rootScope.log.verbose "Valid path; using custom Java"
+      $rootScope.log.outdent()
       return
+
     $scope.launcherOptions.invalidJavaPath = true
+    $rootScope.log.verbose "Invalid path."
+    $rootScope.log.outdent()
+
 
   fileExists = (pathName) ->
     pathName = path.resolve(pathName)
@@ -279,6 +325,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
   $scope.launch = (dedicatedServer = false) =>
+    $rootScope.log.verbose("launch()")
+    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
     loadMemorySettings()
     $scope.verifyJavaPath()
 
@@ -286,10 +334,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     # Use the custom java path if it's set and valid
     if $rootScope.javaPath && not $scope.launcherOptions.invalidJavaPath
-      customJavaPath = $rootScope.javaPath  # ($scope.launcherOptions.javaPath) isn't set right away.
-      console.log "Using custom java path"
+      customJavaPath = $rootScope.javaPath  # `$scope.launcherOptions.javaPath` isn't set right away.
+      $rootScope.log.info "Using custom java path"
     else
-      console.log "Using bundled java"
+      $rootScope.log.info "Using bundled java"
 
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
@@ -307,8 +355,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     stdio  = 'inherit'
     stdio  = 'pipe' if ($rootScope.development && $rootScope.debugging && !detach)
 
-    console.log("using java bin path: #{javaBinDir}")
-    console.log("child process: " + if detach then 'detached' else 'attached')
+    $rootScope.log.info "using java bin path: #{javaBinDir}"
+    $rootScope.log.info "child process: " + if detach then 'detached' else 'attached'
 
 
     # Argument builder
@@ -330,20 +378,24 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
     # Debug output
-    if $rootScope.debugging
-      console.log("command:")
-      command = javaExec + " " + args.join(" ")
-      console.log " | " + cmd_slice  for cmd_slice in command.match /.{1,128}/g
+    $rootScope.log.debug "command:"
+    command = javaExec + " " + args.join(" ")
+    $rootScope.log.indent()
+    $rootScope.log.debug cmd_slice  for cmd_slice in command.match /.{1,128}/g
+    $rootScope.log.outdent()
 
-      console.log("options:")
-      console.log(" | cwd: #{installDir}")
-      console.log(" | stdio: #{stdio}")
-      console.log(" | detached: #{detach}")
+    $rootScope.log.debug "options:"
+    $rootScope.log.indent()
+    $rootScope.log.debug "cwd: #{installDir}"
+    $rootScope.log.debug "stdio: #{stdio}"
+    $rootScope.log.debug "detached: #{detach}"
 
-      if $rootScope.verbose
-        console.log("Environment:")
-        console.log "  #{envvar} = #{process.env[envvar]}"  for envvar in Object.keys(process.env)
-        console.log "--- End Environment ---"
+    $rootScope.log.verbose "Environment:"
+    $rootScope.log.indent()
+    $rootScope.log.verbose "  #{envvar} = #{process.env[envvar]}"  for envvar in Object.keys(process.env)
+    $rootScope.log.outdent()
+    $rootScope.log.outdent()
+
 
 
     # Spawn game process
@@ -352,24 +404,34 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       stdio:    stdio
       detached: detach
 
-    remote.require('app').quit()  if detach
+
+    if detach
+      $rootScope.log.end "Exiting"
+      remote.require('app').quit()
 
     child.on 'close', ->
+      $rootScope.log.end "Game closed.  Exiting."
       remote.require('app').quit()
 
 
     if ($rootScope.development && $rootScope.debugging && !detach)
-      console.log "Monitoring game output"
+      $rootScope.log.entry "Monitoring game output"
       child.stdout.on 'data', (data)->
         str = ""
         str += String.fromCharCode(char)  for char in data
-        console.log str
+        $rootScope.log.indent(1,  $rootScope.log.levels.game)
+        $rootScope.log.game data
+        $rootScope.log.outdent(1, $rootScope.log.levels.game)
 
       child.stderr.on 'data', (data) =>
-        console.log "Game error: #{data}"
+        $rootScope.log.indent(1,  $rootScope.log.levels.game)
+        $rootScope.log.game(data, $rootScope.log.levels.game)
+        $rootScope.log.outdent(1,  $rootScope.log.levels.game)
 
       child.on 'close', (code) =>
-        console.log "Game process exited with code #{code}"
+        $rootScope.log.indent(1,  $rootScope.log.levels.game)
+        $rootScope.log.info "Game process exited with code #{code}"
+        $rootScope.log.outdent(1,  $rootScope.log.levels.game)
 
 
     remote.getCurrentWindow().hide()

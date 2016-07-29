@@ -8,7 +8,7 @@ request = require('request')
 
 app = angular.module 'launcher'
 
-app.factory 'Checksum', ($q, updaterProgress) ->
+app.factory 'Checksum', ($q, $rootScope, updaterProgress) ->
   class Checksum
     constructor: (@size, @checksum, @relativePath, @buildPath) ->
 
@@ -20,7 +20,7 @@ app.factory 'Checksum', ($q, updaterProgress) ->
         stream = fs.createReadStream dest
 
         stream.on 'error', =>
-          console.log "#{@relativePath} does not exist"
+          $rootScope.log.entry "#{@relativePath} does not exist"
           resolve true
 
         stream.on 'data', (data) ->
@@ -29,17 +29,17 @@ app.factory 'Checksum', ($q, updaterProgress) ->
         stream.on 'end', =>
           localChecksum = hash.digest 'hex'
           if localChecksum != @checksum
-            console.log "Checksum differs for #{@relativePath}"
+            $rootScope.log.entry "Checksum differs for #{@relativePath}"
             resolve true
           else
-            console.log "Not downloading #{@relativePath}"
+            $rootScope.log.verbose "Not downloading #{@relativePath}"
             resolve false
 
     download: (installDir) ->
       sourceFilePath = "#{@buildPath}/#{@relativePath}"
       dest = "#{installDir}/#{@relativePath}"
 
-      console.log "Downloading #{sourceFilePath} -> #{dest}"
+      $rootScope.log.entry "Downloading #{sourceFilePath} -> #{dest}"
 
       $q (resolve, reject) =>
         async.series [
