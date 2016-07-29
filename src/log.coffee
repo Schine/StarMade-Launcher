@@ -13,14 +13,17 @@ log_indent_level = 0
 levels =
   normal:  0
   error:   0
+  fatal:   0
   info:    1
   warning: 2
+  game:    3
   debug:   5
   verbose: 10
 
 prefixes =
   normal:    "         "
   important: "   !!!   "
+  game:      " [game]  "
   info:      "  info   "
   warning:   " warning "
   error:     "  error  "
@@ -89,7 +92,7 @@ log = (str,  level=0,  type="normal") ->
     data  = ""
     data += timestamp() + prefix(type)  if type != "raw"
     data += str
-    data += "\n"                        if type != "raw"
+    data += "\n"                        if type != "raw"  &&  not data.endsWith("\n")
 
     bytes = fs.writeSync(log_descriptor, data)
 
@@ -107,6 +110,7 @@ log = (str,  level=0,  type="normal") ->
 # Helper functions
 entry     = (str, level=levels.normal)  -> log(str, level, "normal")
 info      = (str, level=levels.info)    -> log(str, level, "info")
+game      = (str, level=levels.game)    -> log(str, level, "game")
 warning   = (str, level=levels.warning) -> log(str, level, "warning")
 error     = (str, level=levels.normal)  -> log(str, level, "error")
 fatal     = (str, level=levels.normal)  -> log(str, level, "fatal")
@@ -118,14 +122,29 @@ raw       = (str, level=levels.normal)  -> log(str, level, "raw")
 meta      = (str, level=levels.verbose) -> log(str, level, "meta")
 
 
-
+# Only log events with this log-level or below.
 set_level = (level) ->
   log_level = level
+  level_name = null
+  for key,val of levels
+    level_name or= "#{key} (#{val})" if val==level
+  level_name or= level
+  raw "Logging level: #{level_name}\n\n"
 
 
-indent_level    = (   ) -> log_indent_level
-increase_indent = (n=1) -> log_indent_level += n
-decrease_indent = (n=1) -> log_indent_level  = Math.max(0, log_indent_level-n)
+# Returns current log indent level
+indent_level    = () ->
+  log_indent_level
+
+# Increases log indent (with optional log-level)
+increase_indent = (n=1, level=0) ->
+  return if level > log_level
+  log_indent_level += n
+
+# Decreases log indent (with optional log-level)
+decrease_indent = (n=1, level=0) ->
+  return if level > log_level
+  log_indent_level  = Math.max(0, log_indent_level-n)
 
 
 
@@ -135,8 +154,9 @@ module.exports = {
   prefixes:      prefixes         # log-level prefixes
 
   # Functions
-  entry:         entry            # normal log entry
-  info:          info             # info   log entry
+  entry:         entry            # normal entry
+  info:          info             # info   entry
+  game:          game             # game   entry (for captured game output)
   warning:       warning          # etc.
   error:         error            # Standard error
   fatal:         fatal            # Fatal error
@@ -147,8 +167,8 @@ module.exports = {
   raw:           raw              # No timestamp, newlines, etc.
 
   indent_level:  indent_level
-  indent:        increase_indent
-  outdent:       decrease_indent
+  indent:        increase_indent  # Indent `n` levels with optional log-level
+  outdent:       decrease_indent  # outdent ...
 
   set_level:     set_level
 }
