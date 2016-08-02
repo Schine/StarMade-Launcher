@@ -35,7 +35,7 @@ setlocal EnableDelayedExpansion
   set _getting_args=0
 
   :: set _steam_path=f:\Steam\SteamApps\common\StarMade
-  set _vm_path="C:\Users\Terra\Desktop\shared vm"
+  set _vm_path=C:\Users\Terra\Desktop\shared vm
   set _winrar_path=C:\Program Files\WinRAR\winrar.exe
   set _cache_backup_path=.\.cache
 goto :parse
@@ -181,14 +181,14 @@ goto :parse
     echo Packaging
     echo.
     cmd /C gulp package
-    if "%errorlevel%"=="1"  goto :package_failed
+    if not "%errorlevel%"=="0"  goto :package_failed
     echo.
   )
   if "%_package%"=="all" (
     echo Packaging all
     echo.
     cmd /C gulp package --platform all --arch all
-    if "%errorlevel%"=="1"  goto :package_failed
+    if not "%errorlevel%"=="0"  goto :package_failed
     echo.
   )
 
