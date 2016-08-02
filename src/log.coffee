@@ -14,8 +14,8 @@ levels =
   normal:  0
   error:   0
   fatal:   0
-  info:    1
-  warning: 2
+  info:    0
+  warning: 0
   game:    3
   debug:   5
   verbose: 10
@@ -97,8 +97,10 @@ log = (str,  level=0,  type="normal") ->
     bytes = fs.writeSync(log_descriptor, data)
 
   catch e
+    # Should catch other filesystem errors here
     open_logfile()
     try
+      # This assumes `data` is the cause.
       this.warning("Could not write to log.  Attempting re-write.", 0)
       bytes = fs.writeSync(log_descriptor, data)
     catch e
@@ -167,7 +169,7 @@ module.exports = {
   raw:           raw              # No timestamp, newlines, etc.
 
   indent_level:  indent_level
-  indent:        increase_indent  # Indent `n` levels with optional log-level
+  indent:        increase_indent  # indent `n` levels, optionally log-level dependent
   outdent:       decrease_indent  # outdent ...
 
   set_level:     set_level
