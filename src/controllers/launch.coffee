@@ -208,15 +208,21 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   # Load memory settings from storage or set the defaults
   loadMemorySettings = ->
+    $rootScope.log.entry "Loading memory settings"
+    $rootScope.log.indent()
+
+    # Cap max memory to physical ram
+    _max = Number(localStorage.getItem('maxMemory')) || Number(defaults[os.arch()].max)
+    $rootScope.log.info "Max memory capped to physical ram"  if _max > defaults[os.arch()].ceiling
+    _max = Math.min( _max, defaults[os.arch()].ceiling )
+
     $scope.memory =
-      max:      Number(localStorage.getItem('maxMemory'))      || Number(defaults[os.arch()].max)
+      max:      _max
       initial:  Number(localStorage.getItem('initialMemory'))  || Number(defaults[os.arch()].initial)
       earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
       ceiling:  Number( defaults[os.arch()].ceiling )
       step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
 
-    $rootScope.log.entry "Loading memory settings"
-    $rootScope.log.indent()
     $rootScope.log.entry "maxMemory:      #{$scope.memory.max}"
     $rootScope.log.entry "initialMemory:  #{$scope.memory.initial}"
     $rootScope.log.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
