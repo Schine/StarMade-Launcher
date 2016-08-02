@@ -65,15 +65,20 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   # Called by slider updates
   $scope.snap_memory = (newVal) ->
-    # nearest pow2 or memory ceiling (round down)
-    $scope.memory.max = Math.min(Math.max($scope.memory.floor, nearestPow2(newVal)), $scope.memory.ceiling)
+    _nearest_pow_2 = nearestPow2(newVal)
+    _floor         = $scope.memory.floor
 
-    # Allow snapping to end of slider, power of 2 or not
+    # Snap to lower bound if between `floor` and `(floor + floor->pow2)/2`
+    if newVal <= (_floor + nearestPow2(_floor, false)) >> 1  # false: bypass nearestPow2() memoizing
+      $scope.memory.max = _floor
+    else
+      # Snap to nearest pow2 (capped at memory ceiling)
+      $scope.memory.max = Math.min(_nearest_pow_2, $scope.memory.ceiling)
+  
+    # Allow snapping up to end of slider, power of 2 or not
     if $scope.memory.max != $scope.memory.ceiling
       if newVal >= ($scope.memory.max + $scope.memory.ceiling) / 2
         $scope.memory.max = $scope.memory.ceiling
-
-
 
 
     $scope.memory.slider = $scope.memory.max
@@ -103,9 +108,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   # As this is kind of hard to read, I've added comments describing the bitwise math I've used.
   # Works for up values up to 30 bits (javascript limitation)
   # Undefined behavior for values < 1
-  nearestPow2 = (val) ->
-    # Memoize
-    if typeof pow2_lower_bound == "number"  &&  typeof pow2_upper_bound == "number"  # Skip entire block if bounds are undefined/incorrect
+  nearestPow2 = (val, memoize=true) ->
+    # Memoize to speed up subsequent calls with similar values
+    if memoize && typeof pow2_lower_bound == "number"  &&  typeof pow2_upper_bound == "number"  # Skip entire block if bounds are undefined/incorrect
       # no change?
       return pow2_current_power  if val == pow2_current_power
 
@@ -153,6 +158,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     # Construct the power by left-shifting  --  much faster than Math.pow(2, shift_count)
     val = 1 << shift_count
+
+    # Shortcut if not memoizing
+    return val if not memoize
 
     # ... and memoize by storing halfway bounds and the next/prev powers
     pow2_next_power    = val <<  1
