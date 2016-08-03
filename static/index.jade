@@ -159,9 +159,8 @@ html(ng-app='launcher')
         div.clientMemoryOptions(ng-controller='LaunchCtrl')
           popup(title='Client Memory Settings' type='settings' opened='clientMemoryOptions')
             p
-              | Please keep in mind that 32-bit OS's have a limit of allocated
-              | memory. Should 1024 throw out memory exceptions, please try less
-              | than 1024.
+              | The recommended memory for StarMade is 4096mb.
+              | Smaller values will work, but may significantly reduce gameplay quality.
             
             form.side-by-side
               .field-group.primary
@@ -170,9 +169,13 @@ html(ng-app='launcher')
                 input.slider-group(name="maxMemoryInput" id="maxMemoryInput" type="number" ng-model="memory.max" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" step="{{memory.step}}" ng-change="set_memory_slider_value(memory.max)")
                 input.wide.slider-group(name="maxMemorySlider" id="maxMemorySlider" type="range"  ng-model="memory.slider" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" ng-change="snap_memory(memory.slider)")
                 br
-                label.right.non-power-of-2(ng-hide="memory.power_of_2")
+                label.right.critically_low_memory_warning(ng-show="memory.max < 2048")
+                  | Insufficient memory. The game will very likely encounter problems.
+                label.right.low_memory_warning(ng-show="memory.max >= 2048 && memory.max < 4096")
+                  | Less than 4096mb is not recommended, and may cause issues.
+                label.right.non-power-of-2(ng-show="memory.power_of_2 && memory.max > 4096")
                   | Some Java versions require max memory to be a power of 2
-                label.right.power-of-2(ng-show="memory.power_of_2")
+                label.right.power-of-2(ng-show="!memory.power_of_2 && memory.max > 4096")
                   | Max memory is a power of 2
 
               br.clearfix
