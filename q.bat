@@ -27,6 +27,7 @@ setlocal EnableDelayedExpansion
   set _detach=
   set _development=
   set _debugging=
+  set _noupdate=
   set _arch=64
 
   set _dest=
@@ -59,13 +60,13 @@ goto :parse
   echo    s ^| steam         Passes --steam        (Implies    --attach)
   echo    a ^| attach        Passes --attach
   echo    d ^| detach        Passes --detach       (Overwrites --attach)
+  echo   nu ^| noupdate      passes --noupdate
   echo      ^|
-  echo    v ^| development   Passes --development  (with passphrase)
-  echo   vv ^| debugging     Passes --development --debugging
-  echo  vvv ^| verbose       Passes --development --debugging --verbose
+  echo    v ^| debugging     Passes -noupdate --debugging
+  echo   vv ^| verbose       Passes -noupdate --debugging --verbose
   echo      ^|
-  echo    t ^| test          Runs the launcher with --development --debugging
-  echo   tt ^| test-verbose  Runs the launcher with --development --debugging --verbose
+  echo    t ^| test          Runs the launcher with --debugging
+  echo   tt ^| test-verbose  Runs the launcher with --debugging --verbose
   echo.
   echo Destinations
   echo   dest:vm       Copies the Linux packages to the VM shared folder
@@ -122,8 +123,14 @@ goto :eof
   if "%1"=="d"             set _detach=--detach
   if "%1"=="detach"        set _detach=--detach
 
-  if "%1"=="v"             set _development=--development="here be dragons"
-  if "%1"=="development"   set _development=--development="here be dragons"
+  if "%1"=="nu"            set _noupdate=--noupdate
+  if "%1"=="noupdate"      set _noupdate=--noupdate
+
+  if "%1"=="v"             set _debugging=--debugging
+  if "%1"=="debugging"     set _debugging=--debugging
+
+  if "%1"=="vv"            set _debugging=--debugging --verbose
+  if "%1"=="verbose"       set _debugging=--debugging --verbose
 
 
   set _or=0
@@ -135,28 +142,12 @@ goto :eof
     )
 
   set _or=0
-    if "%1"=="vv"            set _or=1
-    if "%1"=="debugging"     set _or=1
-    if "%_or%"=="1" (
-      set _development=--development="here be dragons"
-      set _debugging=--debugging
-    )
-
-  set _or=0
-    if "%1"=="vvv"           set _or=1
-    if "%1"=="verbose"       set _or=1
-    if "%_or%"=="1" (
-      set _development=--development="here be dragons"
-      set _debugging=--debugging --verbose
-    )
-
-  set _or=0
     if "%1"=="t"             set _or=1
     if "%1"=="test"          set _or=1
     if "%_or%"=="1" (
       set _launch=1
-      set _development=--development="here be dragons"
       set _debugging=--debugging
+      set _noupdate=--noupdate
     )
 
   set _or=0
@@ -164,8 +155,8 @@ goto :eof
     if "%1"=="test-verbose"  set _or=1
     if "%_or%"=="1" (
       set _launch=1
-      set _development=--development="here be dragons"
       set _debugging=--debugging --verbose
+      set _noupdate=--noupdate
     )
 
 
@@ -260,9 +251,9 @@ goto :parse
     )
     if not "%_clean%"=="1"  call :cache_restore
 
-    echo !_launch_dir!\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_development% %_debugging% %_args%
+    echo !_launch_dir!\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_noupdate% %_development% %_debugging% %_args%
     echo.
-    !_launch_dir!\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_development% %_debugging% %_args%
+    !_launch_dir!\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_noupdate% %_development% %_debugging% %_args%
     echo.
     if not "%_clean%"=="1"  goto :cache_save
   )
