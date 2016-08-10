@@ -50,72 +50,65 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $httpProvider.interceptors.push 'tokenInterceptor'
 
 app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updater) ->
-  argv = remote.getGlobal('argv')
+  argv       = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
-  
-  # librato.configure
-  #   email: 'wedtm@star-made.org'
-  #   token: '7f547e30f827ca1596a5d141a77d4ff79f4536dd5d093b811ada82cc943d96d3'
-
-  # librato.on 'error', (error) -> console.log error
-
-  # process.once 'SIGINT', () -> librato.stop()
-  
-  # librato.start()
-
 
   tester_build = false
 
-
-  $rootScope.librato     =    librato
-  $rootScope.version     =    pkg.version
-  $rootScope.buildHash   =    buildHash
-  $rootScope.steamLaunch =  !!argv.steam
-  $rootScope.attach      =  !!argv.attach  # attach the game process; default behavior with   --steam
-  $rootScope.detach      =  !!argv.detach  # detach the game process; default behavior witout --steam
-  $rootScope.development =   (argv.development == "here be dragons")     || tester_build
-  $rootScope.debugging   = (!!argv.debugging && $rootScope.development)  || tester_build  # debug only with --development
-  $rootScope.verbose     = (!!argv.verbose   && $rootScope.debugging)                     # verbose debugging
-  $rootScope.noUpdate    =  !!argv.noupdate  || $rootScope.steamLaunch || $rootScope.development
-
-  $rootScope.log         = require('./log.js')
-
-  log_level = $rootScope.log.levels.game      # Default
-  log_level = $rootScope.log.levels.debug    if $rootScope.debugging
-  log_level = $rootScope.log.levels.verbose  if $rootScope.verbose
-
-  $rootScope.log.set_level(log_level)
+  $rootScope.log         = require('./log-helpers')  # Logging helpers
+  $rootScope.version     =   pkg.version
+  $rootScope.buildHash   =   buildHash
+  $rootScope.steamLaunch = !!argv.steam      #TODO: change to `steam`
+  $rootScope.attach      = !!argv.attach     # attach the game process; default behavior with   --steam
+  $rootScope.detach      = !!argv.detach     # detach the game process; default behavior witout --steam
+  $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.steamLaunch
+  $rootScope.debugging   = !!argv.debugging || !!argv.verbose || tester_build
+  $rootScope.verbose     = !!argv.verbose
 
 
-  $rootScope.log.raw "Launcher v#{pkg.version} build #{buildHash}" + (if $rootScope.development then " DEVELOPMENT" else "") + "\n"
-  $rootScope.log.info "OS:  #{process.platform} (#{os.arch()})"
+  $rootScope.log.raw  "StarMade Launcher v#{pkg.version} build #{buildHash}" + (if tester_build then " (QA)" else "") + "\n"
+  
+  $rootScope.log.info "Platform"
+  $rootScope.log.indent()
+  $rootScope.log.entry "OS:  #{process.platform} (#{os.arch()})"
   ##TODO: add java 32/64 info here
-  $rootScope.log.info "RAM: #{Math.floor( os.totalmem()/1024/1024 )}mb"
+  $rootScope.log.entry "RAM: #{Math.floor( os.totalmem()/1024/1024 )}mb"
+  $rootScope.log.entry "CWD: #{ ipc.sendSync('cwd') }"
+  $rootScope.log.outdent()
+
+  $rootScope.log.info "Launcher flags:"
+  $rootScope.log.indent()
+  _flags   = []
+  _flags.push "--#{arg}"  for arg in Object.keys(argv).slice(1)
+  _flags   = _flags.join(" ")
+  $rootScope.log.entry _flags || "(None)"
+  $rootScope.log.outdent()
+
+  $rootScope.log.info "Mode:"
+  $rootScope.log.indent()
+  $rootScope.log.entry "Debugging: enabled" + (if $rootScope.verbose then " (verbose)" else "")  if $rootScope.debugging
+  $rootScope.log.entry "Steam:     #{$rootScope.steamLaunch}"
+  # attach with --steam or --attach; --detach overrides
+  $rootScope.log.entry "Attach:    #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  ##TODO: migrate to using this in launch.coffee
+  $rootScope.log.outdent()
 
 
-  if $rootScope.debugging
-    $rootScope.log.indent()
-    $rootScope.log.debug "Debugging: enabled" + (if $rootScope.verbose then " (verbose)" else "")
-    $rootScope.log.debug "Steam:     #{$rootScope.steamLaunch}"
-    # attach with --steam or --attach; --detach overrides
-    $rootScope.log.debug "Attach:    #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  ##TODO: migrate to using this in launch.coffee
-    $rootScope.log.outdent()
 
 
   $rootScope.openDownloadPage = ->
-    $rootScope.log.entry "Opening download page"
+    $rootScope.log.event "Opening download page: http://star-made.org/download"
     shell.openExternal 'http://star-made.org/download'
 
   $rootScope.openLicenses = ->
-    $rootScope.log.entry "Displaying licenses"
+    $rootScope.log.event "Displaying licenses"
     ipc.send 'open-licenses'
 
   $rootScope.openSteamLink = ->
-    $rootScope.log.entry "opening: https://registry.star-made.org/profile/steam_link"
+    $rootScope.log.event "opening: https://registry.star-made.org/profile/steam_link"
     shell.openExternal 'https://registry.star-made.org/profile/steam_link'
 
   $rootScope.startAuth = ->
-    $rootScope.log.entry "Displaying auth"
+    $rootScope.log.event "Displaying auth"
     $rootScope.currentUser = null
     accessToken.delete()
     refreshToken.delete()
@@ -123,7 +116,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
   $rootScope.switchUser = ->
     $rootScope.launcherOptionsWindow = false
-    $rootScope.log.entry "Switching user"
+    $rootScope.log.event "Switching user"
     $rootScope.startAuth()
 
 
@@ -132,13 +125,13 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
       .success (data) ->
         $rootScope.currentUser = data.user
         $rootScope.playerName = $rootScope.currentUser.username
-        $rootScope.log.entry "Using saved credentials"
-        $rootScope.log.info  "Username: #{$rootScope.playerName}"
+        $rootScope.log.info  "Using saved credentials"
+        $rootScope.log.entry "Username: #{$rootScope.playerName}"
         remote.getCurrentWindow().show()
       .error (data, status) ->
         if status == 401
-          $rootScope.log.entry "Using saved credentials"
-          $rootScope.log.entry "Requesting auth token"
+          $rootScope.log.info  "Using saved credentials"
+          $rootScope.log.event "Requesting auth token"
           refreshToken.refresh()
             .then (data) ->
               accessToken.set data.access_token
@@ -160,7 +153,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
     updater.getVersions('launcher')
       .then (versions) ->
         if versions[0].version != pkg.version
-          $rootScope.log.entry 'Updating launcher...'
+          $rootScope.log.event 'Updating launcher...'
 
           launcherDir = process.cwd()  ##! This resolves to the directory the launcher was run from, e.g. C:\ in this scenario: C:\> X:\path\to\starmade-launcher.exe
           launcherExec = null
@@ -175,6 +168,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
             updater.updateLauncher(versions[0], launcherDir)
               .then ->
                 $rootScope.log.end 'Launcher updated! Restarting...'
+                $rootScope.log.indent(1, $rootScope.log.levels.verbose)
+                $rootScope.log.verbose "launcher exec path: #{launcherExec}"
                 child = spawn launcherExec, [],
                   detached: true
                 electronApp.quit()
