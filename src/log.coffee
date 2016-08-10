@@ -1,5 +1,3 @@
-#log = require('./log.js'); log.entry("entry"); log.info("info"); log.warning("warning"); log.indent(); log.error("error"); log.indent(); log.fatal("fatal"); log.outdent(); log.debug("debug"); log.outdent(); log.end("end"); log.important("important"); log.raw("raw"); log.raw("raw2\n");
-
 'use strict'
 
 fs   = require 'fs'
@@ -15,6 +13,7 @@ levels =
   error:   0
   fatal:   0
   info:    0
+  event:   0
   warning: 0
   game:    3
   debug:   5
@@ -22,9 +21,10 @@ levels =
 
 prefixes =
   normal:    "         "
-  important: "   !!!   "
+  important: "  !!!!   "
   game:      " [game]  "
   info:      "  info   "
+  event:     "  event  "
   warning:   " warning "
   error:     "  error  "
   fatal:     "  FATAL  "
@@ -32,7 +32,7 @@ prefixes =
   verbose:   "(verbose)"
   meta:      " (meta)  "
   end:       " --end-- "
-  raw:       ""       
+  raw:       ""
 
 
 # For alignment
@@ -73,8 +73,8 @@ open_logfile = () ->
     method = "w"
 
   log_descriptor = fs.openSync( path.join(".", "launcher.log"), method )
-  raw  "#{new Date}\n"
-  meta "Opened log file for #{if method=="w" then "writing" else "appending"}."
+  log_raw  "#{new Date}\n"
+  log_meta "Opened log file for #{if method=="w" then "writing" else "appending"}."
 
 
 
@@ -110,28 +110,29 @@ log = (str,  level=0,  type="normal") ->
 
 
 # Helper functions
-entry     = (str, level=levels.normal)  -> log(str, level, "normal")
-info      = (str, level=levels.info)    -> log(str, level, "info")
-game      = (str, level=levels.game)    -> log(str, level, "game")
-warning   = (str, level=levels.warning) -> log(str, level, "warning")
-error     = (str, level=levels.normal)  -> log(str, level, "error")
-fatal     = (str, level=levels.normal)  -> log(str, level, "fatal")
-debug     = (str, level=levels.debug)   -> log(str, level, "debug")
-verbose   = (str, level=levels.verbose) -> log(str, level, "verbose")
-important = (str, level=levels.normal)  -> log(str, level, "important")
-end       = (str, level=levels.normal)  -> log(str, level, "end")
-raw       = (str, level=levels.normal)  -> log(str, level, "raw")
-meta      = (str, level=levels.verbose) -> log(str, level, "meta")
+log_entry     = (str, level=levels.normal)  -> log(str, level, "normal")
+log_info      = (str, level=levels.info)    -> log(str, level, "info")
+log_event     = (str, level=levels.event)   -> log(str, level, "event")
+log_game      = (str, level=levels.game)    -> log(str, level, "game")
+log_warning   = (str, level=levels.warning) -> log(str, level, "warning")
+log_error     = (str, level=levels.normal)  -> log(str, level, "error")
+log_fatal     = (str, level=levels.normal)  -> log(str, level, "fatal")
+log_debug     = (str, level=levels.debug)   -> log(str, level, "debug")
+log_verbose   = (str, level=levels.verbose) -> log(str, level, "verbose")
+log_important = (str, level=levels.normal)  -> log(str, level, "important")
+log_end       = (str, level=levels.normal)  -> log(str, level, "end")
+log_raw       = (str, level=levels.normal)  -> log(str, level, "raw")
+log_meta      = (str, level=levels.verbose) -> log(str, level, "meta")
 
 
-# Only log events with this log-level or below.
+# Only log entries with this log-level or below.
 set_level = (level) ->
   log_level = level
   level_name = null
   for key,val of levels
     level_name or= "#{key} (#{val})" if val==level
   level_name or= level
-  raw "Logging level: #{level_name}\n\n"
+  log_raw "Logging level: #{level_name}\n\n"
 
 
 # Returns current log indent level
@@ -152,21 +153,22 @@ decrease_indent = (n=1, level=0) ->
 
 module.exports = {
   # Constants
-  levels:        levels           # log-level constants
-  prefixes:      prefixes         # log-level prefixes
+  levels:        levels       # log-level constants
+  prefixes:      prefixes     # log-level prefixes
 
   # Functions
-  entry:         entry            # normal entry
-  info:          info             # info   entry
-  game:          game             # game   entry (for captured game output)
-  warning:       warning          # etc.
-  error:         error            # Standard error
-  fatal:         fatal            # Fatal error
-  debug:         debug
-  verbose:       verbose
-  important:     important
-  end:           end              # The beginning of the end
-  raw:           raw              # No timestamp, newlines, etc.
+  entry:         log_entry        # normal entry
+  info:          log_info         # info   entry
+  event:         log_event        # etc.
+  game:          log_game         # used for captured game output
+  warning:       log_warning
+  error:         log_error        # Standard error
+  fatal:         log_fatal        # Fatal error
+  debug:         log_debug
+  verbose:       log_verbose
+  important:     log_important
+  end:           log_end          # The beginning of the end
+  raw:           log_raw          # No timestamp, newlines, etc.
 
   indent_level:  indent_level
   indent:        increase_indent  # indent `n` levels, optionally log-level dependent
