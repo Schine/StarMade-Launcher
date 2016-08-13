@@ -1,17 +1,61 @@
 'use strict'
 
+argv = require('minimist')(process.argv.slice(1))
+path = require('path')
+
+
+# Handle certain single dash arguments
+process.argv.slice(1).forEach (arg, index) ->
+  argv.archive   = true  if arg == '-archive'
+  argv.dev       = true  if arg == '-dev'
+  argv.latest    = true  if arg == '-latest'
+  argv.nogui     = true  if arg == '-nogui'
+  argv.pre       = true  if arg == '-pre'
+  argv.release   = true  if arg == '-release'
+  argv.help      = true  if arg == '-help'
+  argv.debugging = true  if arg == '-debugging'
+  if arg == '-verbose'
+    argv.debugging = true
+    argv.verbose   = true
+
+global.argv = argv
+
+
+if argv.help?
+  buildHash = require('../buildHash.js').buildHash
+  version   = require(path.join(__dirname, '..', '..', 'package.json')).version
+
+  console.log "StarMade Launcher v#{version} build #{buildHash}"
+  console.log ""
+  console.log "Launcher options:"
+  console.log " --noupdate          Skip the autoupdate process"
+  console.log " --steam             Run in Steam mode             (implies attach, noupdate)"
+  console.log " --attach            Attach  to  the game process  (close when the game closes)"
+  console.log " --detach            Detach from the game process  (default; supercedes attach)"
+  console.log ""
+  console.log "Logging options:"
+  console.log " --debugging         Increase log-level to include debug entries"
+  console.log " --verbose           Increase log-level to include everything"
+  console.log " --capture-game-log  Capture the game's output (for troubleshooting; implies attach)"
+  console.log ""
+  console.log "Advanced options:"
+  console.log " --nogui             Immediately update to the newest game version"
+  console.log " --cache-dir=\"path\"  Specify a custom cache path"
+  process.exit(0)
+
+
+
+app           = require('app')
+dialog        = require('dialog')
+ipc           = require('ipc')
+rimraf        = require('rimraf')
+shell         = require('shell')
+BrowserWindow = require('browser-window')
+
+
 # For some reason, windows open taller on OS X
 OSX_HEIGHT_OFFSET = 21
 
-app = require('app')
-dialog = require('dialog')
-ipc = require('ipc')
-path = require('path')
-rimraf = require('rimraf')
-shell = require('shell')
-BrowserWindow = require('browser-window')
-
-argv = require('minimist')(process.argv.slice(1))
 
 
 
@@ -41,33 +85,6 @@ if !!argv.verbose
   console.log "Set userData cache path to: #{path.join(cache_path, 'userData')}"
 
 ### End ###
-
-
-
-
-# Handle certain single dash arguments
-process.argv.slice(1).forEach (arg, index) ->
-  argv.archive = true  if arg == '-archive'
-  argv.dev     = true  if arg == '-dev'
-  argv.latest  = true  if arg == '-latest'
-  argv.nogui   = true  if arg == '-nogui'
-  argv.pre     = true  if arg == '-pre'
-  argv.release = true  if arg == '-release'
-  argv.help    = true  if arg == '-help'
-
-global.argv = argv
-
-
-
-
-if !!argv.help
-  console.log "Available options:"
-  console.log " --noupdate  Skip the autoupdate process"
-  console.log " --nogui     Update to the newest version of the game and launch it immediately"
-  console.log " --steam     Run in Steam mode            (implies attaching)"
-  console.log " --attach    Attach to the game process   (launcher does not exit)"
-  console.log " --detach    Attach to the game process   (launcher exits upon launching game)"
-  process.exit(0)
 
 
 
