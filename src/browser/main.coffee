@@ -51,6 +51,7 @@ ipc           = require('ipc')
 rimraf        = require('rimraf')
 shell         = require('shell')
 BrowserWindow = require('browser-window')
+log           = require('../log.js')
 
 
 # For some reason, windows open taller on OS X
@@ -86,6 +87,32 @@ if !!argv.verbose
 
 ### End ###
 
+
+
+### Logging ###
+log_level = log.levels.normal
+log_level = log.levels.debug    if argv.debugging
+log_level = log.levels.verbose  if argv.verbose
+
+log.set_level(log_level)
+# Log entries
+ipc.on 'log-entry',     (event, msg, level) => log.entry     msg, level; event.returnValue = true
+ipc.on 'log-info',      (event, msg, level) => log.info      msg, level; event.returnValue = true
+ipc.on 'log-event',     (event, msg, level) => log.event     msg, level; event.returnValue = true
+ipc.on 'log-game',      (event, msg, level) => log.game      msg, level; event.returnValue = true
+ipc.on 'log-warning',   (event, msg, level) => log.warning   msg, level; event.returnValue = true
+ipc.on 'log-error',     (event, msg, level) => log.error     msg, level; event.returnValue = true
+ipc.on 'log-fatal',     (event, msg, level) => log.fatal     msg, level; event.returnValue = true
+ipc.on 'log-debug',     (event, msg, level) => log.debug     msg, level; event.returnValue = true
+ipc.on 'log-verbose',   (event, msg, level) => log.verbose   msg, level; event.returnValue = true
+ipc.on 'log-important', (event, msg, level) => log.important msg, level; event.returnValue = true
+ipc.on 'log-end',       (event, msg, level) => log.end       msg, level; event.returnValue = true
+ipc.on 'log-raw',       (event, msg, level) => log.raw       msg, level; event.returnValue = true
+# Array of log levels
+ipc.on 'log-levels',    (event) => event.returnValue = log.levels;
+# Indenting functions
+ipc.on 'log-indent',    (event, num, level) => log.indent( num, level); event.returnValue = true
+ipc.on 'log-outdent',   (event, num, level) => log.outdent(num, level); event.returnValue = true
 
 
 
