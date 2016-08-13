@@ -1,18 +1,19 @@
 'use strict'
 
-fs = require('fs')
-ipc = require('ipc')
-path = require('path')
+fs     = require('fs')
+ipc    = require('ipc')
+path   = require('path')
+shell  = require('shell')
 remote = require('remote')
-dialog = remote.require('dialog')
-electronApp = remote.require('app')
-shell = require('shell')
 
-util = require('./util')
+util   = require('./util')
+
+dialog      = remote.require('dialog')
+electronApp = remote.require('app')
 
 steamLaunch = remote.getCurrentWindow().steamLaunch
 
-close = document.getElementById 'close'
+close       = document.getElementById 'close'
 footerLinks = document.getElementById 'footerLinks'
 currentStep = -1
 
@@ -41,7 +42,7 @@ showLicenses = ->
 
 showUpdating = ->
   # console.log(" > showUpdating()")  ##~
-  step0.style.display = 'none'
+  step0.style.display    = 'none'
   updating.style.display = 'block'
 
 
@@ -177,10 +178,10 @@ util.setupExternalLinks()
 
 # console.log(" > Step 0 -- Licenses")  ##~
 
-licenses = document.getElementById 'licenses'
-accept = document.getElementById 'accept'
-acceptBg = document.getElementById 'acceptBg'
-decline = document.getElementById 'decline'
+licenses  = document.getElementById 'licenses'
+accept    = document.getElementById 'accept'
+acceptBg  = document.getElementById 'acceptBg'
+decline   = document.getElementById 'decline'
 declineBg = document.getElementById 'declineBg'
 
 fs.readFile path.join(path.dirname(__dirname), 'static', 'licenses.txt'), (err, data) ->
@@ -289,12 +290,12 @@ next.addEventListener 'click', ->
 #
 
 
-login = document.getElementById 'login'
-loginBg = document.getElementById 'loginBg'
-createAccount = document.getElementById 'createAccount'
+login           = document.getElementById 'login'
+loginBg         = document.getElementById 'loginBg'
+createAccount   = document.getElementById 'createAccount'
 createAccountBg = document.getElementById 'createAccountBg'
-skip = document.getElementById 'skip'
-skipBg = document.getElementById 'skipBg'
+skip            = document.getElementById 'skip'
+skipBg          = document.getElementById 'skipBg'
 
 login.addEventListener 'mouseenter', ->
   loginBg.className = 'hover'
@@ -332,9 +333,9 @@ skip.addEventListener 'click', ->
 #
 
 
-link = document.getElementById 'link'
-linkBg = document.getElementById 'linkBg'
-skipOnce = document.getElementById 'skipOnce'
+link       = document.getElementById 'link'
+linkBg     = document.getElementById 'linkBg'
+skipOnce   = document.getElementById 'skipOnce'
 skipOnceBg = document.getElementById 'skipOnceBg'
 skipAlways = document.getElementById 'skipAlways'
 
