@@ -58,12 +58,13 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.log         = require('./log-helpers')  # Logging helpers
   $rootScope.version     =   pkg.version
   $rootScope.buildHash   =   buildHash
-  $rootScope.steamLaunch = !!argv.steam      #TODO: change to `steam`
-  $rootScope.attach      = !!argv.attach     # attach the game process; default behavior with   --steam
-  $rootScope.detach      = !!argv.detach     # detach the game process; default behavior witout --steam
+  $rootScope.steamLaunch = !!argv.steam                                    ##TODO: change to just `steam`
+  $rootScope.attach      = !!argv.attach    || !!argv['capture-game-log']  # attach the game process; default behavior with   --steam
+  $rootScope.detach      = !!argv.detach                                   # detach the game process; default behavior witout --steam
   $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.steamLaunch
   $rootScope.debugging   = !!argv.debugging || !!argv.verbose || tester_build
   $rootScope.verbose     = !!argv.verbose
+  $rootScope.captureGame = !!argv['capture-game-log']
 
 
   $rootScope.log.raw  "StarMade Launcher v#{pkg.version} build #{buildHash}" + (if tester_build then " (QA)" else "") + "\n"
@@ -90,6 +91,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.log.entry "Steam:     #{$rootScope.steamLaunch}"
   # attach with --steam or --attach; --detach overrides
   $rootScope.log.entry "Attach:    #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  ##TODO: migrate to using this in launch.coffee
+  $rootScope.log.entry "capture:   #{$rootScope.captureGame}"
   $rootScope.log.outdent()
 
 
