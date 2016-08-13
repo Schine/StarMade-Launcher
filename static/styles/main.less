@@ -95,6 +95,37 @@ code {
 }
 
 
+div.envJavaOptionsWarning {
+  p       { padding: 0; margin: 0.5em 0 0 0;  }
+  p, span { text-align: justify; }
+
+  input#edit_java_options {
+    width: 100%;
+    color: cyan;
+    margin-bottom: 0.25em
+  }
+
+  .severe  { color: orangered; }
+  .warning { color: orange;    }
+
+  .field-group {
+    margin: 0.5em 0 0 0 !important;
+
+    &.block {
+      display: block;
+      width: 100%;
+    }
+    &.right {
+      float: right;
+    }
+  }
+
+  button {
+    margin: 0.25em;
+  }
+}
+
+
 div.clientMemoryOptions {
   .field-group {
     label {
@@ -482,6 +513,14 @@ form {
 .clearfix {
   clear: both;
 }
+
+span.code {
+  padding: 0.2em;
+  font-family: courier, monospace;
+  color: cyan;
+  background-color: rgba(200,200,255, 0.1);
+}
+
 
 footer {
   bottom: 4px;

@@ -47,6 +47,42 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   $scope.launcherOptions.javaPath = localStorage.getItem('javaPath')   || ""
 
 
+
+  # _JAVA_OPTIONS Dialog
+
+  $scope.showEnvJavaOptionsWarning = () ->
+    # Called four times; only the last actually presents the dialog.
+    if $rootScope.shown_java_options_dialog != true
+      # Only submit log entries once
+      $rootScope.shown_java_options_dialog = true
+      $rootScope.log.info "_JAVA_OPTIONS=#{process.env['_JAVA_OPTIONS']}"
+      $rootScope.log.event "Presenting _JAVA_OPTIONS Dialog"
+    # Show the dialog
+    $scope.envJavaOptionsWarning = true
+
+  # Must follow function declaration
+  if process.env["_JAVA_OPTIONS"]?
+    $scope.showEnvJavaOptionsWarning()
+
+  $scope.get_java_options = () ->
+    process.env["_JAVA_OPTIONS"]
+
+  $scope.saveEnvJavaOptionsWarning = () ->
+    process.env["_JAVA_OPTIONS"] = document.getElementById("edit_java_options").value
+    if process.env["_JAVA_OPTIONS"] == ''
+      $rootScope.log.info "Cleared _JAVA_OPTIONS"
+    else
+      $rootScope.log.info "Set _JAVA_OPTIONS to: #{process.env['_JAVA_OPTIONS']}"
+    $scope.envJavaOptionsWarning = false
+
+  $scope.closeEnvJavaOptionsWarning = () ->
+    $rootScope.log.entry "Keeping _JAVA_OPTIONS intact"
+    $scope.envJavaOptionsWarning = false
+
+
+
+
+
   $scope.$watch 'serverPort', (newVal) ->
     localStorage.setItem 'serverPort', newVal
 
