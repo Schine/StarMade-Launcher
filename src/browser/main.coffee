@@ -161,6 +161,7 @@ openMainWindow = ->
     width: 800
     height: height
 
+  log.event "Opening Window: Main"
   mainWindow.loadUrl "file://#{staticDir}/index.html"
   # mainWindow.openDevTools()  if argv.development
 
@@ -210,12 +211,14 @@ openGettingStartedWindow = (args) ->
       mainWindow.show()
     else
       # Getting started process finished
+      log.event "Finished Initial Setup"
       openMainWindow()
 
   gettingStartedWindow.on 'closed', ->
     gettingStartedWindow = null
 
 app.on 'window-all-closed', ->
+  log.end "All windows closed.  Exiting."
   app.quit()
 
 app.on 'ready', ->
@@ -224,12 +227,15 @@ app.on 'ready', ->
   openGettingStartedWindow()
 
 app.on 'before-quit', ->
+  log.end "Exiting"
   quitting = true
 
 ipc.on 'open-licenses', ->
+  log.event "Opening Window: Licenses"
   openGettingStartedWindow('licenses')
 
 ipc.on 'open-updating', ->
+  log.event "Opening Window: Update"
   openGettingStartedWindow('updating')
 
 ipc.on 'updating-opened', ->
@@ -250,6 +256,7 @@ ipc.on 'start-auth', ->
 
   mainWindow.hide()
 
+  log.event "Opening Window: Auth"
   authWindow.loadUrl "file://#{staticDir}/auth.html"
   #authWindow.openDevTools()
 
@@ -260,13 +267,15 @@ ipc.on 'start-auth', ->
 
 ipc.on 'finish-auth', (event, args) ->
   authFinished = true
+  log.event "Finished Auth"
 
   if authWindow?
     authWindow.close()
   else
-    console.warn 'finish-auth was triggered when authWindow is null!'
+    log.warning 'finish-auth was triggered when authWindow is null!'
 
   mainWindow.webContents.send 'finish-auth', args
 
 ipc.on 'start-steam-link', ->
+  log.event "Opening Window: Steam Link"
   openGettingStartedWindow('steam')
