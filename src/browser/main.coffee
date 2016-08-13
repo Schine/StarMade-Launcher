@@ -134,6 +134,9 @@ ipc.on 'log-indent',    (event, num, level) => log.indent( num, level); event.re
 ipc.on 'log-outdent',   (event, num, level) => log.outdent(num, level); event.returnValue = true
 
 
+# On Linux, renderer processes do not inherit the working directory
+ipc.on 'cwd',           (event, arg) => event.returnValue = process.cwd()
+
 
 
 staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
