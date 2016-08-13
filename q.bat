@@ -27,6 +27,7 @@ setlocal EnableDelayedExpansion
   set _detach=
   set _development=
   set _debugging=
+  set _capture=
   set _noupdate=
   set _arch=64
 
@@ -57,13 +58,15 @@ goto :parse
   echo   32 ^| ia32          Use the 32bit launcher for all actions
   echo      ^|
   echo    h ^| help          Passes --help
-  echo    s ^| steam         Passes --steam        (Implies    --attach)
+  echo    s ^| steam         Passes --steam        (Implies    --attach, --noupdate)
   echo    a ^| attach        Passes --attach
   echo    d ^| detach        Passes --detach       (Overwrites --attach)
   echo   nu ^| noupdate      passes --noupdate
   echo      ^|
-  echo    v ^| debugging     Passes -noupdate --debugging
-  echo   vv ^| verbose       Passes -noupdate --debugging --verbose
+  echo    v ^| debugging     Passes --noupdate --debugging
+  echo   vv ^| verbose       Passes --noupdate --debugging --verbose
+  echo  dev ^| development   Passes --development
+  echo  cap ^| capture       Passes --capture-game-log
   echo      ^|
   echo    t ^| test          Runs the launcher with --debugging
   echo   tt ^| test-verbose  Runs the launcher with --debugging --verbose
@@ -131,6 +134,12 @@ goto :eof
 
   if "%1"=="vv"            set _debugging=--debugging --verbose
   if "%1"=="verbose"       set _debugging=--debugging --verbose
+
+  if "%1"=="dev"           set _development=--development
+  if "%1"=="development"   set _development=--development
+
+  if "%1"=="cap"           set _capture=--capture-game-log
+  if "%1"=="capture"       set _capture=--capture-game-log
 
 
   set _or=0
@@ -251,9 +260,9 @@ goto :parse
     )
     if not "%_clean%"=="1"  call :cache_restore
 
-    echo !_launch_dir!\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_noupdate% %_development% %_debugging% %_args%
+    echo !_launch_dir!\starmade-launcher.exe  %_help% %_attach% %_detach% %_steam% %_noupdate% %_development% %_debugging% %_capture% %_args%
     echo.
-    !_launch_dir!\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_noupdate% %_development% %_debugging% %_args%
+    !_launch_dir!\starmade-launcher.exe       %_help% %_attach% %_detach% %_steam% %_noupdate% %_development% %_debugging% %_capture% %_args%
     echo.
     if not "%_clean%"=="1"  goto :cache_save
   )
@@ -301,6 +310,7 @@ goto :cleanup
   set _detach=
   set _development=
   set _debugging=
+  set _capture=
 
   set _dest=
 
