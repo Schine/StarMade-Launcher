@@ -158,7 +158,7 @@ if localStorage.getItem('gotStarted')?
   else if window.location.href.split('?')[1] == 'steam'
     currentStep = 4
     step0.style.display = 'none'
-    step3.style.display = 'block'  ##! Step 4
+    step4.style.display = 'block'
     footerLinks.style.display = 'block'
     log.event "Initial Setup: Step 4 (Steam)"
     remote.getCurrentWindow().show()
@@ -355,6 +355,7 @@ link.addEventListener 'mouseleave', ->
 link.addEventListener 'click', ->
   # Steam linking takes place on the Registry website
   log.event "Opening external: https://registry.star-made.org/profile/steam_link"
+  localStorage.setItem 'steamLinked', 'linked'
   shell.openExternal 'https://registry.star-made.org/profile/steam_link'
   window.close()
 

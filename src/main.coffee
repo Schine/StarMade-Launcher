@@ -128,7 +128,10 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
         $rootScope.playerName = $rootScope.currentUser.username
         $rootScope.log.info  "Using saved credentials"
         $rootScope.log.entry "Username: #{$rootScope.playerName}"
-        remote.getCurrentWindow().show()
+        if $rootScope.steamLaunch && !localStorage.getItem('steamLinked')?
+          ipc.send 'start-steam-link'
+        else
+          remote.getCurrentWindow().show()
       .error (data, status) ->
         if status == 401
           $rootScope.log.info  "Using saved credentials"
@@ -206,19 +209,21 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
             scope.steamAccountLinked = true if data.user.steam_link?
 
-            if $rootScope.steamLaunch && !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
-              steamId = steam.steamId().toString()
-              api.get "profiles/steam_links/#{steamId}"
-                .success ->
-                  # Current Steam account is already linked
-                  remote.getCurrentWindow().show()
-                .error (data, status) ->
-                  if status == 404
-                    # Steam account not linked
-                    ipc.send 'start-steam-link'
-                  else
-                    $rootScope.log.warning "Unable to determine status of Steam account: #{steamId}"
-                    remote.getCurrentWindow().show()
+            # if $rootScope.steamLaunch && !data.user.steam_link? && steam.initialized && !localStorage.getItem('steamLinked')?
+            if $rootScope.steamLaunch && !localStorage.getItem('steamLinked')?
+              ipc.send 'start-steam-link'
+              # steamId = steam.steamId().toString()
+              # api.get "profiles/steam_links/#{steamId}"
+              #   .success ->
+              #     # Current Steam account is already linked
+              #     remote.getCurrentWindow().show()
+              #   .error (data, status) ->
+              #     if status == 404
+              #       # Steam account not linked
+              #       ipc.send 'start-steam-link'
+              #     else
+              #       $rootScope.log.warning "Unable to determine status of Steam account: #{steamId}"
+              #       remote.getCurrentWindow().show()
             else
               remote.getCurrentWindow().show()
 
