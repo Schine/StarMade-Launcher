@@ -60,28 +60,43 @@ OSX_HEIGHT_OFFSET = 21
 
 
 
-### Update Electron's cache location ###
+### Update working directory ###
+  # osx:        launcher.app/Contents/Resources/app.asar -> launcher.app/Contents/MacOS
+  # win/linux:  launcher/resources/app.asar              -> launcher
 
 # Get the current running dir, slicing off everything after "app.asar"
 _cwd       = __dirname.split(path.sep)
-_pos_asar = __dirname.toLowerCase().split(path.sep).indexOf("app.asar")
+_pos_asar  = __dirname.toLowerCase().split(path.sep).indexOf("app.asar")
 _cwd       = _cwd.slice(0, _pos_asar+1).join(path.sep)
-
 # Backtrack from "app.asar" to the launcher directory, and resolve to an absolute path
-_cwd = path.resolve( path.normalize( path.join(_cwd, "..", "..") ) )  # Two steps back  (launcher/resources/app.asar)
+_cwd       = path.resolve( path.normalize( path.join(_cwd, "..", "..") ) )  # Two steps back  (launcher/resources/app.asar)
 
-# Account for the differing folder structure on OSX
-# placing it here: starmade-launcher.app\Contents\MacOS
+# Account for the differing folder structure on OSX, placing it here: starmade-launcher.app\Contents\MacOS
 if process.platform == 'darwin'
   _cwd = path.join(_cwd, "MacOS")
 
-# Join the new cache directory
-cache_path = path.resolve( path.join(_cwd, ".cache") )
+# Update working directory
+process.chdir(_cwd)
+
+### End ###
+
+
+
+### Update Electron's cache location ###
+  # osx:        ~/Library/Application Support/StarMade/Launcher/  ## any changes to the .app directory breaks its codesigning
+  # win/linux:  ./.cache/
+
+if process.platform == "darwin"  # osx
+  # `app.getPath('appData')` defaults to `~/Library/Application Support`
+  cache_path =  path.resolve( path.join(app.getPath('appData'), 'StarMade', 'Launcher') )
+else
+  cache_path = path.resolve( path.join(".", ".cache") )
+
 
 # Update cache locations
 app.setPath("appData",  cache_path)
 app.setPath("userData", path.join(cache_path, 'userData'))
-if !!argv.verbose
+if argv.verbose?
   console.log "Set appData  cache path to: #{cache_path}"
   console.log "Set userData cache path to: #{path.join(cache_path, 'userData')}"
 
