@@ -171,7 +171,7 @@ openMainWindow = ->
 
   log.event "Opening Window: Main"
   mainWindow.loadUrl "file://#{staticDir}/index.html"
-  # mainWindow.openDevTools()  if argv.development
+  mainWindow.openDevTools()  if argv.development
 
   #if argv['install-dir']?
   #  escapedInstallDir = path.resolve(argv['install-dir']).replace(/\\/g, '\\\\')
@@ -209,6 +209,7 @@ openGettingStartedWindow = (args) ->
   gettingStartedWindow.steamLaunch = !!argv.steam
 
   gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
+  gettingStartedWindow.openDevTools()  if argv.development
 
   gettingStartedWindow.on 'close', ->
     if authWindow?
@@ -266,7 +267,7 @@ ipc.on 'start-auth', ->
 
   log.event "Opening Window: Auth"
   authWindow.loadUrl "file://#{staticDir}/auth.html"
-  #authWindow.openDevTools()
+  authWindow.openDevTools()  if argv.development
 
   authWindow.on 'closed', ->
     authWindow = null
