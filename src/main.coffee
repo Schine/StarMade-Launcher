@@ -6,7 +6,6 @@ path    = require('path')
 remote  = require('remote')
 shell   = require('shell')
 spawn   = require('child_process').spawn
-librato = require('librato-node')
 
 electronApp = remote.require('app')
 
