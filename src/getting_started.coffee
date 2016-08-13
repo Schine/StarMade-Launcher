@@ -48,30 +48,17 @@ showUpdating = ->
 determineInstallDirectory = ->
   # Try to automatically determine the correct install path
   # console.log(" > determineInstallDirectory()")  ##~
-  cwd            = __dirname.toLowerCase().split(path.sep)
-  pos_asar       = cwd.indexOf("app.asar")
-  pos_steamapps  = cwd.indexOf("steamapps")
-  pos_common     = cwd.indexOf("common")
-  pos_starmade   = cwd.indexOf("starmade")
+
+  # Get current working directory from the main process
+  cwd            = ipc.sendSync('cwd')
+  cwd_array      = cwd.toLowerCase().split(path.sep)
+  pos_steamapps  = cwd_array.indexOf("steamapps")
+  pos_common     = cwd_array.indexOf("common")
+  pos_starmade   = cwd_array.indexOf("starmade")
   suggested_path = ""
 
-  install_automatically = false
-
-  if (pos_asar>0)
-    # navigate backwards from "app.asar" to "resources" to the launcher directory
-    # append a "StarMade" directory for the game to live in, then condense and clean
-    suggested_path = __dirname.split(path.sep).slice(0, pos_asar+1).join(path.sep)
-    suggested_path = path.normalize( path.join(suggested_path, "..", "..", "StarMade") )
-
-    # console.log("   | Suggested path: #{suggested_path}")  ##~
-  else
-    # This should never happen. (is __dirname not supported?)
-    console.error("Error: Unexpected runtime path: #{__dirname}.  Using fallback.")
-    # Fallback to the default install folder
-    suggested_path = default_install_path
-    # console.log("   | Suggesting fallback path (#{default_install_path})")  ##~
-
-
+  # append a "StarMade" directory for the game to live in, then condense and clean
+  suggested_path = path.resolve( path.normalize( path.join(cwd, "StarMade") ) )
 
 
   # Automatically use the suggested path for steam installs
@@ -80,6 +67,7 @@ determineInstallDirectory = ->
 
   # Does the path conform to Steam's standard directory structure?
   # The path should always include "SteamApps/common" somewhere
+  install_automatically = false
   if (pos_steamapps>0 && pos_steamapps<pos_common)
     # with "StarMade" following it
     if (pos_starmade == pos_common + 1)
