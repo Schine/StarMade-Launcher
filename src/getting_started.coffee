@@ -7,9 +7,13 @@ shell  = require('shell')
 remote = require('remote')
 
 util   = require('./util')
+log    = require('./log-helpers')
 
 dialog      = remote.require('dialog')
 electronApp = remote.require('app')
+
+
+log.event "Beginning initial setup"
 
 steamLaunch = remote.getCurrentWindow().steamLaunch
 
@@ -26,10 +30,8 @@ step4 = document.getElementById 'step4'
 updating = document.getElementById 'updating'
 
 
-#TODO: write a logger and migrate some of the debugging output
-
 showLicenses = ->
-  # console.log(" > showLicenses()")  ##~
+  log.event "Showing licenses"
   close.style.display = 'none'
   step0.style.display = 'block'
   step1.style.display = 'none'
@@ -41,14 +43,14 @@ showLicenses = ->
 
 
 showUpdating = ->
-  # console.log(" > showUpdating()")  ##~
+  log.debug "Showing updating pane"
   step0.style.display    = 'none'
   updating.style.display = 'block'
 
 
 determineInstallDirectory = ->
   # Try to automatically determine the correct install path
-  # console.log(" > determineInstallDirectory()")  ##~
+  log.event "Automatically determining install directory"
 
   # Get current working directory from the main process
   cwd            = ipc.sendSync('cwd')
@@ -79,23 +81,30 @@ determineInstallDirectory = ->
 
 
   installPath.value = path.resolve( suggested_path )
-  # console.log("  | Suggested install path: #{installPath.value}")  ##~
 
 
-  return if !install_automatically
-  # console.log("  > installing automatically")  ##~
+  if not install_automatically
+    log.indent()
+    log.info "Suggested path: #{suggested_path}"
+    log.outdent()
+    return
 
-  # Automatically set the path and move onto the next step
+
+# Automatically set the path and move onto the next step
+  log.info "Installing automatically"
   localStorage.setItem 'installDir', installPath.value
+  log.indent()
+  log.entry "Here: #{installPath.value}"
+  log.outdent()
   currentStep = 2
   step1.style.display = 'none'
   step2.style.display = 'block'
-  # console.log(" > Step 2")  ##~
-  
+  log.event "Initial Setup: Step 2"
+
+
 
 acceptEula = ->
-  # console.log(" > acceptEula()")  ##~
-  # console.log("   | currentStep: #{currentStep}")  ##~
+  log.entry "Accepted EULA"
   
   localStorage.setItem 'acceptedEula', true
   close.style.display = 'inline'
@@ -107,31 +116,33 @@ acceptEula = ->
       window.close()
     when 0, 1
       currentStep = 1
-      # console.log("     | currentStep: #{currentStep}")  ##~
+      log.event "Initial Setup: Step 1"
       step0.style.display = 'none'
       step1.style.display = 'block'
       determineInstallDirectory()
     when 2
+      log.event "Initial Setup: Step 2"
       step0.style.display = 'none'
       step2.style.display = 'block'
     when 3
+      log.event "Initial Setup: Step 3"
       step0.style.display = 'none'
       step3.style.display = 'block'
     when 4
+      log.event "Initial Setup: Step 4"
       step0.style.display = 'none'
       step4.style.display = 'block'
-  # console.log("   > currentStep switch -- after")  ##~
-  # console.log("   | currentStep: #{currentStep}")  ##~  
 
 
 close.addEventListener 'click', ->
+  log.end("User clicked the close button.")
   remote.require('app').quit()
 
 # console.log("[Root]")  ##~
 # console.log(" | localStorage: #{JSON.stringify(localStorage)}")  ##~
-unless localStorage.getItem('gotStarted')?
+if not localStorage.getItem('gotStarted')? and localStorage.getItem('acceptedEula')?
   # If the user has not finished the initial setup, restart it and present the EULA again.
-  # console.log(" ! User did not finish previous setup; restarting")  ##~
+  log.info "User did not finish previous setup. Restarting."
   localStorage.removeItem('acceptedEula')
   # This also prevents a race condition between a) showing the window and b) updating the install directory textbox
   # -- The events required to solve this race condition [getCurrentWindow.on('show' / 'ready-to-show')] currently do not fire.
@@ -147,9 +158,9 @@ if localStorage.getItem('gotStarted')?
   else if window.location.href.split('?')[1] == 'steam'
     currentStep = 4
     step0.style.display = 'none'
-    step3.style.display = 'block'
+    step3.style.display = 'block'  ##! Step 4
     footerLinks.style.display = 'block'
-    # console.log(" > Step 4 -- Steam")  ##~
+    log.event "Initial Setup: Step 4 (Steam)"
     remote.getCurrentWindow().show()
   else if window.location.href.split('?')[1] == 'updating'
     showUpdating()
@@ -159,24 +170,19 @@ if localStorage.getItem('gotStarted')?
     window.close()
     return
 else
-  # console.log(" > State block -- else")  ##~
-  # console.log("   | currentStep: 0")  ##~
   currentStep = 0
+  log.event "Initial Setup: Step 0 (EULA)"
   acceptEula() if localStorage.getItem('acceptedEula')?
   remote.getCurrentWindow().show()
 
 util.setupExternalLinks()
 
-# console.log(" > State block -- after")  ##~
-# console.log(" | window.location.href: #{window.location.href}")  ##~
-# console.log(" | currentStep: #{currentStep}")  ##~
 
 
 #
 # Step 0 (Licenses)
 #
 
-# console.log(" > Step 0 -- Licenses")  ##~
 
 licenses  = document.getElementById 'licenses'
 accept    = document.getElementById 'accept'
@@ -186,7 +192,7 @@ declineBg = document.getElementById 'declineBg'
 
 fs.readFile path.join(path.dirname(__dirname), 'static', 'licenses.txt'), (err, data) ->
   if err
-    console.warn 'Unable to open licenses.txt'
+    log.warning 'Unable to open licenses.txt'
     acceptEula()
 
   licenses.innerHTML = '\n\n\n' + data
@@ -265,9 +271,10 @@ installContinue.addEventListener 'click', ->
   # console.log("> using manual path (#{installPath.value})")  ##~
   currentStep = 2
   localStorage.setItem 'installDir', installPath.value
+  log.entry "Install path: #{installPath.value}"
   step1.style.display = 'none'
   step2.style.display = 'block'
-  # console.log(" > Step 2")  ##~
+  log.event "Initial Setup: Step 2"
 
 
 
@@ -281,7 +288,7 @@ next.addEventListener 'click', ->
   localStorage.setItem 'gotStarted', true
   step2.style.display = 'none'
   step3.style.display = 'block'
-  # console.log(" > Step 3 -- Account")  ##~
+  log.event "Initial Setup: Step 3"
 
 
 
@@ -347,6 +354,7 @@ link.addEventListener 'mouseleave', ->
 
 link.addEventListener 'click', ->
   # Steam linking takes place on the Registry website
+  log.event "Opening external: https://registry.star-made.org/profile/steam_link"
   shell.openExternal 'https://registry.star-made.org/profile/steam_link'
   window.close()
 
@@ -357,9 +365,11 @@ skipOnce.addEventListener 'mouseleave', ->
   skipOnceBg.className = ''
 
 skipOnce.addEventListener 'click', ->
+  log.entry "Steam Link: Skipping"
   window.close()
 
 skipAlways.addEventListener 'click', ->
+  log.entry "Steam Link: Permanently ignoring"
   localStorage.setItem 'steamLinked', 'ignored'
   window.close()
 
