@@ -136,10 +136,6 @@ ipc.on 'log-outdent',   (event, num, level) => log.outdent(num, level); event.re
 
 
 
-if process.platform == 'darwin' && process.cwd() == '/'
-  # Change working directory
-  process.chdir(path.join(path.dirname(path.dirname(path.dirname(path.dirname(__dirname)))), 'MacOS'))
-
 staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
 
 authWindow = null
