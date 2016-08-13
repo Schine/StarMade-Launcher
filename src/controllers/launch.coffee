@@ -183,7 +183,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     return  if typeof earlyGen == "undefined"
     return  if typeof initial  == "undefined"
 
-    $rootScope.log.verbose "updateMemorySlider():"
+    $rootScope.log.event("updateMemorySlider():", $rootScope.log.levels.verbose)
     $rootScope.log.indent()
     $rootScope.log.verbose "earlyGen: #{earlyGen}     "
     $rootScope.log.verbose "initial:  #{initial}      "
@@ -208,7 +208,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   updateMemoryFloor = () ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
     $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
-    $rootScope.log.verbose "updateMemoryFloor():"
+    $rootScope.log.event("updateMemoryFloor():", $rootScope.log.levels.verbose)
     $rootScope.log.indent()
     $rootScope.log.verbose "setting memory.floor to #{$scope.memory.floor}"
     $rootScope.log.outdent()
@@ -216,7 +216,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   # Load memory settings from storage or set the defaults
   loadMemorySettings = ->
-    $rootScope.log.entry "Loading memory settings"
+    $rootScope.log.event "Loading memory settings"
     $rootScope.log.indent()
 
     # Cap max memory to physical ram
@@ -254,7 +254,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     localStorage.setItem 'initialMemory',  $scope.memory.initial
     localStorage.setItem 'earlyGenMemory', $scope.memory.earlyGen
 
-    $rootScope.log.entry "Saving memory settings"
+    $rootScope.log.event "Saving memory settings"
     $rootScope.log.indent()
     $rootScope.log.entry "maxMemory:      #{$scope.memory.max}"
     $rootScope.log.entry "initialMemory:  #{$scope.memory.initial}"
@@ -283,7 +283,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
 
   $scope.launcherOptions.javaPathBrowse = () =>
-    $rootScope.log.verbose "Browsing for custom java path"
+    $rootScope.log.event("Browsing for custom java path", $rootScope.log.levels.verbose)
     $rootScope.log.indent(1, $rootScope.log.levels.verbose)
     dialog.showOpenDialog remote.getCurrentWindow(),
       title: 'Select Java Bin Directory'
@@ -301,7 +301,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   $scope.verifyJavaPath = () =>
     newPath = $rootScope.javaPath
-    $rootScope.log.verbose "verifyJavaPath()"
+    $rootScope.log.event("verifyJavaPath()", $rootScope.log.levels.verbose)
     $rootScope.log.indent()
     $rootScope.log.verbose "javaPath: #{newPath}"
 
@@ -339,7 +339,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
   $scope.launch = (dedicatedServer = false) =>
-    $rootScope.log.verbose("launch()")
+    $rootScope.log.event "Launching game"
     $rootScope.log.indent(1, $rootScope.log.levels.verbose)
     loadMemorySettings()
     $scope.verifyJavaPath()
@@ -367,10 +367,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     # Standard IO:  pipe if debugging and attaching to the process
     stdio  = 'inherit'
-    stdio  = 'pipe' if ($rootScope.development && $rootScope.debugging && !detach)
+    stdio  = 'pipe' if ($rootScope.captureGame && !detach)
 
-    $rootScope.log.info "using java bin path: #{javaBinDir}"
-    $rootScope.log.info "child process: " + if detach then 'detached' else 'attached'
+    $rootScope.log.info "Using java bin path: #{javaBinDir}"
+    $rootScope.log.info "Child process: " + if detach then 'detached' else 'attached'
 
 
     # Argument builder
@@ -428,23 +428,27 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       remote.require('app').quit()
 
 
-    if ($rootScope.development && $rootScope.debugging && !detach)
-      $rootScope.log.entry "Monitoring game output"
-      child.stdout.on 'data', (data)->
+    if ($rootScope.captureGame && !detach)
+      $rootScope.log.event "Monitoring game output"
+
+      child.stdout.on 'data', (data) ->
         str = ""
         str += String.fromCharCode(char)  for char in data
         $rootScope.log.indent(1,  $rootScope.log.levels.game)
-        $rootScope.log.game data
+        $rootScope.log.game str
         $rootScope.log.outdent(1, $rootScope.log.levels.game)
 
       child.stderr.on 'data', (data) =>
+        str = ""
+        str += String.fromCharCode(char)  for char in data
+
         $rootScope.log.indent(1,  $rootScope.log.levels.game)
-        $rootScope.log.game(data, $rootScope.log.levels.game)
+        $rootScope.log.game(str, $rootScope.log.levels.game)
         $rootScope.log.outdent(1,  $rootScope.log.levels.game)
 
       child.on 'close', (code) =>
         $rootScope.log.indent(1,  $rootScope.log.levels.game)
-        $rootScope.log.info "Game process exited with code #{code}"
+        $rootScope.log.event "Game process exited with code #{code}"
         $rootScope.log.outdent(1,  $rootScope.log.levels.game)
 
 
