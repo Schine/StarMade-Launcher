@@ -138,8 +138,10 @@ ipc.on 'log-outdent',   (event, num, level) => log.outdent(num, level); event.re
 ipc.on 'cwd',           (event, arg) => event.returnValue = process.cwd()
 
 
-
+# app.asar/static
 staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
+
+
 
 authWindow = null
 mainWindow = null
@@ -149,19 +151,7 @@ updatingWindow = null
 authFinished = false
 quitting = false
 
-oldUserData = app.getPath 'userData'
 
-if argv['install-dir']?
-  app.setPath 'userData', path.join(path.resolve(argv['install-dir']), 'Launcher')
-else
-  if process.platform == 'linux'
-    # Use the user's home directory on Linux
-    app.setPath 'userData', "#{app.getPath('home')}/StarMade/Launcher"
-  else
-    app.setPath 'userData', "#{app.getPath('appData')}/StarMade/Launcher"
-
-rimraf oldUserData, (err) ->
-  console.warn "Unable to remove old user data directory: #{err}" if err
 
 # Disable caching so that files like the build index and checksums aren't cached
 app.commandLine.appendSwitch('disable-http-cache')
