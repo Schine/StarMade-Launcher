@@ -22,7 +22,7 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
   @update = (version, installDir, checkOnly = false, force = false) ->
     return if updaterProgress.inProgress
 
-    $rootScope.log.entry "Updating game..."
+    $rootScope.log.event "Updating game..."
 
     $rootScope.log.indent()
     $rootScope.log.info  "(checkOnly)"  if checkOnly
@@ -44,7 +44,7 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
             updaterProgress.text = 'Up to date'
             updaterProgress.needsUpdating = false
             updaterProgress.inProgress = false
-            $rootScope.log.entry "Up to date"
+            $rootScope.log.info "Up to date"
             # $rootScope.log.outdent()
             return
 
@@ -69,7 +69,7 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
             updaterProgress.text = 'All files downloaded'
             updaterProgress.inProgress = false
             updaterProgress.needsUpdating = false
-            $rootScope.log.entry "All files downloaded"
+            $rootScope.log.info "All files downloaded"
             # $rootScope.log.outdent()
 
           if checkOnly
