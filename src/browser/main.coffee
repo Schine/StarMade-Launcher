@@ -92,6 +92,10 @@ if process.platform == "darwin"  # osx
 else
   cache_path = path.resolve( path.join(".", ".cache") )
 
+# Custom path
+if argv['cache-dir']?
+  cache_path = path.join(path.resolve(argv['install-dir']), 'StarMade', 'Launcher')
+
 
 # Update cache locations
 app.setPath("appData",  cache_path)
