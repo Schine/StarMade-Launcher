@@ -3,11 +3,13 @@
 REGISTRY_TOKEN_URL = 'https://registry.star-made.org/oauth/token'
 REGISTRY_REGISTER_URL = 'https://registry.star-made.org/api/v1/users.json'
 
-ipc = require('ipc')
-remote = require('remote')
+ipc     = require('ipc')
+remote  = require('remote')
 request = require('request')
 
-util = require('./util')
+util    = require('./util')
+log     = require('./log-helpers')
+
 
 close = document.getElementById 'close'
 
@@ -111,10 +113,13 @@ doLogin = (event) ->
     (err, res, body) ->
       body = JSON.parse body
       if !err && res.statusCode == 200
+        log.entry "Logged in as #{document.getElementById('username').value}"
         ipc.send 'finish-auth', body
       else if res.statusCode == 401
+        log.entry "Invalid login credentials"
         status.innerHTML = 'Invalid credentials.'
       else
+        log.entry "Unable to log in (#{res.statusCode})"
         status.innerHTML = 'Unable to login, please try later.'
 
 uplinkForm.addEventListener 'submit', doLogin
@@ -134,7 +139,7 @@ registerLink.addEventListener 'click', showRegister
 
 doGuest = (event) ->
   event.preventDefault()
-
+  log.entry "Guest login: #{document.getElementById('playerName').value}"
   ipc.send 'finish-auth',
     playerName: document.getElementById('playerName').value
 
@@ -160,6 +165,7 @@ doRegister = (event) ->
       body = JSON.parse body
       if !err && (res.statusCode == 200 || res.statusCode == 201)
         registerStatus.innerHTML = ''
+        log.entry "Registered new account"
         status.innerHTML = 'Registered! Please confirm your email.'
         document.getElementById('username').value = username
         exitRegister()
@@ -168,8 +174,13 @@ doRegister = (event) ->
         error = body.errors[field][0]
         field = field.substring(0, 1).toUpperCase() + field.substring(1, field.length)
 
+        log.error "Error registering account"
+        log.indent()
+        log.entry   "#{field} #{error}"
+        log.outdent()
         registerStatus.innerHTML = "#{field} #{error}"
       else
+        log.warning "Unable to register account (#{res.statusCode})"
         registerStatus.innerHTML = 'Unable to register, please try later.'
 
 registerForm.addEventListener 'submit', doRegister
