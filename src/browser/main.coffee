@@ -279,7 +279,7 @@ ipc.on 'start-auth', ->
 
 ipc.on 'finish-auth', (event, args) ->
   authFinished = true
-  log.event "Finished Auth"
+  log.verbose "Finished Auth"
 
   if authWindow?
     authWindow.close()
