@@ -31,6 +31,7 @@ prefixes =
   debug:     " (debug) "
   verbose:   "(verbose)"
   meta:      " (meta)  "
+  update:    " update  "
   end:       " --end-- "
   raw:       ""
 
@@ -120,6 +121,7 @@ log_fatal     = (str, level=levels.normal)  -> log(str, level, "fatal")
 log_debug     = (str, level=levels.debug)   -> log(str, level, "debug")
 log_verbose   = (str, level=levels.verbose) -> log(str, level, "verbose")
 log_important = (str, level=levels.normal)  -> log(str, level, "important")
+log_update    = (str, level=levels.normal)  -> log(str, level, "update")
 log_end       = (str, level=levels.normal)  -> log(str, level, "end")
 log_raw       = (str, level=levels.normal)  -> log(str, level, "raw")
 log_meta      = (str, level=levels.verbose) -> log(str, level, "meta")
@@ -167,6 +169,7 @@ module.exports = {
   debug:         log_debug
   verbose:       log_verbose
   important:     log_important
+  update:        log_update
   end:           log_end          # The beginning of the end
   raw:           log_raw          # No timestamp, newlines, etc.
 

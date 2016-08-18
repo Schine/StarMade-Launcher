@@ -125,6 +125,7 @@ ipc.on 'log-fatal',     (event, msg, level) => log.fatal     msg, level; event.r
 ipc.on 'log-debug',     (event, msg, level) => log.debug     msg, level; event.returnValue = true
 ipc.on 'log-verbose',   (event, msg, level) => log.verbose   msg, level; event.returnValue = true
 ipc.on 'log-important', (event, msg, level) => log.important msg, level; event.returnValue = true
+ipc.on 'log-update',    (event, msg, level) => log.update    msg, level; event.returnValue = true
 ipc.on 'log-end',       (event, msg, level) => log.end       msg, level; event.returnValue = true
 ipc.on 'log-raw',       (event, msg, level) => log.raw       msg, level; event.returnValue = true
 # Array of log levels
@@ -169,7 +170,7 @@ openMainWindow = ->
     width: 800
     height: height
 
-  log.event "Opening Window: Main"
+  log.verbose "Opening Window: Main"
   mainWindow.loadUrl "file://#{staticDir}/index.html"
   mainWindow.openDevTools()  if argv.development
 
@@ -220,7 +221,7 @@ openGettingStartedWindow = (args) ->
       mainWindow.show()
     else
       # Getting started process finished
-      log.event "Finished Initial Setup"
+      log.verbose "Finished Initial Setup"
       openMainWindow()
 
   gettingStartedWindow.on 'closed', ->
@@ -240,11 +241,11 @@ app.on 'before-quit', ->
   quitting = true
 
 ipc.on 'open-licenses', ->
-  log.event "Opening Window: Licenses"
+  log.verbose "Opening Window: Licenses"
   openGettingStartedWindow('licenses')
 
 ipc.on 'open-updating', ->
-  log.event "Opening Window: Update"
+  log.verbose "Opening Window: Update"
   openGettingStartedWindow('updating')
 
 ipc.on 'updating-opened', ->
@@ -265,7 +266,7 @@ ipc.on 'start-auth', ->
 
   mainWindow.hide()
 
-  log.event "Opening Window: Auth"
+  log.verbose "Opening Window: Auth"
   authWindow.loadUrl "file://#{staticDir}/auth.html"
   authWindow.openDevTools()  if argv.development
 
@@ -286,5 +287,5 @@ ipc.on 'finish-auth', (event, args) ->
   mainWindow.webContents.send 'finish-auth', args
 
 ipc.on 'start-steam-link', ->
-  log.event "Opening Window: Steam Link"
+  log.verbose "Opening Window: Steam Link"
   openGettingStartedWindow('steam')

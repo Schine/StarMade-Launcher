@@ -12,6 +12,7 @@ log_fatal     = (msg, level) -> ipc.send('log-fatal',     msg, level)
 log_debug     = (msg, level) -> ipc.send('log-debug',     msg, level)
 log_verbose   = (msg, level) -> ipc.send('log-verbose',   msg, level)
 log_important = (msg, level) -> ipc.send('log-important', msg, level)
+log_update    = (msg, level) -> ipc.send('log-update',    msg, level)
 log_end       = (msg, level) -> ipc.send('log-end',       msg, level)
 log_raw       = (msg, level) -> ipc.send('log-raw',       msg, level)
 
@@ -32,6 +33,7 @@ module.exports = {
   debug:      log_debug
   verbose:    log_verbose
   important:  log_important
+  update:     log_update
   end:        log_end
   raw:        log_raw
 
