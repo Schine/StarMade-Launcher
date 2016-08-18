@@ -43,7 +43,6 @@ showLicenses = ->
 
 
 showUpdating = ->
-  log.debug "Showing updating pane"
   step0.style.display    = 'none'
   updating.style.display = 'block'
 
