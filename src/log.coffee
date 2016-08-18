@@ -27,11 +27,11 @@ prefixes =
   event:     "  event  "
   warning:   " warning "
   error:     "  error  "
-  fatal:     "  FATAL  "
+  fatal:     "**FATAL**"
   debug:     " (debug) "
   verbose:   "(verbose)"
   meta:      " (meta)  "
-  update:    " update  "
+  update:    " updater "
   end:       " --end-- "
   raw:       ""
 
