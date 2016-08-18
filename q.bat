@@ -156,7 +156,6 @@ goto :eof
     if "%_or%"=="1" (
       set _launch=1
       set _debugging=--debugging
-      set _noupdate=--noupdate
     )
 
   set _or=0
@@ -165,7 +164,6 @@ goto :eof
     if "%_or%"=="1" (
       set _launch=1
       set _debugging=--debugging --verbose
-      set _noupdate=--noupdate
     )
 
 
