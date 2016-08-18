@@ -1,11 +1,12 @@
-fs = require('fs')
+fs   = require('fs')
+path = require('path')
 
-fileExists = (pathName) ->
-  pathName = path.resolve(pathName)
+fileExists = (fullpath) ->
+  # since Node changes the fs.exists() functions with every version
   try
-    # since Node changes the fs.exists() functions with every version
-    fs.closeSync( fs.openSync(pathName, "r") )
-    return true
+    fullpath = path.resolve(fullpath)
+    return true  if path.basename(fullpath) in fs.readdirSync(path.dirname(fullpath))
+    return false
   catch e
     return false
 
