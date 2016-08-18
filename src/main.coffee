@@ -53,7 +53,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   argv       = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
-  tester_build = false
+  tester_build = true
 
   $rootScope.log         = require('./log-helpers')  # Logging helpers
   $rootScope.version     =   pkg.version
