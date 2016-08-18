@@ -61,7 +61,7 @@ goto :parse
   echo    s ^| steam         Passes --steam        (Implies    --attach, --noupdate)
   echo    a ^| attach        Passes --attach
   echo    d ^| detach        Passes --detach       (Overwrites --attach)
-  echo   nu ^| noupdate      passes --noupdate
+  echo  nou ^| noupdate      passes --noupdate
   echo      ^|
   echo    v ^| debugging     Passes --noupdate --debugging
   echo   vv ^| verbose       Passes --noupdate --debugging --verbose
@@ -126,7 +126,7 @@ goto :eof
   if "%1"=="d"             set _detach=--detach
   if "%1"=="detach"        set _detach=--detach
 
-  if "%1"=="nu"            set _noupdate=--noupdate
+  if "%1"=="nou"           set _noupdate=--noupdate
   if "%1"=="noupdate"      set _noupdate=--noupdate
 
   if "%1"=="v"             set _debugging=--debugging
