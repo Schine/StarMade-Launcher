@@ -9,8 +9,9 @@ spawn   = require('child_process').spawn
 
 electronApp = remote.require('app')
 
-buildHash = require('./buildHash.js').buildHash
-util = require('./util')
+buildHash  = require('./buildHash.js').buildHash
+util       = require('./util')
+
 
 pkg = require(path.join(path.dirname(__dirname), 'package.json'))
 
@@ -157,32 +158,46 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
     updater.getVersions('launcher')
       .then (versions) ->
         if versions[0].version != pkg.version
-          $rootScope.log.event 'Updating launcher...'
+          $rootScope.log.update 'Updating launcher...'
 
-          launcherDir = process.cwd()  ##! This resolves to the directory the launcher was run from, e.g. C:\ in this scenario: C:\> X:\path\to\starmade-launcher.exe
+          launcherDir = ipc.sendSync('cwd');  # Fetch launcher dir from main process
           launcherExec = null
+          launcherAsar = null
           if process.platform == 'darwin'
+            launcherAsar = path.join launcherDir, '..', 'Resources'
             launcherExec = path.join launcherDir, 'Electron'
           else
+            launcherAsar = path.join launcherDir, 'resources'
             launcherExec = path.join launcherDir, 'starmade-launcher'
             launcherExec += '.exe' if process.platform == 'win32'
+
 
           ipc.send 'open-updating'
           ipc.once 'updating-opened', ->
             updater.updateLauncher(versions[0], launcherDir)
               .then ->
-                $rootScope.log.end 'Launcher updated! Restarting...'
+                $rootScope.log.entry "Launcher updated!"
+                $rootScope.log.end   "Restarting"
                 $rootScope.log.indent(1, $rootScope.log.levels.verbose)
-                $rootScope.log.verbose "launcher exec path: #{launcherExec}"
+                $rootScope.log.verbose  "launcher exec path: #{launcherExec}"
+                $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+
+                ipc.send 'close-updating'
+                $rootScope.launcherUpdating = false
                 child = spawn launcherExec, [],
                   detached: true
                 electronApp.quit()
-              , (err) ->
-                $rootScope.log.error 'Updating the launcher failed!'
-                $rootScope.log.raw err
-                remote.showErrorBox('Launcher update failed', 'The launcher failed to update.')
-                ipc.send 'close-updating'
 
+
+              , (err) ->
+                $rootScope.log.error 'Launcher update failed!'
+                $rootScope.log.indent()
+                $rootScope.log.entry err
+                $rootScope.log.outdent()
+
+                # remote.showErrorBox('Launcher update failed', 'The launcher failed to update.')
+
+                ipc.send 'close-updating'
                 $rootScope.launcherUpdating = false
                 $rootScope.startAuth()
         else
