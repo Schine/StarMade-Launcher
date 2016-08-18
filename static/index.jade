@@ -226,7 +226,7 @@ html(ng-app='launcher')
                     input(name="earlyGenMemory" id='earlyGenMemory' type="number" ng-model='memory.earlyGen' min="64")
 
                   br.clearfix
-                  label.critically_low_memory_warning(ng-show='memory.earlyGen > memory.initial')
+                  label.critically_low_memory_warning(ng-show='memory.earlyGen >= memory.initial')
                     | Initial memory 
                     i must 
                     | be larger than earlyGen.
@@ -234,7 +234,7 @@ html(ng-app='launcher')
                   label.low_memory_warning(ng-show='memory.initial < 256') Note: Setting initial memory below 256mb may cause problems
 
                 .field-group.block.right
-                  button(ng-click='saveClientOptions()') Save
+                  button(ng-click='saveClientOptions()' ng-disabled="memory.earlyGen >= memory.initial") Save
                   button(ng-click='closeClientOptions()') Cancel
 
             a.gear.gear-memory(ng-click="openClientMemoryOptions()") &nbsp;
