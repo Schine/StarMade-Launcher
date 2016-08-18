@@ -1,15 +1,18 @@
 'use strict'
 
-os = require('os')
-fs = require('fs')
-path = require('path')
-remote = require('remote')
-dialog = remote.require('dialog')
-spawn = require('child_process').spawn
-util = require('../util')
+os         = require('os')
+fs         = require('fs')
+path       = require('path')
+spawn      = require('child_process').spawn
+remote     = require('remote')
 
-pkg = require(path.join(path.dirname(path.dirname(__dirname)), 'package.json'))
-javaVersion = pkg.javaVersion
+dialog     = remote.require('dialog')
+
+util       = require('../util')
+fileExists = require('../fileexists').fileExists
+pkg        = require('../../package.json')
+
+javaVersion      = pkg.javaVersion
 javaJreDirectory = util.getJreDirectory javaVersion
 
 app = angular.module 'launcher'
@@ -362,16 +365,6 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $scope.launcherOptions.invalidJavaPath = true
     $rootScope.log.verbose "Invalid path."
     $rootScope.log.outdent()
-
-
-  fileExists = (pathName) ->
-    pathName = path.resolve(pathName)
-    try
-      # since Node changes the fs.exists() functions with every version
-      fs.closeSync( fs.openSync(pathName, "r") )
-      return true
-    catch e
-      return false
 
 
   $scope.launch = (dedicatedServer = false) =>
