@@ -246,8 +246,8 @@ ipc.on 'open-licenses', ->
 
 ipc.on 'open-updating', ->
   log.verbose "Opening Window: Update"
-  mainWindow.hide()
-  authWindow.hide()
+  mainWindow.hide()  if !!mainWindow
+  authWindow.hide()  if !!authWindow
   openGettingStartedWindow('updating')
 
 ipc.on 'updating-opened', ->
