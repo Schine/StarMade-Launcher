@@ -282,12 +282,19 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
 
             # ignore malformed entries:
             return if (!buildPath || !buildVersion || !buildBuild)  # missing segments
-            return if buildPath.indexOf('#') >= 0         # two entries on a line
+            return if buildPath.indexOf('#') >= 0                   # two entries on a line
 
             versions.push new Version(buildPath, buildVersion, buildBuild)
 
           resolve uniqVersions(versions)
         .error (data, status, headers, config) ->
+          $rootScope.log.error "Error fetching #{branch} build index"
+          $rootScope.log.indent()
+          $rootScope.log.verbose  "Status:  #{status}"
+          $rootScope.log.verbose  "Headers: #{headers}"
+          $rootScope.log.verbose  "Config:  #{config}"
+          $rootScope.log.outdent()
+
           reject data, status, headers, config
 
   uniqVersions = (versions) ->
