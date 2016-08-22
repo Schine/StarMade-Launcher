@@ -1,6 +1,6 @@
 bower_components/
 build/
-cache/
+.cache/
 dep/
 dist/
 lib/
