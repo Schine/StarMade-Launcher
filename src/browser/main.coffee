@@ -144,13 +144,15 @@ staticDir = path.join(path.dirname(path.dirname(__dirname)), 'static')
 
 
 
-authWindow = null
-mainWindow = null
 gettingStartedWindow = null
-updatingWindow = null
+authWindow           = null
+mainWindow           = null
+updatingWindow       = null
 
-authFinished = false
-quitting = false
+authFinished     = false
+quitting         = false
+launcherUpdating = false
+
 
 
 
@@ -158,10 +160,11 @@ quitting = false
 app.commandLine.appendSwitch('disable-http-cache')
 
 openMainWindow = ->
-  return if quitting
+  return  if launcherUpdating
+  return  if quitting
 
   height = 550
-  height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
+  height -= OSX_HEIGHT_OFFSET  if process.platform == 'darwin'
 
   mainWindow = new BrowserWindow
     frame: false
@@ -170,8 +173,8 @@ openMainWindow = ->
     width: 800
     height: height
 
-  log.verbose "Opening Window: Main"
   mainWindow.loadUrl "file://#{staticDir}/index.html"
+  log.verbose "Opened Window: Main"
   mainWindow.openDevTools()  if argv.development
 
   #if argv['install-dir']?
@@ -194,10 +197,10 @@ openMainWindow = ->
     mainWindow = null
 
 openGettingStartedWindow = (args) ->
-  return if quitting
+  return  if quitting
 
   height = 504
-  height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
+  height -= OSX_HEIGHT_OFFSET  if process.platform == 'darwin'
 
   gettingStartedWindow = new BrowserWindow
     frame: false
@@ -241,24 +244,29 @@ app.on 'before-quit', ->
   quitting = true
 
 ipc.on 'open-licenses', ->
-  log.verbose "Opening Window: Licenses"
   openGettingStartedWindow('licenses')
+  log.verbose "Opened Window: Licenses"
 
 ipc.on 'open-updating', ->
-  log.verbose "Opening Window: Update"
-  mainWindow.hide()  if !!mainWindow
-  authWindow.hide()  if !!authWindow
+  launcher_updating = true
   openGettingStartedWindow('updating')
+  log.verbose "Opened Window: Update"
 
 ipc.on 'updating-opened', ->
+  mainWindow.hide()  if !!mainWindow
+  authWindow.hide()  if !!authWindow
+
   mainWindow.webContents.send('updating-opened')
 
 ipc.on 'close-updating', ->
   gettingStartedWindow.close()
+  launcherUpdating = false
+  log.verbose "Closed Window: Update"
 
 ipc.on 'start-auth', ->
+  return  if launcherUpdating
   height = 404
-  height -= OSX_HEIGHT_OFFSET if process.platform == 'darwin'
+  height -= OSX_HEIGHT_OFFSET  if process.platform == 'darwin'
 
   authWindow = new BrowserWindow
     frame: false
@@ -268,8 +276,8 @@ ipc.on 'start-auth', ->
 
   mainWindow.hide()
 
-  log.verbose "Opening Window: Auth"
   authWindow.loadUrl "file://#{staticDir}/auth.html"
+  log.verbose "Opened Window: Auth"
   authWindow.openDevTools()  if argv.development
 
   authWindow.on 'closed', ->
@@ -289,5 +297,5 @@ ipc.on 'finish-auth', (event, args) ->
   mainWindow.webContents.send 'finish-auth', args
 
 ipc.on 'start-steam-link', ->
-  log.verbose "Opening Window: Steam Link"
   openGettingStartedWindow('steam')
+  log.verbose "Opened Window: Steam Link"
