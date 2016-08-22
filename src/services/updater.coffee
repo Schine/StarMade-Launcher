@@ -290,9 +290,9 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
         .error (data, status, headers, config) ->
           $rootScope.log.error "Error fetching #{branch} build index"
           $rootScope.log.indent()
-          $rootScope.log.verbose  "Status:  #{status}"
-          $rootScope.log.verbose  "Headers: #{headers}"
-          $rootScope.log.verbose  "Config:  #{config}"
+          $rootScope.log.debug  "URL:     #{config['url']}"
+          $rootScope.log.debug  "Status:  #{status}"
+          $rootScope.log.verbose  "Headers: #{JSON.stringify headers}"
           $rootScope.log.outdent()
 
           reject data, status, headers, config
