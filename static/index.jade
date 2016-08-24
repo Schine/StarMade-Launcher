@@ -160,28 +160,34 @@ html(ng-app='launcher')
 
         div(ng-controller="LaunchCtrl")
           div.envJavaOptionsWarning
-            popup(title="Warning" type='notification' opened='envJavaOptionsWarning')
+            popup(title="Warning" type='notification' opened='_java_options.show_dialog')
               form.side-by-side
                 p
                   | Found the 
                   span.code _JAVA_OPTIONS
                   |  environment variable on your system.  The options it contains forcibly overwrite those used by every java app on your system, including StarMade.
                 p.severe In many cases this will cause undesired behavior, including preventing the game from launching if it specifies too small of memory values.
+
+                br.clearfix
+
                 p
-                  | You may alter (or erase) its value below, or you can choose keep it and continue anyway. 
+                  | We recommend clearing this value, but you may keep it or alter it below.
 
                 br.clearfix
 
                 .field-group.block.right
-                  input(id="edit_java_options" value="{{get_java_options()}}")
+                  input(id="edit_java_options" name="edit_java_options" ng-model="_java_options.modified")
 
                 p.warning To change its value permanently, you must do so outside of the launcher.
 
                 br.clearfix
 
-                .field-group.block.right
-                  button.right(ng-click='closeEnvJavaOptionsWarning()') Close
-                  button.right(ng-click='saveEnvJavaOptionsWarning()') Update
+                .field-group.block
+                  div.right
+                    button(ng-click='saveEnvJavaOptionsWarning()' ng-disabled="_java_options.modified == get_java_options()") Update value
+                    button(ng-click='closeEnvJavaOptionsWarning()') Close
+                  div.left
+                    button(ng-click='clearEnvJavaOptions()') Clear and continue
 
 
 

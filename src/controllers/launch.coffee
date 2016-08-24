@@ -55,32 +55,44 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   $scope.showEnvJavaOptionsWarning = () ->
     # Called four times; only the last actually presents the dialog.
-    if $rootScope.shown_java_options_dialog != true
+    if $rootScope.shown_java_options_dialog != true  # must be within $rootScope
       # Only submit log entries once
       $rootScope.shown_java_options_dialog = true
       $rootScope.log.info "_JAVA_OPTIONS=#{process.env['_JAVA_OPTIONS']}"
       $rootScope.log.event "Presenting _JAVA_OPTIONS Dialog"
     # Show the dialog
-    $scope.envJavaOptionsWarning = true
-
-  # Must follow function declaration
-  if process.env["_JAVA_OPTIONS"]?
-    $scope.showEnvJavaOptionsWarning()
+    $scope._java_options.show_dialog = true
 
   $scope.get_java_options = () ->
-    process.env["_JAVA_OPTIONS"]
+    process.env["_JAVA_OPTIONS"].trim()
+
+
+  # Must follow function declarations
+  if process.env["_JAVA_OPTIONS"]?
+    $scope._java_options = {}
+    $scope._java_options.modified    = $scope.get_java_options()
+    $scope._java_options.show_dialog = false
+    $scope.showEnvJavaOptionsWarning()
+
+
+  $scope.clearEnvJavaOptions = () ->
+    process.env["_JAVA_OPTIONS"] = ''
+    $rootScope.log.info "Cleared _JAVA_OPTIONS"
+    $scope._java_options.show_dialog = false
 
   $scope.saveEnvJavaOptionsWarning = () ->
-    process.env["_JAVA_OPTIONS"] = document.getElementById("edit_java_options").value
+    process.env["_JAVA_OPTIONS"] = $scope._java_options.modified
+
     if process.env["_JAVA_OPTIONS"] == ''
       $rootScope.log.info "Cleared _JAVA_OPTIONS"
     else
       $rootScope.log.info "Set _JAVA_OPTIONS to: #{process.env['_JAVA_OPTIONS']}"
-    $scope.envJavaOptionsWarning = false
+    $scope._java_options.show_dialog = false
+
 
   $scope.closeEnvJavaOptionsWarning = () ->
     $rootScope.log.entry "Keeping _JAVA_OPTIONS intact"
-    $scope.envJavaOptionsWarning = false
+    $scope._java_options.show_dialog = false
 
 
 
@@ -316,10 +328,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
   $scope.$watch 'launcherOptionsWindow', (visible) ->
-    $rootScope.log.important "launcherOptionsWindow visible? #{visible}", $rootScope.log.levels.verbose
-    $rootScope.log.indent(1,  $rootScope.log.levels.verbose)
-    $scope.verifyJavaPath()  if visible
-    $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+    return  if not visible
+    $scope.verifyJavaPath()
 
   $scope.launcherOptions.javaPathBrowse = () =>
     $rootScope.log.event("Browsing for custom java path", $rootScope.log.levels.verbose)
@@ -340,16 +350,15 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   $scope.verifyJavaPath = () =>
     newPath = $rootScope.javaPath
-    $rootScope.log.event("verifyJavaPath()", $rootScope.log.levels.verbose)
-    $rootScope.log.indent()
-    $rootScope.log.verbose "javaPath: #{newPath}"
+    $rootScope.log.verbose "Verifiying Java path"
+    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
 
     if !newPath  # blank path uses bundled java instead
       $scope.launcherOptions.invalidJavaPath = false
       $scope.launcherOptions.javaPathStatus = "-- Using bundled Java version --"
 
-      $rootScope.log.verbose "Blank path; using bundled Java version"
-      $rootScope.log.outdent()
+      $rootScope.log.debug "Using bundled Java"
+      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       return
 
     newPath = path.resolve(newPath)
@@ -358,13 +367,21 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
        fileExists( path.join(newPath, "java.exe") ) # windows
       $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
       $scope.launcherOptions.invalidJavaPath  = false
-      $rootScope.log.verbose "Valid path; using custom Java"
+      $rootScope.log.debug "Using custom Java"
+      $rootScope.log.indent()
+      $rootScope.log.entry "path: #{newPath}"
       $rootScope.log.outdent()
+
+      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       return
 
     $scope.launcherOptions.invalidJavaPath = true
-    $rootScope.log.verbose "Invalid path."
+    $rootScope.log.warning "Invalid Java path specified"
+    $rootScope.log.indent()
+    $rootScope.log.entry      "path: #{newPath}"
     $rootScope.log.outdent()
+    $rootScope.log.debug    "Using bundled Java as a fallback"
+    $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
 
 
   $scope.launch = (dedicatedServer = false) =>
@@ -378,9 +395,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     # Use the custom java path if it's set and valid
     if $rootScope.javaPath && not $scope.launcherOptions.invalidJavaPath
       customJavaPath = $rootScope.javaPath  # `$scope.launcherOptions.javaPath` isn't set right away.
-      $rootScope.log.info "Using custom java path"
+      $rootScope.log.info "Using custom Java path"
     else
-      $rootScope.log.info "Using bundled java"
+      $rootScope.log.info "Using bundled Java"
 
     installDir = path.resolve $scope.$parent.installDir
     starmadeJar = path.resolve "#{installDir}/StarMade.jar"
@@ -398,7 +415,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     stdio  = 'inherit'
     stdio  = 'pipe' if ($rootScope.captureGame && !detach)
 
-    $rootScope.log.info "Using java bin path: #{javaBinDir}"
+    $rootScope.log.info "Using Java bin path: #{javaBinDir}"
     $rootScope.log.info "Child process: " + if detach then 'detached' else 'attached'
 
 
@@ -449,11 +466,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
     if detach
-      $rootScope.log.end "Exiting"
-      remote.require('app').quit()
-
-    child.on 'close', ->
-      $rootScope.log.end "Game closed.  Exiting."
+      $rootScope.log.event "Launched game. Exiting"
       remote.require('app').quit()
 
 
@@ -480,5 +493,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
         $rootScope.log.event "Game process exited with code #{code}"
         $rootScope.log.outdent(1,  $rootScope.log.levels.game)
 
+
+    child.on 'close', ->
+      $rootScope.log.event "Game closed. Exiting"
+      remote.require('app').quit()
 
     remote.getCurrentWindow().hide()
