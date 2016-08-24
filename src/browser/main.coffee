@@ -110,6 +110,7 @@ if argv.verbose?
 
 ### Logging ###
 log_level = log.levels.normal
+log_level = log.levels.game     if argv["capture-game-log"]
 log_level = log.levels.debug    if argv.debugging
 log_level = log.levels.verbose  if argv.verbose
 
