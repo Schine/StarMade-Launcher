@@ -160,8 +160,7 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
 
           .on 'error', (err) ->
             fetch_failed = true
-            $rootScope.log.important "fetch error."
-            return reject("fetch->error  #{err.message}")
+            return reject("fetch error: #{err.message}")
 
           .on 'end', ->
             # This event fires even after rejecting; and there's no apparent way to read the response code.
