@@ -31,6 +31,17 @@ app.directive 'stringToNumber', ->
 
 app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   totalRam = Math.floor( os.totalmem()/1024/1024 )  # bytes -> mb
+  x64max   = 4096
+
+  # Low system memory? decrease default max
+  if totalRam <= 4096
+    x64max = 2048
+    if not $rootScope.alreadyExecuted 'log low system memory'
+      $rootScope.log.info "Low system memory (#{totalRam}mb)"
+      $rootScope.log.indent()
+      $rootScope.log.entry   "Decreased default max memory from 4gb to 2gb"
+      $rootScope.log.outdent()
+
   defaults =
     ia32:
       earlyGen:   64
@@ -40,8 +51,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     x64:
       earlyGen:  128
       initial:   512
-      max:      2048      # initial memory.max value
+      max:      x64max    # initial memory.max value
       ceiling:  totalRam  # maximum value allowed
+
 
   $scope.launcherOptions = {}
 
