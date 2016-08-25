@@ -179,8 +179,8 @@ goto :parse
     echo Packaging
     echo.
     cmd /C gulp package
-    if not "%errorlevel%"=="0"  goto :package_failed
     echo.
+    if not "!errorlevel!"=="0"  goto :package_failed
   )
   if "%_package%"=="all" (
     echo Packaging all
