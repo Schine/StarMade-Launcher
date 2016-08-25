@@ -96,6 +96,14 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
 
 
+  # Forgive me for my sins... they just keep things so clean!
+  $rootScope.alreadyExecuted = (id) ->
+    $rootScope.alreadyExecuted.ids or= {}
+
+    return true  if $rootScope.alreadyExecuted.ids[id] == true
+    $rootScope.alreadyExecuted.ids[id] = true
+    return false
+
 
   $rootScope.openDownloadPage = ->
     $rootScope.log.event "Opening download page: http://star-made.org/download"
