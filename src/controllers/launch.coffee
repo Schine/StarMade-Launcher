@@ -76,7 +76,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $scope._java_options.show_dialog = true
 
   $scope.get_java_options = () ->
-    process.env["_JAVA_OPTIONS"].trim()
+    (process.env["_JAVA_OPTIONS"] || '').trim()
 
 
   # Must follow function declarations
