@@ -63,29 +63,17 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
 
-  # _JAVA_OPTIONS Dialog
+  ### _JAVA_OPTIONS Dialog ###
 
   $scope.showEnvJavaOptionsWarning = () ->
-    # Called four times; only the last actually presents the dialog.
-    if $rootScope.shown_java_options_dialog != true  # must be within $rootScope
-      # Only submit log entries once
-      $rootScope.shown_java_options_dialog = true
-      $rootScope.log.info "_JAVA_OPTIONS=#{process.env['_JAVA_OPTIONS']}"
-      $rootScope.log.event "Presenting _JAVA_OPTIONS Dialog"
-    # Show the dialog
     $scope._java_options.show_dialog = true
+    return if $rootScope.alreadyExecuted 'log _JAVA_OPTIONS Dialog'
+
+    $rootScope.log.info "_JAVA_OPTIONS=#{process.env['_JAVA_OPTIONS']}"
+    $rootScope.log.event "Presenting _JAVA_OPTIONS Dialog"
 
   $scope.get_java_options = () ->
     (process.env["_JAVA_OPTIONS"] || '').trim()
-
-
-  # Must follow function declarations
-  if process.env["_JAVA_OPTIONS"]?
-    $scope._java_options = {}
-    $scope._java_options.modified    = $scope.get_java_options()
-    $scope._java_options.show_dialog = false
-    $scope.showEnvJavaOptionsWarning()
-
 
   $scope.clearEnvJavaOptions = () ->
     process.env["_JAVA_OPTIONS"] = ''
@@ -101,11 +89,17 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       $rootScope.log.info "Set _JAVA_OPTIONS to: #{process.env['_JAVA_OPTIONS']}"
     $scope._java_options.show_dialog = false
 
-
   $scope.closeEnvJavaOptionsWarning = () ->
     $rootScope.log.entry "Keeping _JAVA_OPTIONS intact"
     $scope._java_options.show_dialog = false
 
+
+  # Must follow function declarations
+  if process.env["_JAVA_OPTIONS"]?
+    $scope._java_options = {}
+    $scope._java_options.modified    = $scope.get_java_options()
+    $scope._java_options.show_dialog = false
+    $scope.showEnvJavaOptionsWarning()
 
 
 
