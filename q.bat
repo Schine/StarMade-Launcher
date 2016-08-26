@@ -12,6 +12,8 @@
 
 :: Required to enable `set` within if blocks; usage requires !varname! format
 setlocal EnableDelayedExpansion
+:: Required for `if defined envvar` (Enabled by default, but just to make sure)
+setlocal EnableExtensions
 
 
 :begin
@@ -20,6 +22,9 @@ setlocal EnableDelayedExpansion
 
   set _clean=
   set _launch=
+
+  set _javaoptions=
+  set _JAVA_OPTIONS_backup=
 
   set _help=
   set _steam=
@@ -57,12 +62,13 @@ goto :parse
   echo      ^|                 - dest:steam modifies the launch directory
   echo   32 ^| ia32          Use the 32bit launcher for all actions
   echo      ^|
+  echo    j ^| javaoptions   Populates _JAVA_OPTIONS for this launch
+  echo      ^|
   echo    h ^| help          Passes --help
   echo    s ^| steam         Passes --steam        (Implies    --attach, --noupdate)
   echo    a ^| attach        Passes --attach
   echo    d ^| detach        Passes --detach       (Overwrites --attach)
   echo  nou ^| noupdate      passes --noupdate
-  echo      ^|
   echo    v ^| debugging     Passes --noupdate --debugging
   echo   vv ^| verbose       Passes --noupdate --debugging --verbose
   echo  dev ^| development   Passes --development
@@ -113,6 +119,9 @@ goto :eof
 
   if "%1"=="32"            set _arch=32
   if "%1"=="ia32"          set _arch=32
+
+  if "%1"=="j"             set _javaoptions=1
+  if "%1"=="javaoptions"   set _javaoptions=1
 
   if "%1"=="h"             set _help=--help
   if "%1"=="help"          set _help=--help
@@ -242,6 +251,16 @@ goto :parse
     )
   )
 
+  if "%_javaoptions%"=="1" (
+    if defined _JAVA_OPTIONS (
+      echo Backing up _JAVA_OPTIONS
+      set _JAVA_OPTIONS_backup=%_JAVA_OPTIONS%
+    )
+
+    echo Populating _JAVA_OPTIONS with: -Xmx=256m
+    set _JAVA_OPTIONS=-Xmx=256m
+  )
+
 
   if "%_launch%"=="1" (
     if "%_dest%"=="steam" (
@@ -302,6 +321,18 @@ goto :cleanup
   set _clean=
   set _launch=
   set _launch_dir=
+
+  if "%_javaoptions%"=="1" (
+    if defined _JAVA_OPTIONS_backup (
+      echo Restoring _JAVA_OPTIONS ^(%_JAVA_OPTIONS_backup%^)
+      set _JAVA_OPTIONS=%_JAVA_OPTIONS_backup%
+    ) else (
+      echo Clearing _JAVA_OPTIONS
+      set _JAVA_OPTIONS=
+    )
+  )
+  set _javaoptions=
+  set _JAVA_OPTIONS_backup=
 
   set _steam=
   set _attach=
