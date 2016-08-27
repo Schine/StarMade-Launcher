@@ -129,8 +129,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     if newVal <= (_floor + nearestPow2(_floor, false)) >> 1  # false: bypass nearestPow2() memoizing
       $scope.memory.max = _floor
     else
-      # Snap to nearest pow2 (capped at memory ceiling)
-      $scope.memory.max = Math.min(_nearest_pow_2, $scope.memory.ceiling)
+      # Snap to nearest pow2 (higher than the lower bound, capped at memory ceiling)
+      $scope.memory.max = Math.max(_floor, Math.min(_nearest_pow_2, $scope.memory.ceiling))
+
   
     # Allow snapping up to end of slider, power of 2 or not
     if $scope.memory.max != $scope.memory.ceiling
