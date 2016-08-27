@@ -208,9 +208,9 @@ html(ng-app='launcher')
                     | Insufficient memory. The game will very likely encounter problems.
                   label.right.low_memory_warning(ng-show="memory.max >= 2048 && memory.max < 4096")
                     | Less than 4096mb is not recommended, and may cause issues.
-                  label.right.non-power-of-2(ng-show="memory.power_of_2 && memory.max > 4096")
+                  label.right.non-power-of-2(ng-show="!memory.power_of_2 && memory.max >= 4096")
                     | Some Java versions require max memory to be a power of 2
-                  label.right.power-of-2(ng-show="!memory.power_of_2 && memory.max > 4096")
+                  label.right.power-of-2(ng-show="memory.power_of_2 && memory.max >= 4096")
                     | Max memory is a power of 2
 
                 br.clearfix
