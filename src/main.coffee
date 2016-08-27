@@ -53,7 +53,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   argv       = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
-  tester_build = true
+  # Quality Assurance build?  (enables debugging)
+  qa_build = false
 
   $rootScope.log         = require('./log-helpers')  # Logging helpers
   $rootScope.version     =   pkg.version
@@ -62,12 +63,12 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.attach      = !!argv.attach    || !!argv['capture-game-log']  # attach the game process; default behavior with   --steam
   $rootScope.detach      = !!argv.detach                                   # detach the game process; default behavior witout --steam
   $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.steamLaunch
-  $rootScope.debugging   = !!argv.debugging || !!argv.verbose || tester_build
+  $rootScope.debugging   = !!argv.debugging || !!argv.verbose || qa_build
   $rootScope.verbose     = !!argv.verbose
   $rootScope.captureGame = !!argv['capture-game-log']
 
 
-  $rootScope.log.raw  "StarMade Launcher v#{pkg.version} build #{buildHash}" + (if tester_build then " (QA)" else "") + "\n"
+  $rootScope.log.raw  "StarMade Launcher v#{pkg.version} build #{buildHash}" + (if qa_build then " (QA)" else "") + "\n"
   
   $rootScope.log.info "Platform"
   $rootScope.log.indent()
