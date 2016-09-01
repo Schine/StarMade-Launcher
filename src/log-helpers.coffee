@@ -1,25 +1,43 @@
 ipc = require('ipc')
 
 
-# Logging
-log_entry     = (msg, level) -> ipc.send('log-entry',     msg, level) # Sync would be better
-log_info      = (msg, level) -> ipc.send('log-info',      msg, level) # for logging; however,
-log_event     = (msg, level) -> ipc.send('log-event',     msg, level) # that causes $apply()
-log_game      = (msg, level) -> ipc.send('log-game',      msg, level) # in AngularJS to die.
-log_warning   = (msg, level) -> ipc.send('log-warning',   msg, level)
-log_error     = (msg, level) -> ipc.send('log-error',     msg, level)
-log_fatal     = (msg, level) -> ipc.send('log-fatal',     msg, level)
-log_debug     = (msg, level) -> ipc.send('log-debug',     msg, level)
-log_verbose   = (msg, level) -> ipc.send('log-verbose',   msg, level)
-log_important = (msg, level) -> ipc.send('log-important', msg, level)
-log_update    = (msg, level) -> ipc.send('log-update',    msg, level)
-log_end       = (msg, level) -> ipc.send('log-end',       msg, level)
-log_raw       = (msg, level) -> ipc.send('log-raw',       msg, level)
+# While ipc.sendSync() would be better for logging, using it kills AngularJS's $apply()
+log = (type, data, level) -> ipc.send("log-#{type}", data, level)
 
-log_levels    = ipc.sendSync('log-levels')
+# Logging helpers
+log_entry            = (msg, level) -> log('entry',            msg, level)
+log_info             = (msg, level) -> log('info',             msg, level)
+log_event            = (msg, level) -> log('event',            msg, level)
+log_game             = (msg, level) -> log('game',             msg, level)
+log_warning          = (msg, level) -> log('warning',          msg, level)
+log_error            = (msg, level) -> log('error',            msg, level)
+log_fatal            = (msg, level) -> log('fatal',            msg, level)
+log_debug            = (msg, level) -> log('debug',            msg, level)
+log_verbose          = (msg, level) -> log('verbose',          msg, level)
+log_important        = (msg, level) -> log('important',        msg, level)
+log_update           = (msg, level) -> log('update',           msg, level)
+log_end              = (msg, level) -> log('end',              msg, level)
+log_raw              = (msg, level) -> log('raw',              msg, level)
+# Indenting functions
+log_indent           = (num, level) -> log('indent',           num, level)
+log_outdent          = (num, level) -> log('outdent',          num, level)
+# Logging helpers (single-indent)
+log_indent.entry     = (msg, level) -> log('indent-entry',     msg, level) # Indenting and outdenting here triples
+log_indent.info      = (msg, level) -> log('indent-info',      msg, level) # the number of ipc calls, so the added
+log_indent.event     = (msg, level) -> log('indent-event',     msg, level) # ipc catches in browser/main are worth
+log_indent.game      = (msg, level) -> log('indent-game',      msg, level) # the extra lines of code.
+log_indent.warning   = (msg, level) -> log('indent-warning',   msg, level)
+log_indent.error     = (msg, level) -> log('indent-error',     msg, level)
+log_indent.fatal     = (msg, level) -> log('indent-fatal',     msg, level)
+log_indent.debug     = (msg, level) -> log('indent-debug',     msg, level)
+log_indent.verbose   = (msg, level) -> log('indent-verbose',   msg, level)
+log_indent.important = (msg, level) -> log('indent-important', msg, level)
+log_indent.update    = (msg, level) -> log('indent-update',    msg, level)
+log_indent.end       = (msg, level) -> log('indent-end',       msg, level)
+log_indent.raw       = (msg, level) -> log('indent-raw',       msg, level)
+# Array of log levels
+log_levels = ipc.sendSync('log-levels')
 
-log_indent    = (num, level) -> ipc.sendSync('log-indent',  num, level)
-log_outdent   = (num, level) -> ipc.sendSync('log-outdent', num, level)
 
 
 module.exports = {

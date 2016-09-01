@@ -116,28 +116,42 @@ log_level = log.levels.verbose  if argv.verbose
 
 log.set_level(log_level)
 # Log entries
-ipc.on 'log-entry',     (event, msg, level) => log.entry     msg, level; event.returnValue = true
-ipc.on 'log-info',      (event, msg, level) => log.info      msg, level; event.returnValue = true
-ipc.on 'log-event',     (event, msg, level) => log.event     msg, level; event.returnValue = true
-ipc.on 'log-game',      (event, msg, level) => log.game      msg, level; event.returnValue = true
-ipc.on 'log-warning',   (event, msg, level) => log.warning   msg, level; event.returnValue = true
-ipc.on 'log-error',     (event, msg, level) => log.error     msg, level; event.returnValue = true
-ipc.on 'log-fatal',     (event, msg, level) => log.fatal     msg, level; event.returnValue = true
-ipc.on 'log-debug',     (event, msg, level) => log.debug     msg, level; event.returnValue = true
-ipc.on 'log-verbose',   (event, msg, level) => log.verbose   msg, level; event.returnValue = true
-ipc.on 'log-important', (event, msg, level) => log.important msg, level; event.returnValue = true
-ipc.on 'log-update',    (event, msg, level) => log.update    msg, level; event.returnValue = true
-ipc.on 'log-end',       (event, msg, level) => log.end       msg, level; event.returnValue = true
-ipc.on 'log-raw',       (event, msg, level) => log.raw       msg, level; event.returnValue = true
-# Array of log levels
-ipc.on 'log-levels',    (event) => event.returnValue = log.levels;
+ipc.on 'log-entry',            (event, msg, level) => log.entry            msg, level; event.returnValue = true
+ipc.on 'log-info',             (event, msg, level) => log.info             msg, level; event.returnValue = true
+ipc.on 'log-event',            (event, msg, level) => log.event            msg, level; event.returnValue = true
+ipc.on 'log-game',             (event, msg, level) => log.game             msg, level; event.returnValue = true
+ipc.on 'log-warning',          (event, msg, level) => log.warning          msg, level; event.returnValue = true
+ipc.on 'log-error',            (event, msg, level) => log.error            msg, level; event.returnValue = true
+ipc.on 'log-fatal',            (event, msg, level) => log.fatal            msg, level; event.returnValue = true
+ipc.on 'log-debug',            (event, msg, level) => log.debug            msg, level; event.returnValue = true
+ipc.on 'log-verbose',          (event, msg, level) => log.verbose          msg, level; event.returnValue = true
+ipc.on 'log-important',        (event, msg, level) => log.important        msg, level; event.returnValue = true
+ipc.on 'log-update',           (event, msg, level) => log.update           msg, level; event.returnValue = true
+ipc.on 'log-end',              (event, msg, level) => log.end              msg, level; event.returnValue = true
+ipc.on 'log-raw',              (event, msg, level) => log.raw              msg, level; event.returnValue = true
 # Indenting functions
-ipc.on 'log-indent',    (event, num, level) => log.indent( num, level); event.returnValue = true
-ipc.on 'log-outdent',   (event, num, level) => log.outdent(num, level); event.returnValue = true
+ipc.on 'log-indent',           (event, num, level) => log.indent           num, level; event.returnValue = true
+ipc.on 'log-outdent',          (event, num, level) => log.outdent          num, level; event.returnValue = true
+# Log entries (single-indent)
+ipc.on 'log-indent-entry',     (event, msg, level) => log.indent.entry     msg, level; event.returnValue = true
+ipc.on 'log-indent-info',      (event, msg, level) => log.indent.info      msg, level; event.returnValue = true
+ipc.on 'log-indent-event',     (event, msg, level) => log.indent.event     msg, level; event.returnValue = true
+ipc.on 'log-indent-game',      (event, msg, level) => log.indent.game      msg, level; event.returnValue = true
+ipc.on 'log-indent-warning',   (event, msg, level) => log.indent.warning   msg, level; event.returnValue = true
+ipc.on 'log-indent-error',     (event, msg, level) => log.indent.error     msg, level; event.returnValue = true
+ipc.on 'log-indent-fatal',     (event, msg, level) => log.indent.fatal     msg, level; event.returnValue = true
+ipc.on 'log-indent-debug',     (event, msg, level) => log.indent.debug     msg, level; event.returnValue = true
+ipc.on 'log-indent-verbose',   (event, msg, level) => log.indent.verbose   msg, level; event.returnValue = true
+ipc.on 'log-indent-important', (event, msg, level) => log.indent.important msg, level; event.returnValue = true
+ipc.on 'log-indent-update',    (event, msg, level) => log.indent.update    msg, level; event.returnValue = true
+ipc.on 'log-indent-end',       (event, msg, level) => log.indent.end       msg, level; event.returnValue = true
+ipc.on 'log-indent-raw',       (event, msg, level) => log.indent.raw       msg, level; event.returnValue = true
+# Array of log levels
+ipc.on 'log-levels',           (event) => event.returnValue = log.levels;
 
 
 # On Linux, renderer processes do not inherit the working directory
-ipc.on 'cwd',           (event, arg) => event.returnValue = process.cwd()
+ipc.on 'cwd',  (event, arg) => event.returnValue = process.cwd()
 
 
 # app.asar/static

@@ -5,7 +5,7 @@ path = require 'path'
 
 
 log_descriptor   = null
-log_level        = 1
+log_level        = 0
 log_indent_level = 0
 
 levels =
@@ -142,40 +142,59 @@ indent_level    = () ->
   log_indent_level
 
 # Increases log indent (with optional log-level)
-increase_indent = (n=1, level=0) ->
+log_indent = (n=1, level=0) ->
   return if level > log_level
   log_indent_level += n
 
+
 # Decreases log indent (with optional log-level)
-decrease_indent = (n=1, level=0) ->
+log_outdent = (n=1, level=0) ->
   return if level > log_level
   log_indent_level  = Math.max(0, log_indent_level-n)
+
+
+# Helper functions (single-indent)
+log_indent.entry     = (str, level) -> log_indent();  log_entry     str, level;  log_outdent();
+log_indent.info      = (str, level) -> log_indent();  log_info      str, level;  log_outdent();
+log_indent.event     = (str, level) -> log_indent();  log_event     str, level;  log_outdent();
+log_indent.game      = (str, level) -> log_indent();  log_game      str, level;  log_outdent();
+log_indent.warning   = (str, level) -> log_indent();  log_warning   str, level;  log_outdent();
+log_indent.error     = (str, level) -> log_indent();  log_error     str, level;  log_outdent();
+log_indent.fatal     = (str, level) -> log_indent();  log_fatal     str, level;  log_outdent();
+log_indent.debug     = (str, level) -> log_indent();  log_debug     str, level;  log_outdent();
+log_indent.verbose   = (str, level) -> log_indent();  log_verbose   str, level;  log_outdent();
+log_indent.important = (str, level) -> log_indent();  log_important str, level;  log_outdent();
+log_indent.update    = (str, level) -> log_indent();  log_update    str, level;  log_outdent();
+log_indent.end       = (str, level) -> log_indent();  log_end       str, level;  log_outdent();
+log_indent.raw       = (str, level) -> log_indent();  log_raw       str, level;  log_outdent();
+log_indent.meta      = (str, level) -> log_indent();  log_meta      str, level;  log_outdent();
+
 
 
 
 module.exports = {
   # Constants
-  levels:        levels       # log-level constants
-  prefixes:      prefixes     # log-level prefixes
+  levels:        levels           # Log-level constants
+  prefixes:      prefixes         # Log-level prefixes
 
   # Functions
-  entry:         log_entry        # normal entry
-  info:          log_info         # info   entry
-  event:         log_event        # etc.
-  game:          log_game         # used for captured game output
-  warning:       log_warning
-  error:         log_error        # Standard error
-  fatal:         log_fatal        # Fatal error
-  debug:         log_debug
-  verbose:       log_verbose
+  entry:         log_entry        # Normal entry
+  info:          log_info         # Info   entry
+  event:         log_event        # Event  entry
+  game:          log_game         # Used for captured game output (log-level 3)
+  warning:       log_warning      # Not an error
+  error:         log_error        # Normal error
+  fatal:         log_fatal        # Fatal  error
+  debug:         log_debug        # Log-level 5
+  verbose:       log_verbose      # Log-level 10
   important:     log_important
-  update:        log_update
+  update:        log_update       # Used by the self-updater
   end:           log_end          # The beginning of the end
   raw:           log_raw          # No timestamp, newlines, etc.
 
-  indent_level:  indent_level
-  indent:        increase_indent  # indent `n` levels, optionally log-level dependent
-  outdent:       decrease_indent  # outdent ...
+  indent_level:  indent_level     # Returns current indent level
+  indent:        log_indent       # indent(num=1, level=normal) plus indent.<entry_type>() single-indent helper functions
+  outdent:       log_outdent      # outdent(num=1, level=normal)
 
-  set_level:     set_level
+  set_level:     set_level        # Sets log-level
 }
