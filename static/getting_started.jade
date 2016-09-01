@@ -29,6 +29,8 @@ html
         h1 Install directory
         p
           | Please select where you would like to install the game. It will be be installed in a StarMade subdirectory in the location you choose.
+        span#blank_path.hidden
+          | You must specify an install directory.
         input(type='text' name='installPath' id='installPath' placeholder='install directory')
         button(id="installBrowse") Browse
         span#linux_info.hidden

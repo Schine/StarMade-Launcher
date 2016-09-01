@@ -267,7 +267,14 @@ installBrowse.addEventListener 'click', ->
 
 
 installContinue.addEventListener 'click', ->
-  # console.log("> using manual path (#{installPath.value})")  ##~
+  # Disallow blank install directories
+  if installPath.value.toString().trim() == ''
+    document.getElementById("blank_path").className = ''        # remove .hidden from blank_path
+    return
+  else
+    document.getElementById("blank_path").className = 'hidden'  # hide it again
+
+
   currentStep = 2
   localStorage.setItem 'installDir', installPath.value
   log.entry "Install path: #{installPath.value}"
