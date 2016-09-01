@@ -6,8 +6,11 @@ path     = require('path')
 remote   = require('remote')
 sanitize = require('sanitize-filename')
 
-dialog = remote.require('dialog')
+dialog      = remote.require('dialog')
 electronApp = remote.require('app')
+
+fileExists  = require('../fileexists').fileExists
+
 
 app = angular.module 'launcher'
 
@@ -155,7 +158,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   $scope.getLastUsedVersion = ->
     for version, i in $scope.versions
       if version.build == $scope.lastVersion
-        $scope.lastUsedVersion = version.version.toString()
+        $scope.lastUsedVersion       =  version.version.toString()
+        $scope.lastUsedVersionHotfix = "#{version.version}#{version.hotfix || ''}"  # used in dialog
         return i.toString()
     return '0'
 
@@ -175,25 +179,25 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       else
         $scope.status = "You are up-to-date for v#{$scope.versions[selectedVersion].version}#{$scope.versions[selectedVersion].hotfix || ""}"
 
+    if $scope.updaterProgress.indeterminateState
+      $scope.status = "Unable to determine installed game version."
+      $scope.status_updateWarning = "Update game to resolve."
+
+
     if !$scope.starmadeInstalled
-      $scope.status = "StarMade.jar missing; click to repair."
-      $scope.status_updateWarning = "This will overwrite any installed mods."
+      $scope.status = ""
+      $scope.status_updateWarning = "Click to install StarMade"
 
 
 
 
-  # Starmade Jar path
-  starmadeJarPath = ->
-    path.resolve "#{$scope.installDir}/StarMade.jar"
+  # Is StarMade is actually installed?
+  isStarMadeInstalled = ->
+    #TODO: Check for the presence of other files as well.  some files -> not intact; no files -> clean
+    $scope.starmadeInstalled = fileExists( path.join($scope.installDir, "StarMade.jar") )
+    return $scope.starmadeInstalled
 
-  # check if StarMade is actually installed
-  bIsStarmadeInstalled = ->
-    try
-      # since Node changes the fs.exists() functions with every version
-      fs.closeSync( fs.openSync(starmadeJarPath(), "r") )
-      return $scope.starmadeInstalled = true
-    catch e
-      return $scope.starmadeInstalled = false
+  #TODO: isStarMadeIntact()
 
 
   branchChange = (newVal) ->
@@ -249,7 +253,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
                 electronApp.quit() if !newVal
             else
               # Update only when selecting a different build version
-              $scope.updaterProgress.needsUpdating = ($scope.versions[$scope.selectedVersion].build != $scope.lastVersion  ||  !bIsStarmadeInstalled())
+              $scope.updaterProgress.needsUpdating = ($scope.versions[$scope.selectedVersion].build != $scope.lastVersion  ||  !isStarMadeInstalled() || $scope.updaterProgress.indeterminateState)
               # updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
       , ->
         $scope.status = 'You are offline.' unless navigator.onLine
@@ -287,7 +291,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     return unless $scope.versions[newVal]?
     return unless navigator.onLine
     # Require an update when selecting a different version
-    $scope.updaterProgress.needsUpdating = ($scope.versions[newVal].build != $scope.lastVersion || !bIsStarmadeInstalled())
+    $scope.updaterProgress.needsUpdating = ($scope.versions[newVal].build != $scope.lastVersion || !isStarMadeInstalled() || $scope.updaterProgress.indeterminateState)
     updateStatus(newVal)
 
   $scope.$watch 'updaterProgress.text', (newVal) ->
@@ -317,15 +321,81 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   if argv.release
     localStorage.setItem('branch', 'release')
 
-  $scope.lastVersion = localStorage.getItem('lastVersion')
-  $scope.branch = localStorage.getItem('branch') || 'release'
-  $scope.installDir = localStorage.getItem('installDir') || path.resolve(path.join(electronApp.getPath('userData'), '..'))
-  $scope.serverPort = localStorage.getItem('serverPort') || '4242'
+
+  #TODO: make this public, have it accept a game id
+  getInstalledVersion = () ->
+    $rootScope.log.event("Determining installed game version", $rootScope.log.levels.verbose)
+    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
+
+    # get current install directory
+    dir = localStorage.getItem('installDir')
+    if not dir?
+      $rootScope.log.error("UpdateCtrl: installDir not set")
+      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+      return null
+
+    # Edge-case: version.txt does not exist
+    if not fileExists(path.join(dir, "version.txt"))
+      # Is it a fresh install?
+      if not fileExists(path.join(dir, "StarMade.jar"))
+        $rootScope.log.info "Fresh install"
+        $rootScope.log.indent()
+        $rootScope.log.debug   "game install path: #{dir}"
+        $rootScope.log.outdent()
+        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+        return null  # unknown version -> suggest updating to latest
+
+      else
+        # Otherwise... indeterminable game state with (at least) version.txt missing.
+        $rootScope.log.error "Unable to determine version of installed game: version.txt missing"
+        $rootScope.log.indent()
+        $rootScope.log.debug    "game install path: #{dir}"
+        $rootScope.log.outdent()
+        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+        # Indeterminable game state requires an update to resolve.
+        $scope.updaterProgress.indeterminateState = true
+        return null  # unknown version -> suggest updating to latest
+
+    # Parse version.txt  (Expected format: 0.199.132#20160802_134223)
+    data = fs.readFileSync(path.join(dir, "version.txt")).toString().trim()  # and strip newline, if present
+
+    # Edge-case: invalid data/format
+    if not data.match(/^[0-9]{1,3}\.[0-9]{1,3}(\.[0-9]{1,3})?#[0-9]{8}_[0-9]+$/)?   # backwards-compatibility with previous 0.xxx version numbering
+      $rootScope.log.error "Unable to determine version of installed game: version.txt contains unexpected data"
+      $rootScope.log.indent()
+      $rootScope.log.debug    "game install path: #{dir}"
+      $rootScope.log.debug    "version contents:  #{data}"
+      $rootScope.log.outdent()
+      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+      # Requires an update to resolve.
+      $scope.updaterProgress.indeterminateState = true
+      return null  # unknown version -> suggest updating to latest
+
+    # Return build data
+    [_version, _build] = data.split('#')
+
+    $rootScope.log.info "Installed game version: #{_version} (build #{_build})"
+    $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+
+    return _build
+
+
+  $scope.installDir  = localStorage.getItem('installDir')  # If this isn't set, we have a serious problem.
+  $scope.branch      = localStorage.getItem('branch')     || 'release'
+  $scope.serverPort  = localStorage.getItem('serverPort') || '4242'
+  $scope.lastVersion = getInstalledVersion()               # Installed build id
+
+  if not $scope.installDir?
+    $rootScope.log.error("UpdateCtrl: installDir not set")
 
   $scope.update = (force = false) ->
     version = $scope.versions[$scope.selectedVersion]
     $scope.lastVersion = version.build
+
+    $rootScope.log.event "Updating game from #{$scope.lastUsedVersionHotfix} to #{version.version}#{version.hotfix || ''}"
+
     $scope.getLastUsedVersion()  # update displayed 'Currently Installed' version
     $scope.status_updateWarning = ""
     $scope.starmadeInstalled = true
+    $scope.updaterProgress.indeterminateState = false
     updater.update(version, $scope.installDir, false, force)
