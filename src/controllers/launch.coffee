@@ -347,15 +347,21 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   $scope.verifyJavaPath = () =>
     newPath = $rootScope.javaPath
-    $rootScope.log.verbose "Verifiying Java path"
-    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
+
+    # Log only once per second (as there are four controller references)
+    _do_logging = true  if not $rootScope.alreadyExecuted('log verifyJavaPath', 1000)
+
+    if _do_logging
+      $rootScope.log.verbose "Verifiying Java path"
+      $rootScope.log.indent(1, $rootScope.log.levels.verbose)
 
     if !newPath  # blank path uses bundled java instead
       $scope.launcherOptions.invalidJavaPath = false
       $scope.launcherOptions.javaPathStatus = "-- Using bundled Java version --"
 
-      $rootScope.log.debug "Using bundled Java"
-      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+      if _do_logging
+        $rootScope.log.debug "Using bundled Java"
+        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       return
 
     newPath = path.resolve(newPath)
@@ -364,17 +370,19 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
        fileExists( path.join(newPath, "java.exe") ) # windows
       $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
       $scope.launcherOptions.invalidJavaPath  = false
-      $rootScope.log.debug "Using custom Java"
-      $rootScope.log.indent.entry "path: #{newPath}"
 
-      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+      if _do_logging
+        $rootScope.log.debug "Using custom Java"
+        $rootScope.log.indent.entry "path: #{newPath}"
+        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       return
 
     $scope.launcherOptions.invalidJavaPath = true
-    $rootScope.log.warning "Invalid Java path specified"
-    $rootScope.log.indent.entry  "path: #{newPath}"
-    $rootScope.log.debug    "Using bundled Java as a fallback"
-    $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+    if _do_logging
+      $rootScope.log.warning "Invalid Java path specified"
+      $rootScope.log.indent.entry  "path: #{newPath}"
+      $rootScope.log.debug    "Using bundled Java as a fallback"
+      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
 
 
   $scope.launch = (dedicatedServer = false) =>
