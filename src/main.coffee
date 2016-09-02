@@ -97,12 +97,25 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
 
 
-  # Forgive me for my sins... they just keep things so clean!
-  $rootScope.alreadyExecuted = (id) ->
+  # Prevent multiple executions, optionally within a specified cooldown
+  $rootScope.alreadyExecuted = (id, cooldown=0) ->
+    # Forgive me for my sins... they just keep things so clean!
     $rootScope.alreadyExecuted.ids or= {}
+    cooldown += Date.now()  if cooldown > 0
 
-    return true  if $rootScope.alreadyExecuted.ids[id] == true
-    $rootScope.alreadyExecuted.ids[id] = true
+    expiry = $rootScope.alreadyExecuted.ids[id]
+
+    if not expiry?
+      # Not executed yet.
+      $rootScope.alreadyExecuted.ids[id] = cooldown
+      return false
+
+    # Already executed?
+    return true  if expiry <= 0           # <1: only execute once
+    return true  if expiry >= Date.now()  # still within cooldown
+
+    # Yes, but out of cooldown.  Refresh ~
+    $rootScope.alreadyExecuted.ids[id] = cooldown
     return false
 
 
