@@ -38,9 +38,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     x64max = 2048
     if not $rootScope.alreadyExecuted 'log low system memory'
       $rootScope.log.info "Low system memory (#{totalRam}mb)"
-      $rootScope.log.indent()
-      $rootScope.log.entry   "Decreased default max memory from 4gb to 2gb"
-      $rootScope.log.outdent()
+      $rootScope.log.indent.entry "Decreased default max memory from 4gb to 2gb"
 
   defaults =
     ia32:
@@ -242,9 +240,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     return  if typeof initial  == "undefined"
 
     $rootScope.log.event("updateMemorySlider():", $rootScope.log.levels.verbose)
-    $rootScope.log.indent()
-    $rootScope.log.verbose "earlyGen: #{earlyGen}     "
-    $rootScope.log.verbose "initial:  #{initial}      "
+    $rootScope.log.indent.verbose "earlyGen: #{earlyGen}"
+    $rootScope.log.indent.verbose "initial:  #{initial}"
 
     updateMemoryFloor()  # update floor whenever initial/earlyGen change
 
@@ -253,9 +250,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $scope.memory.slider = $scope.memory.max
     update_slider_class() # toggles green and labels when at a power of 2
 
-    $rootScope.log.verbose "max:      #{$scope.memory.max}"
-    $rootScope.log.verbose "slider:   #{$scope.memory.slider}"
-    $rootScope.log.outdent()
+    $rootScope.log.indent.verbose "max:      #{$scope.memory.max}"
+    $rootScope.log.indent.verbose "slider:   #{$scope.memory.slider}"
 
     # Workaround for Angular's range bug  (https://github.com/angular/angular.js/issues/6726)
     $timeout ->
@@ -267,19 +263,16 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
     $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
     $rootScope.log.event("updateMemoryFloor():", $rootScope.log.levels.verbose)
-    $rootScope.log.indent()
-    $rootScope.log.verbose "setting memory.floor to #{$scope.memory.floor}"
-    $rootScope.log.outdent()
+    $rootScope.log.indent.verbose "setting memory.floor to #{$scope.memory.floor}"
 
 
   # Load memory settings from storage or set the defaults
   loadMemorySettings = ->
     $rootScope.log.event "Loading memory settings"
-    $rootScope.log.indent()
 
     # Cap max memory to physical ram
     _max = Number(localStorage.getItem('maxMemory')) || Number(defaults[os.arch()].max)
-    $rootScope.log.info "Max memory capped to physical ram"  if _max > defaults[os.arch()].ceiling
+    $rootScope.log.indent.info "Max memory capped to physical ram"  if _max > defaults[os.arch()].ceiling
     _max = Math.min( _max, defaults[os.arch()].ceiling )
 
     $scope.memory =
@@ -289,11 +282,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       ceiling:  Number( defaults[os.arch()].ceiling )
       step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
 
-    $rootScope.log.entry "maxMemory:      #{$scope.memory.max}"
-    $rootScope.log.entry "initialMemory:  #{$scope.memory.initial}"
-    $rootScope.log.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
-    $rootScope.log.entry "ceiling:        #{$scope.memory.ceiling}"
-    $rootScope.log.outdent()
+    $rootScope.log.indent.entry "maxMemory:      #{$scope.memory.max}"
+    $rootScope.log.indent.entry "initialMemory:  #{$scope.memory.initial}"
+    $rootScope.log.indent.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
+    $rootScope.log.indent.entry "ceiling:        #{$scope.memory.ceiling}"
 
     updateMemorySlider()
 
@@ -313,11 +305,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     localStorage.setItem 'earlyGenMemory', $scope.memory.earlyGen
 
     $rootScope.log.event "Saving memory settings"
-    $rootScope.log.indent()
-    $rootScope.log.entry "maxMemory:      #{$scope.memory.max}"
-    $rootScope.log.entry "initialMemory:  #{$scope.memory.initial}"
-    $rootScope.log.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
-    $rootScope.log.outdent()
+    $rootScope.log.indent.entry "maxMemory:      #{$scope.memory.max}"
+    $rootScope.log.indent.entry "initialMemory:  #{$scope.memory.initial}"
+    $rootScope.log.indent.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
 
     $scope.closeClientOptions()
 
@@ -375,25 +365,20 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
       $scope.launcherOptions.invalidJavaPath  = false
       $rootScope.log.debug "Using custom Java"
-      $rootScope.log.indent()
-      $rootScope.log.entry "path: #{newPath}"
-      $rootScope.log.outdent()
+      $rootScope.log.indent.entry "path: #{newPath}"
 
       $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       return
 
     $scope.launcherOptions.invalidJavaPath = true
     $rootScope.log.warning "Invalid Java path specified"
-    $rootScope.log.indent()
-    $rootScope.log.entry      "path: #{newPath}"
-    $rootScope.log.outdent()
+    $rootScope.log.indent.entry  "path: #{newPath}"
     $rootScope.log.debug    "Using bundled Java as a fallback"
     $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
 
 
   $scope.launch = (dedicatedServer = false) =>
     $rootScope.log.event "Launching game"
-    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
     loadMemorySettings()
     $scope.verifyJavaPath()
 
@@ -447,20 +432,15 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     # Debug output
     $rootScope.log.debug "command:"
     command = javaExec + " " + args.join(" ")
-    $rootScope.log.indent()
-    $rootScope.log.debug cmd_slice  for cmd_slice in command.match /.{1,128}/g
-    $rootScope.log.outdent()
+    $rootScope.log.indent.debug  cmd_slice  for cmd_slice in command.match /.{1,128}/g
 
     $rootScope.log.debug "options:"
     $rootScope.log.indent()
-    $rootScope.log.debug "cwd: #{installDir}"
-    $rootScope.log.debug "stdio: #{stdio}"
-    $rootScope.log.debug "detached: #{detach}"
-
+    $rootScope.log.debug   "cwd: #{installDir}"
+    $rootScope.log.debug   "stdio: #{stdio}"
+    $rootScope.log.debug   "detached: #{detach}"
     $rootScope.log.verbose "Environment:"
-    $rootScope.log.indent()
-    $rootScope.log.verbose "  #{envvar} = #{process.env[envvar]}"  for envvar in Object.keys(process.env)
-    $rootScope.log.outdent()
+    $rootScope.log.indent.verbose "  #{envvar} = #{process.env[envvar]}"  for envvar in Object.keys(process.env)
     $rootScope.log.outdent()
 
 
@@ -483,22 +463,16 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       child.stdout.on 'data', (data) ->
         str = ""
         str += String.fromCharCode(char)  for char in data
-        $rootScope.log.indent(1,  $rootScope.log.levels.game)
-        $rootScope.log.game str
-        $rootScope.log.outdent(1, $rootScope.log.levels.game)
+        $rootScope.log.indent.game str
 
       child.stderr.on 'data', (data) =>
         str = ""
         str += String.fromCharCode(char)  for char in data
 
-        $rootScope.log.indent(1,  $rootScope.log.levels.game)
-        $rootScope.log.game(str, $rootScope.log.levels.game)
-        $rootScope.log.outdent(1,  $rootScope.log.levels.game)
+        $rootScope.log.indent.game str
 
       child.on 'close', (code) =>
-        $rootScope.log.indent(1,  $rootScope.log.levels.game)
-        $rootScope.log.event "Game process exited with code #{code}"
-        $rootScope.log.outdent(1,  $rootScope.log.levels.game)
+        $rootScope.log.indent.event("Game process exited with code #{code}", $rootScope.log.levels.game)
 
 
     child.on 'close', ->

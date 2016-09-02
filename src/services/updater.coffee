@@ -27,10 +27,8 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
 
     $rootScope.log.event "Updating game..."
 
-    $rootScope.log.indent()
-    $rootScope.log.info  "(checkOnly)"  if checkOnly
-    $rootScope.log.info  "(forced)"     if force
-    $rootScope.log.outdent()
+    $rootScope.log.indent.info "(checkOnly)"  if checkOnly
+    $rootScope.log.indent.info "(forced)"     if force
 
 
     updaterProgress.curValue = 0
@@ -288,11 +286,9 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
           resolve uniqVersions(versions)
         .error (data, status, headers, config) ->
           $rootScope.log.error "Error fetching #{branch} build index"
-          $rootScope.log.indent()
-          $rootScope.log.debug  "URL:     #{config['url']}"
-          $rootScope.log.debug  "Status:  #{status}"
-          $rootScope.log.verbose  "Headers: #{JSON.stringify headers}"
-          $rootScope.log.outdent()
+          $rootScope.log.indent.debug   "URL:     #{config['url']}"
+          $rootScope.log.indent.debug   "Status:  #{status}"
+          $rootScope.log.indent.verbose "Headers: #{JSON.stringify headers}"
 
           reject data, status, headers, config
 

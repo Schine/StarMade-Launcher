@@ -187,9 +187,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
               .then ->
                 $rootScope.log.entry "Launcher updated!"
                 $rootScope.log.end   "Restarting"
-                $rootScope.log.indent(1, $rootScope.log.levels.verbose)
-                $rootScope.log.verbose  "launcher exec path: #{launcherExec}"
-                $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+                $rootScope.log.indent.verbose "launcher exec path: #{launcherExec}"
 
                 ipc.send 'close-updating'
                 $rootScope.launcherUpdating = false
@@ -200,9 +198,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
               , (err) ->
                 $rootScope.log.error 'Launcher update failed!'
-                $rootScope.log.indent()
-                $rootScope.log.entry err
-                $rootScope.log.outdent()
+                $rootScope.log.indent.entry err
 
                 # remote.showErrorBox('Launcher update failed', 'The launcher failed to update.')
 

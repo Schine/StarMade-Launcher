@@ -40,9 +40,7 @@ app.factory 'Checksum', ($q, $rootScope, updaterProgress) ->
       dest = "#{installDir}/#{@relativePath}"
 
       $rootScope.log.entry "Downloading: #{sourceFilePath}"
-      $rootScope.log.indent()
-      $rootScope.log.entry("To local: #{dest}", $rootScope.log.levels.debug)
-      $rootScope.log.outdent()
+      $rootScope.log.indent.entry("To local: #{dest}", $rootScope.log.levels.debug)
 
       $q (resolve, reject) =>
         async.series [

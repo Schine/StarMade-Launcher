@@ -105,10 +105,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
 
     $rootScope.log.important("Sanitizing path", $rootScope.log.levels.debug)
-    $rootScope.log.indent( 1, $rootScope.log.levels.debug)
-    $rootScope.log.debug "From: #{$scope.popupData.installDir}"
-    $rootScope.log.debug "To:   #{sanitizePath( $scope.popupData.installDir )}"
-    $rootScope.log.outdent(1, $rootScope.log.levels.debug)
+    $rootScope.log.indent.debug "From: #{$scope.popupData.installDir}"
+    $rootScope.log.indent.debug "To:   #{sanitizePath( $scope.popupData.installDir )}"
 
 
     $scope.branch           = $scope.popupData.branch
@@ -339,18 +337,14 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       # Is it a fresh install?
       if not fileExists(path.join(dir, "StarMade.jar"))
         $rootScope.log.info "Fresh install"
-        $rootScope.log.indent()
-        $rootScope.log.debug   "game install path: #{dir}"
-        $rootScope.log.outdent()
+        $rootScope.log.indent.debug "game install path: #{dir}"
         $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
         return null  # unknown version -> suggest updating to latest
 
       else
         # Otherwise... indeterminable game state with (at least) version.txt missing.
         $rootScope.log.error "Unable to determine version of installed game: version.txt missing"
-        $rootScope.log.indent()
-        $rootScope.log.debug    "game install path: #{dir}"
-        $rootScope.log.outdent()
+        $rootScope.log.indent.debug "game install path: #{dir}"
         $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
         # Indeterminable game state requires an update to resolve.
         $scope.updaterProgress.indeterminateState = true
@@ -362,10 +356,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     # Edge-case: invalid data/format
     if not data.match(/^[0-9]{1,3}\.[0-9]{1,3}(\.[0-9]{1,3})?#[0-9]{8}_[0-9]+$/)?   # backwards-compatibility with previous 0.xxx version numbering
       $rootScope.log.error "Unable to determine version of installed game: version.txt contains unexpected data"
-      $rootScope.log.indent()
-      $rootScope.log.debug    "game install path: #{dir}"
-      $rootScope.log.debug    "version contents:  #{data}"
-      $rootScope.log.outdent()
+      $rootScope.log.indent.debug "game install path: #{dir}"
+      $rootScope.log.indent.debug "version contents:  #{data}"
       $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       # Requires an update to resolve.
       $scope.updaterProgress.indeterminateState = true

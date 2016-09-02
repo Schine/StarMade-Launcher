@@ -175,9 +175,7 @@ doRegister = (event) ->
         field = field.substring(0, 1).toUpperCase() + field.substring(1, field.length)
 
         log.error "Error registering account"
-        log.indent()
-        log.entry   "#{field} #{error}"
-        log.outdent()
+        log.indent.entry "#{field} #{error}"
         registerStatus.innerHTML = "#{field} #{error}"
       else
         log.warning "Unable to register account (#{res.statusCode})"

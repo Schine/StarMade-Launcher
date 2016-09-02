@@ -83,18 +83,14 @@ determineInstallDirectory = ->
 
 
   if not install_automatically
-    log.indent()
-    log.info "Suggested path: #{suggested_path}"
-    log.outdent()
+    log.indent.info "Suggested path: #{suggested_path}"
     return
 
 
 # Automatically set the path and move onto the next step
   log.info "Installing automatically"
   localStorage.setItem 'installDir', installPath.value
-  log.indent()
-  log.entry "Here: #{installPath.value}"
-  log.outdent()
+  log.indent.entry "Here: #{installPath.value}"
   currentStep = 2
   step1.style.display = 'none'
   step2.style.display = 'block'
