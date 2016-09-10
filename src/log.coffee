@@ -182,7 +182,7 @@ module.exports = {
   info:          log_info         # Info   entry
   event:         log_event        # Event  entry
   game:          log_game         # Used for captured game output (log-level 3)
-  warning:       log_warning      # Not an error
+  warning:       log_warning      # Achtung
   error:         log_error        # Normal error
   fatal:         log_fatal        # Fatal  error
   debug:         log_debug        # Log-level 5

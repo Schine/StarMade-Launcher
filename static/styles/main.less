@@ -95,6 +95,28 @@ code {
 }
 
 
+div.backupDialog, div.envJavaOptionsWarning {
+  .field-group {
+    margin: 0.5em 0 0 0 !important;
+
+    &.block {
+      display: block;
+      width: 100%;
+    }
+    &.right {
+      float: right;
+    }
+  }
+
+  .highlight {
+    color: darkcyan;
+  }
+
+  button {
+    margin: 0.25em;
+  }
+}
+
 div.envJavaOptionsWarning {
   p       { padding: 0; margin: 0.5em 0 0 0;  }
   p, span { text-align: justify; }
@@ -108,21 +130,6 @@ div.envJavaOptionsWarning {
   .severe  { color: orangered; }
   .warning { color: orange;    }
 
-  .field-group {
-    margin: 0.5em 0 0 0 !important;
-
-    &.block {
-      display: block;
-      width: 100%;
-    }
-    &.right {
-      float: right;
-    }
-  }
-
-  button {
-    margin: 0.25em;
-  }
 }
 
 

@@ -2,6 +2,7 @@
 
 fs       = require('fs')
 os       = require('os')
+ncp      = require('ncp')  # beans
 path     = require('path')
 remote   = require('remote')
 sanitize = require('sanitize-filename')
@@ -162,10 +163,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     return '0'
 
   $scope.selectLastUsedVersion = ->
+    $rootScope.log.verbose "selectLastUsedVersion()"
     $scope.selectedVersion = $scope.getLastUsedVersion()
 
   updateStatus = (selectedVersion) ->
     return if $scope.versions.length == 0
+
+    $rootScope.log.verbose "updateStatus()"
 
     if $scope.updaterProgress.needsUpdating
       $scope.status = "You need to update for v#{$scope.versions[selectedVersion].version}#{$scope.versions[selectedVersion].hotfix || ""}"
@@ -199,6 +203,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
 
   branchChange = (newVal) ->
+    $rootScope.log.verbose "branchChange(#{newVal})"
     $scope.switchingBranch = true
     updater.getVersions newVal
       .then (versions) ->
@@ -275,7 +280,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
   $scope.$watch 'lastVersion', (newVal) ->
     return unless newVal?
-    $scope.popupData.lastVersion = newVal
+    $scope.popupData.lastVersion = newVal  ##- not used?
     localStorage.setItem 'lastVersion', newVal
 
   $scope.$watch 'popupData.selectedVersion', (newVal) ->
@@ -322,30 +327,36 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
   #TODO: make this public, have it accept a game id
   getInstalledVersion = () ->
-    $rootScope.log.event("Determining installed game version", $rootScope.log.levels.verbose)
-    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
+    _do_logging = true  if not $rootScope.alreadyExecuted 'log getInstalledVersion'
+
+    if _do_logging
+      $rootScope.log.event("Determining installed game version", $rootScope.log.levels.verbose)
+      $rootScope.log.indent(1, $rootScope.log.levels.verbose)
 
     # get current install directory
     dir = localStorage.getItem('installDir')
     if not dir?
-      $rootScope.log.error("UpdateCtrl: installDir not set")
-      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+      if _do_logging
+        $rootScope.log.error("UpdateCtrl: installDir not set")
+        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       return null
 
     # Edge-case: version.txt does not exist
     if not fileExists(path.join(dir, "version.txt"))
       # Is it a fresh install?
       if not fileExists(path.join(dir, "StarMade.jar"))
-        $rootScope.log.info "Fresh install"
-        $rootScope.log.indent.debug "game install path: #{dir}"
-        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+        if _do_logging
+          $rootScope.log.info "Fresh install"
+          $rootScope.log.indent.debug "game install path: #{dir}"
+          $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
         return null  # unknown version -> suggest updating to latest
 
       else
         # Otherwise... indeterminable game state with (at least) version.txt missing.
-        $rootScope.log.error "Unable to determine version of installed game: version.txt missing"
-        $rootScope.log.indent.debug "game install path: #{dir}"
-        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+        if _do_logging
+          $rootScope.log.error "Unable to determine version of installed game: version.txt missing"
+          $rootScope.log.indent.debug "game install path: #{dir}"
+          $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
         # Indeterminable game state requires an update to resolve.
         $scope.updaterProgress.indeterminateState = true
         return null  # unknown version -> suggest updating to latest
@@ -355,10 +366,11 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
     # Edge-case: invalid data/format
     if not data.match(/^[0-9]{1,3}\.[0-9]{1,3}(\.[0-9]{1,3})?#[0-9]{8}_[0-9]+$/)?   # backwards-compatibility with previous 0.xxx version numbering
-      $rootScope.log.error "Unable to determine version of installed game: version.txt contains unexpected data"
-      $rootScope.log.indent.debug "game install path: #{dir}"
-      $rootScope.log.indent.debug "version contents:  #{data}"
-      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+      if _do_logging
+        $rootScope.log.error "Unable to determine version of installed game: version.txt contains unexpected data"
+        $rootScope.log.indent.debug "game install path: #{dir}"
+        $rootScope.log.indent.debug "version contents:  #{data}"
+        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       # Requires an update to resolve.
       $scope.updaterProgress.indeterminateState = true
       return null  # unknown version -> suggest updating to latest
@@ -366,8 +378,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     # Return build data
     [_version, _build] = data.split('#')
 
-    $rootScope.log.info "Installed game version: #{_version} (build #{_build})"
-    $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+    if _do_logging
+      $rootScope.log.info "Installed game version: #{_version} (build #{_build})"
+      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
 
     return _build
 
@@ -380,11 +393,158 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   if not $scope.installDir?
     $rootScope.log.error("UpdateCtrl: installDir not set")
 
-  $scope.update = (force = false) ->
+
+
+  copyDir = (source, dest) ->
+    $rootScope.log.verbose "copyDir"
+    $rootScope.log.indent.entry "source: #{source}", $rootScope.log.levels.verbose
+    $rootScope.log.indent.entry "dest:   #{dest}",   $rootScope.log.levels.verbose
+    return new Promise (resolve, reject) ->
+      ncp source, dest, (err) ->
+        reject(err)  if     err?
+        resolve()    if not err?
+
+
+  # Backup specific folder
+  backupFolder = (name, backupPath, itemPath) ->
+    $rootScope.log.entry "Backing up: #{name}..."
+    return new Promise (resolve, reject) ->
+      copyDir(path.join($scope.installDir, itemPath),  path.join(backupPath, itemPath))
+      .then  ()    -> resolve()
+      .catch (err) ->
+        $rootScope.log.indent.entry "Failed"
+        $scope.backupDialogErrorDetailsSection = name
+        reject(err)
+
+
+  $scope.closeBackupDialog = () ->
+    $rootScope.log.verbose "Closing backup dialog"
+    $scope.backupDialog                    = null
+    $scope.backupDialogError               = null
+    $scope.backupDialogErrorDetails        = null
+    $scope.backupDialogErrorDetailsSection = null
+    $scope.backupDialogProgress            = null
+    $scope.backupDialogProgressWorlds      = null
+    $scope.backupDialogProgressBlueprints  = null
+
+
+  $scope.backup = () ->
+    $rootScope.log.event "Performing backup"
+    $rootScope.log.indent()
+
+    # Show backup progress dialog
+    $scope.backupDialogProgress = true
+
+
+    now = new Date
+    # Get date/time portions
+    month   = now.getMonth()+1    # 0-indexed
+    day     = now.getDate()       # 1-indexed
+    hours   = now.getHours()      # 1-indexed
+    minutes = now.getMinutes()    # 1-indexed
+    seconds = now.getSeconds()+1  # 0-indexed
+    # prefix with zeros
+    month   = "0#{month}"    if month   < 10
+    day     = "0#{day}"      if day     < 10
+    hours   = "0#{hours}"    if hours   < 10
+    minutes = "0#{minutes}"  if minutes < 10
+    seconds = "0#{seconds}"  if seconds < 10
+
     version = $scope.versions[$scope.selectedVersion]
+
+
+    # Format: game/backups/2016-09-06 at 17_08_46 from (0.199.132a) to (0.199.169)
+    backupPath  = "#{now.getFullYear()}-#{month}-#{day}"
+    backupPath += " at #{hours}_#{minutes}_#{seconds}"
+    backupPath += " from (#{$scope.lastUsedVersionHotfix})"
+    backupPath += " to (#{version.version}#{version.hotfix || ''})"
+    backupPath  = path.resolve( path.join( path.resolve($scope.installDir), "backups", backupPath) )
+
+    $rootScope.log.verbose "destination: #{backupPath}"
+
+    # Create backup folder
+    try
+      fs.mkdirSync(backupPath)
+    catch err
+      if err.code == "EEXIST"
+        # This should not happen.
+        $rootScope.log.error "Aborting backup: directory already exists"
+        $scope.backupDialogError        = true
+        $scope.backupDialogErrorDetails = "Backup directory already exists.  Please try again"
+      else
+        # build error description
+        desc  = ""
+        desc += err.code + ": "  if err.code?
+        desc += (err.message || "unknown")
+        # Log
+        $rootScope.log.error "Error creating backup folder"
+        $rootScope.log.indent.entry desc
+        # Show error dialog
+        $scope.backupDialogError        = true
+        $scope.backupDialogErrorDetails = desc
+
+      $rootScope.log.outdent()
+      return
+
+    $rootScope.log.verbose "Created backup folder"
+
+
+    # Perform backup
+    new Promise (resolve, reject) ->
+      resolve() # Empty promise allows using $scope.$apply() to update the dialog at each step.
+    .then () ->
+      # Worlds
+      $scope.backupDialogProgressWorlds = true
+      $scope.$apply()
+      backupFolder("Worlds",     backupPath, "server-database")
+    .then () ->
+      # Blueprints
+      $scope.backupDialogProgressBlueprints = true
+      $scope.$apply()
+      backupFolder("Blueprints", backupPath, "blueprints")
+    .then () ->
+      # Complete!
+      $scope.backupDialogProgressComplete = true
+      $scope.backupDialogPath = backupPath
+      $rootScope.log.entry "Complete"
+      $scope.$apply()
+
+    .catch (err) ->
+      $rootScope.log.error "Aborted backup. Reason:"
+      msgs = ["unknown"]
+      msgs = [err]          if err?
+      msgs = [err.message]  if err.message?
+      if typeof err != 'string'  and  Object.keys(err).length > 0
+        msgs = []
+        msgs.push "#{key}: #{err[key]}"  for key in Object.keys(err)
+      $rootScope.log.indent.entry msg  for msg in msgs
+      $rootScope.log.outdent()
+
+      # Display error dialog
+      $scope.backupDialogError        = true
+      $scope.backupDialogErrorDetails = msgs.join(". ").trim()
+      $scope.$apply()
+
+
+
+  $scope.pre_update = (force = false) ->
+    return $scope.update(force)  if $rootScope.noBackup
+    $scope.update_force = force
+    $scope.backupDialog = true
+
+
+  $scope.update = (force = false) ->
+    $scope.closeBackupDialog()
+
+    # Supplied `force` param overrides saved param from `pre_update()`
+    force = force || $scope.update_force
+    $scope.update_force = null
+
+    version = $scope.versions[$scope.selectedVersion]
+    $rootScope.log.verbose "Target version: #{JSON.stringify(version)}"
     $scope.lastVersion = version.build
 
-    $rootScope.log.event "Updating game from #{$scope.lastUsedVersionHotfix} to #{version.version}#{version.hotfix || ''}"
+    $rootScope.log.event "Updating game from #{$scope.lastUsedVersionHotfix} to #{version.version}#{version.hotfix || ''}#{if $scope.selectedVersion == '0' then ' (Latest)' else ''}"
 
     $scope.getLastUsedVersion()  # update displayed 'Currently Installed' version
     $scope.status_updateWarning = ""

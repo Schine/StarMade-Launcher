@@ -63,6 +63,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.attach      = !!argv.attach    || !!argv['capture-game-log']  # attach the game process; default behavior with   --steam
   $rootScope.detach      = !!argv.detach                                   # detach the game process; default behavior witout --steam
   $rootScope.noUpdate    = !!argv.noupdate  || $rootScope.steamLaunch
+  $rootScope.noBackup    = !!argv.nobackup
   $rootScope.debugging   = !!argv.debugging || !!argv.verbose || qa_build
   $rootScope.verbose     = !!argv.verbose
   $rootScope.captureGame = !!argv['capture-game-log']

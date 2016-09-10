@@ -124,12 +124,12 @@ html(ng-app='launcher')
               .field-group.download-options
                 label Download Options
                 br
-                button(ng-click='update()' ng-disabled='updaterProgress.inProgress || switchingBranch') Download Selected Build Version
+                button(ng-click='pre_update()' ng-disabled='updaterProgress.inProgress || switchingBranch') Download Selected Build Version
                 span.description
                   | Repair current download or quickly switch to another Build
                   | Version
               
-                button(ng-click='update(true)' ng-disabled='updaterProgress.inProgress || switchingBranch || popupData.deleting') Force Download All &amp; Overwrite
+                button(ng-click='pre_update(true)' ng-disabled='updaterProgress.inProgress || switchingBranch || popupData.deleting') Force Download All &amp; Overwrite
                 span.description
                   | Force re-download and replace of every file (takes longer)
 
@@ -147,15 +147,64 @@ html(ng-app='launcher')
                   img(src='images/main/launch_tooltip_icon.png' alt='')
               br
               input(id='serverPort' ng-model='serverPort')
+
+
         .status
           | {{status}}
           br
           span(ng-hide:"updaterProgress.inProgress")
             | {{status_updateWarning}}
         .update-bg(ng-class='{hover: updateHover}' ng-show='updaterProgress.needsUpdating && !updaterProgress.inProgress')
-        a.update(ng-click='update()' ng-mouseenter='updateMouseEnter()' ng-mouseleave='updateMouseLeave()')
+        a.update(ng-click='pre_update()' ng-mouseenter='updateMouseEnter()' ng-mouseleave='updateMouseLeave()')
         
         progress-bar(ng-show='updaterProgress.inProgress' cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}')
+
+        div.backupDialog
+          popup(title="Backup" type="settings" opened='backupDialog')
+            //- Initial query
+            div(ng-show="!backupDialogError && !backupDialogProgress")
+              form.side-by-side
+                b Would you like to perform a backup prior to updating?
+                p This will create a backup of your worlds and blueprints, preserving your game data in the unlikely event of something going wrong. The backup will be stored in the backups folder within your game directory.
+                .field-group.block
+                  div.right
+                    button(ng-click='closeBackupDialog()') Cancel
+                  div.left
+                    button(ng-click='backup()') Yes
+                    button(ng-click='update()') No
+            //- Progress
+            div(ng-show="backupDialogProgress && !backupDialogError")
+              form.side-by-side
+                b Backing up your game data
+                ul
+                  li(ng-show="backupDialogProgressWorlds"    ) Worlds...
+                  li(ng-show="backupDialogProgressBlueprints") Blueprints...
+                div(ng-show="backupDialogProgressComplete")
+                  p Complete. 
+                    span(ng-show="backupDialogPath") Your backup is located here:
+                    input(style="width:100%" value="{{backupDialogPath}}" readonly)
+                br
+                span(style="size: 14px").right Click update to continue
+                .field-group.block
+                  div
+                    button.right(ng-click='update()' ng-show="backupDialogProgressComplete") Update
+            //- Error
+            div(ng-show="backupDialogError")
+              form.side-by-side
+                p An error occured during the backup
+                  span(ng-show="backupDialogErrorDetailsSection")  of 
+                    span.highlight {{backupDialogErrorDetailsSection}}
+                  | .
+                  br
+                  | Details follow:
+                pre {{backupDialogErrorDetails || "No details available"}}
+                .field-group.block
+                  div.right
+                    button(ng-click='backup()'           ) Retry
+                    button(ng-click='closeBackupDialog()') Cancel
+                  div.left
+                    button(ng-click='update()'            ) Update anyway
+
 
 
         div(ng-controller="LaunchCtrl")
@@ -243,7 +292,7 @@ html(ng-app='launcher')
                   button(ng-click='saveClientOptions()' ng-disabled="memory.earlyGen >= memory.initial") Save
                   button(ng-click='closeClientOptions()') Cancel
 
-            a.gear.gear-memory(ng-click="openClientMemoryOptions()") &nbsp;
+          a.gear.gear-memory(ng-click="openClientMemoryOptions()") &nbsp;
           .launch-bg(ng-class='{hover: launchHover}' ng-hide='updaterProgress.needsUpdating || updaterProgress.inProgress')
           a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
 
