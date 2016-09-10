@@ -54,7 +54,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
   # Quality Assurance build?  (enables debugging)
-  qa_build = false
+  qa_build = true
 
   $rootScope.log         = require('./log-helpers')  # Logging helpers
   $rootScope.version     =   pkg.version
