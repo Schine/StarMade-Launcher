@@ -141,6 +141,12 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     update_slider_class()
     $rootScope.log.verbose "Slider: Snapping from #{newVal} to #{$scope.memory.max}"
 
+    # Log bounding errors  (these should never happen)
+    if $scope.memory.max > $scope.memory.ceiling
+      $rootScope.log.error "Snapped above memory ceiling (#{$scope.memory.max} > #{$scope.memory.ceiling})"
+    if $scope.memory.max < $scope.memory.floor
+      $rootScope.log.error "Snapped below memory floor (#{$scope.memory.max} < #{$scope.memory.floor})"
+
 
   update_slider_class = () ->
     # ensure there's only one bit set:
