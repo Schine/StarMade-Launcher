@@ -258,6 +258,11 @@ app.on 'before-quit', ->
   log.end "Exiting"
   quitting = true
 
+
+ipc.on 'open-changelog', ->
+  log.event "Opening changelog"
+  openGettingStartedWindow()
+
 ipc.on 'open-licenses', ->
   openGettingStartedWindow('licenses')
   log.verbose "Opened Window: Licenses"

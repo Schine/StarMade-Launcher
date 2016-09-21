@@ -311,6 +311,9 @@ html(ng-app='launcher')
             span.highlight {{buildHash}}
             | )
           br
+          button(ng-click='showChangelog()') Show Changelog
+          span.description
+          br
           button(ng-click='switchUser()') Switch User
           span.description
             | You are currently logged in as:

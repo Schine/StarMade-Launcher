@@ -109,6 +109,16 @@ html
         h1 Launcher updating
         p
           | Please wait, the launcher is updating...
+    div#changelog.step
+      div.side
+      div.content
+        div#log
+          br
+          br
+          include changelog.jade
+        a#closeChangelogBg
+        a#closeChangelog
+          span.hidden Close
     footer
       ul.links#footerLinks
         li

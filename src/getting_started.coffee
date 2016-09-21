@@ -27,7 +27,9 @@ step1 = document.getElementById 'step1'
 step2 = document.getElementById 'step2'
 step3 = document.getElementById 'step3'
 step4 = document.getElementById 'step4'
-updating = document.getElementById 'updating'
+updating  = document.getElementById 'updating'
+changelog = document.getElementById 'changelog'
+
 
 
 showLicenses = ->
@@ -38,7 +40,8 @@ showLicenses = ->
   step2.style.display = 'none'
   step3.style.display = 'none'
   step4.style.display = 'none'
-  updating.style.display = 'none'
+  updating.style.display  = 'none'
+  changelog.style.display = 'none'
   footerLinks.style.display = 'none'
 
 
@@ -142,10 +145,9 @@ if not localStorage.getItem('gotStarted')? and localStorage.getItem('acceptedEul
   # This also prevents a race condition between a) showing the window and b) updating the install directory textbox
   # -- The events required to solve this race condition [getCurrentWindow.on('show' / 'ready-to-show')] currently do not fire.
 
-# console.log(" | currentStep: #{currentStep}")  ##~
-# console.log(" | window.location.href: #{window.location.href}")  ##~
 
-# console.log(" > State block")  ##~
+log.verbose "Getting Started window.location.href: #{window.location.href}"
+
 if localStorage.getItem('gotStarted')?
   if window.location.href.split('?')[1] == 'licenses'
     showLicenses()
@@ -162,8 +164,17 @@ if localStorage.getItem('gotStarted')?
     ipc.send('updating-opened')
     remote.getCurrentWindow().show()
   else
-    window.close()
-    return
+    # Show changelog, if needed.
+    if localStorage.getItem("presented-changelog")?
+      log.debug "Already presented changelog"
+      window.close()
+      return
+
+    log.event "Presenting changelog"
+    step0.style.display     = 'none'
+    changelog.style.display = 'block'
+    localStorage.setItem "presented-changelog", true
+    remote.getCurrentWindow().show()
 else
   currentStep = 0
   log.event "Initial Setup: Step 0 (EULA)"
@@ -375,6 +386,24 @@ skipAlways.addEventListener 'click', ->
   log.entry "Steam Link: Permanently ignoring"
   localStorage.setItem 'steamLinked', 'ignored'
   window.close()
+
+#
+# Changelog
+#
+
+
+closeChangelog = document.getElementById 'closeChangelog'
+
+closeChangelog.addEventListener 'mouseenter', ->
+  closeChangelogBg.className = 'hover'
+
+closeChangelog.addEventListener 'mouseleave', ->
+  closeChangelogBg.className = ''
+
+closeChangelog.addEventListener 'click', ->
+  # ipc.send("changelog-close")
+  window.close()
+
 
 #
 # Footer links

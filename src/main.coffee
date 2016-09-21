@@ -119,6 +119,10 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
     $rootScope.alreadyExecuted.ids[id] = cooldown
     return false
 
+  $rootScope.showChangelog = ->
+    $rootScope.log.debug "showChangelog()"
+    localStorage.removeItem "presented-changelog"
+    ipc.send "open-changelog"
 
   $rootScope.openDownloadPage = ->
     $rootScope.log.event "Opening download page: http://star-made.org/download"
@@ -199,8 +203,10 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           ipc.once 'updating-opened', ->
             updater.updateLauncher(versions[0], launcherDir)
               .then ->
-                $rootScope.log.entry "Launcher updated!"
-                $rootScope.log.end   "Restarting"
+                $rootScope.log.entry   "Launcher updated!"
+                $rootScope.log.end     "Restarting"
+                $rootScope.log.verbose "Presenting changelog next launch"
+                localStorage.removeItem("presented-changelog")
                 $rootScope.log.indent.verbose "launcher exec path: #{launcherExec}"
 
                 ipc.send 'close-updating'
