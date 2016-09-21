@@ -330,19 +330,18 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   $scope.launcherOptions.javaPathBrowse = () =>
     $rootScope.log.event("Browsing for custom java path", $rootScope.log.levels.verbose)
-    $rootScope.log.indent(1, $rootScope.log.levels.verbose)
     dialog.showOpenDialog remote.getCurrentWindow(),
       title: 'Select Java Bin Directory'
       properties: ['openDirectory']
       defaultPath: $scope.launcherOptions.javaPath
     , (newPath) =>
-      if newPath?
-        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+      if not newPath?
+        $rootScope.log.indent.verbose "Canceled"
         return
+      $rootScope.log.indent.verbose "Setting javaPath to #{newPath[0]}"
       $scope.launcherOptions.javaPath = newPath[0]
       $scope.$apply()
       $scope.verifyJavaPath()
-      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
 
 
   $scope.verifyJavaPath = () =>
