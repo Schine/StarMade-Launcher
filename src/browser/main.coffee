@@ -18,14 +18,15 @@ process.argv.slice(1).forEach (arg, index) ->
     argv.debugging = true
     argv.verbose   = true
 
-global.argv = argv
+
+global.argv      = argv
+global.version   = require(path.join(__dirname, '..', '..', 'package.json')).version
+global.buildHash = require('../buildHash.js').buildHash
+global.qa        = true
 
 
 if argv.help?
-  buildHash = require('../buildHash.js').buildHash
-  version   = require(path.join(__dirname, '..', '..', 'package.json')).version
-
-  console.log "StarMade Launcher v#{version} build #{buildHash}"
+  console.log "StarMade Launcher v#{global.version} build #{global.buildHash}" + (if global.qa then " (QA)" else "") + "\n"
   console.log ""
   console.log "Launcher options:"
   console.log " --noupdate          Skip the autoupdate process"
@@ -257,7 +258,6 @@ app.on 'ready', ->
 app.on 'before-quit', ->
   log.end "Exiting"
   quitting = true
-
 
 ipc.on 'open-changelog', ->
   log.event "Opening changelog"
