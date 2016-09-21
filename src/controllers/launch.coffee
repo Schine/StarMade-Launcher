@@ -239,9 +239,12 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     return  if typeof earlyGen == "undefined"
     return  if typeof initial  == "undefined"
 
-    $rootScope.log.event("updateMemorySlider():", $rootScope.log.levels.verbose)
-    $rootScope.log.indent.verbose "earlyGen: #{earlyGen}"
-    $rootScope.log.indent.verbose "initial:  #{initial}"
+    _do_logging = true if not $rootScope.alreadyExecuted("Log - updateMemorySlider", 800)
+
+    if _do_logging?
+      $rootScope.log.event("Updating memory slider", $rootScope.log.levels.verbose)
+      $rootScope.log.indent.verbose "earlyGen: #{earlyGen}"
+      $rootScope.log.indent.verbose "initial:  #{initial}"
 
     updateMemoryFloor()  # update floor whenever initial/earlyGen change
 
@@ -250,8 +253,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $scope.memory.slider = $scope.memory.max
     update_slider_class() # toggles green and labels when at a power of 2
 
-    $rootScope.log.indent.verbose "max:      #{$scope.memory.max}"
-    $rootScope.log.indent.verbose "slider:   #{$scope.memory.slider}"
+    if _do_logging?
+      $rootScope.log.indent.verbose "max:      #{$scope.memory.max}"
+      $rootScope.log.indent.verbose "slider:   #{$scope.memory.slider}"
 
     # Workaround for Angular's range bug  (https://github.com/angular/angular.js/issues/6726)
     $timeout ->
@@ -262,8 +266,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   updateMemoryFloor = () ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
     $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
-    $rootScope.log.event("updateMemoryFloor():", $rootScope.log.levels.verbose)
-    $rootScope.log.indent.verbose "setting memory.floor to #{$scope.memory.floor}"
+    if not $rootScope.alreadyExecuted("Log - updateMemoryFloor", 800)
+      $rootScope.log.event("Updating memory floor", $rootScope.log.levels.verbose)
+      $rootScope.log.indent.verbose "setting memory.floor to #{$scope.memory.floor}"
 
 
   # Load memory settings from storage or set the defaults
