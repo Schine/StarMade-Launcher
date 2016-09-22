@@ -177,14 +177,19 @@ html(ng-app='launcher')
               form.side-by-side
                 b Backing up your game data
                 ul
-                  li(ng-show="backupDialogProgressWorlds"    ) Worlds...
-                  li(ng-show="backupDialogProgressBlueprints") Blueprints...
+                  li(ng-show="backupDialogProgressWorlds"    ) Worlds ... 
+                    span(ng-show="backupDialogProgressWorlds=='complete'") done.
+                    span(ng-show="backupDialogProgressWorlds=='skipped'") skipped.
+                  li(ng-show="backupDialogProgressBlueprints") Blueprints ... 
+                    span(ng-show="backupDialogProgressBlueprints=='complete'") done.
+                    span(ng-show="backupDialogProgressBlueprints=='skipped'") skipped.
+                br
                 div(ng-show="backupDialogProgressComplete")
                   p Complete. 
                     span(ng-show="backupDialogPath") Your backup is located here:
-                    input(style="width:100%" value="{{backupDialogPath}}" readonly)
+                    input(id="backupPath" style="width:100%" value="{{backupDialogPath}}" readonly)
                 br
-                span(style="size: 14px").right Click update to continue
+                span(style="size: 14px" ng-show="backupDialogProgressComplete").right Click update to continue
                 .field-group.block
                   div
                     button.right(ng-click='update()' ng-show="backupDialogProgressComplete") Update

@@ -418,7 +418,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
 
   $scope.closeBackupDialog = () ->
-    $rootScope.log.verbose "Closing backup dialog"
+    if $scope.backupDialog?
+      $rootScope.log.verbose "Closing backup dialog"
     $scope.backupDialog                    = null
     $scope.backupDialogError               = null
     $scope.backupDialogErrorDetails        = null
@@ -462,12 +463,32 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
     $rootScope.log.verbose "destination: #{backupPath}"
 
+    try
+      fs.mkdirSync path.join( path.resolve($scope.installDir), "backups")
+      $rootScope.log.verbose "Created parent backups folder"
+
+    catch err
+      if err.code != "EEXIST"  # Very likely this already exists
+        # build error description
+        desc  = ""
+        desc += err.code + ": "  if err.code?
+        desc += (err.message || "unknown")
+        # Log
+        $rootScope.log.error "Error creating parent backups folder"
+        $rootScope.log.indent.entry desc
+        # Show error dialog
+        $scope.backupDialogError        = true
+        $scope.backupDialogErrorDetails = desc
+        # And exit
+        $rootScope.log.outdent()
+        return
+
     # Create backup folder
     try
-      fs.mkdirSync(backupPath)
+      fs.mkdirSync backupPath
     catch err
       if err.code == "EEXIST"
-        # This should not happen.
+        # This can happen if someone tries creating a second backup too quickly, or sets their clock back.
         $rootScope.log.error "Aborting backup: directory already exists"
         $scope.backupDialogError        = true
         $scope.backupDialogErrorDetails = "Backup directory already exists.  Please try again"
@@ -489,24 +510,43 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     $rootScope.log.verbose "Created backup folder"
 
 
+
     # Perform backup
     new Promise (resolve, reject) ->
       resolve() # Empty promise allows using $scope.$apply() to update the dialog at each step.
+
     .then () ->
       # Worlds
-      $scope.backupDialogProgressWorlds = true
-      $scope.$apply()
-      backupFolder("Worlds",     backupPath, "server-database")
+      if fileExists path.resolve( path.join($scope.installDir, "server-database") )
+        $scope.backupDialogProgressWorlds = true
+        $scope.$apply()
+        backupFolder("Worlds", backupPath, "server-database")
+        $scope.backupDialogProgressWorlds = "complete"
+        $scope.$apply()
+      else
+        $rootScope.log.info "Worlds folder does not exist"
+        $scope.backupDialogProgressWorlds = "skipped"
+        $scope.$apply()
+
     .then () ->
       # Blueprints
-      $scope.backupDialogProgressBlueprints = true
-      $scope.$apply()
-      backupFolder("Blueprints", backupPath, "blueprints")
+      if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
+        $scope.backupDialogProgressBlueprints = true
+        $scope.$apply()
+        backupFolder("Blueprints", backupPath, "blueprints")
+        $scope.backupDialogProgressBlueprints = "complete"
+        $scope.$apply()
+      else
+        $rootScope.log.info "Blueprints folder does not exist"
+        $scope.backupDialogProgressBlueprints = "skipped"
+        $scope.$apply()
+
     .then () ->
       # Complete!
       $scope.backupDialogProgressComplete = true
       $scope.backupDialogPath = backupPath
       $rootScope.log.entry "Complete"
+      $rootScope.log.outdent()
       $scope.$apply()
 
     .catch (err) ->
@@ -528,9 +568,30 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
 
   $scope.pre_update = (force = false) ->
-    return $scope.update(force)  if $rootScope.noBackup
-    $scope.update_force = force
-    $scope.backupDialog = true
+    # Skip if --nobackup
+    if $rootScope.noBackup
+      $rootScope.log.info "Bypassing backup"
+      return $scope.update(force)
+
+    # Ensure game directory exists
+    if not fileExists(path.resolve($scope.installDir))
+      $rootScope.log.info "Skipping backup: fresh install"
+      return $scope.update(force)
+
+    # Ensure at least one of [blueprints, server-database] exist
+    blueprints = fileExists path.resolve( path.join($scope.installDir, "blueprints") )
+    database   = fileExists path.resolve( path.join($scope.installDir, "server-database") )
+
+    if blueprints or database
+      # Show backup dialog
+      $scope.update_force = force
+      $scope.backupDialog = true
+    else
+      # Otherwise, continue with the update
+      $rootScope.log.info "Backup"
+      $rootScope.log.indent.entry "Neither blueprints nor worlds folders exist"
+      $rootScope.log.indent.entry "Aborting backup and continuing with udpdate"
+      $scope.update()
 
 
   $scope.update = (force = false) ->
