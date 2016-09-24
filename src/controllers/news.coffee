@@ -9,7 +9,7 @@ app.controller 'NewsCtrl', ($http, $scope, $rootScope, $sce, NewsSidebarEntry) -
 
       $scope.news = data
       $scope.news.forEach (entry) ->
-        entry.body = entry.body.replace(/style=['"].*["']/g, '')
+        entry.body = entry.body.replace(/style=['"].*?["']/g, '')
         entry.body = $sce.trustAsHtml(entry.body)
     .error ->
       if !navigator.onLine
