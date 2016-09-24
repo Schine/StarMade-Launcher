@@ -582,6 +582,11 @@ div.launcher-options-popup {
     margin-top: 0;
   }
 
+  div.popup-container {
+    // Raise the options popup a bit as it's taller.
+    top: 21% !important;
+  }
+
   div.popup-body {
     div.field-group {
       &.launcher-options {
@@ -589,8 +594,9 @@ div.launcher-options-popup {
 
 
         input {
-          float: left;
-          width: 231px;
+          float:    left;
+          width:    231px;
+          font-size: 75%;
         }
 
         button {
@@ -623,7 +629,7 @@ div.launcher-options-popup {
           }
 
           &:not(:last-child) {
-            height: 36px;
+            height: 29px;
           }
         }
       }

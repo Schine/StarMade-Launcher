@@ -58,7 +58,34 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   # restore previous settings, or use the defaults
   $scope.serverPort               = localStorage.getItem('serverPort') || 4242
   $scope.launcherOptions.javaPath = localStorage.getItem('javaPath')   || ""
+  $scope.launcherOptions.javaArgs = localStorage.getItem("javaArgs")    # Defaults set below
 
+
+  # Custom java args (and defaults)
+
+  $scope.resetJavaArgs = () ->
+    args = []
+    args.push('-Xincgc')
+    args.push('-server')  if (os.arch() == "x64")
+    args = args.join(" ")
+    # Don't bother if they've already been reset
+    return  if $scope.launcherOptions.javaArgs == args
+
+    $scope.launcherOptions.javaArgs = args
+    localStorage.setItem "javaArgs", args
+    $rootScope.log.info "Set javaArgs to defaults"
+    $rootScope.log.indent.entry args
+
+  # Set default javaArgs when not set
+  if not $scope.launcherOptions.javaArgs?
+    $scope.resetJavaArgs()
+
+
+  $scope.setJavaArgs = () ->
+    return  if $scope.launcherOptions.javaArgs == localStorage.getItem("javaArgs")
+    localStorage.setItem "javaArgs", $scope.launcherOptions.javaArgs
+    $rootScope.log.info "Set javaArgs"
+    $rootScope.log.indent.entry $scope.launcherOptions.javaArgs
 
 
   ### _JAVA_OPTIONS Dialog ###
@@ -405,7 +432,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     # Use the custom java path if it's set and valid
     if $rootScope.javaPath && not $scope.launcherOptions.invalidJavaPath
       customJavaPath = $rootScope.javaPath  # `$scope.launcherOptions.javaPath` isn't set right away.
-      $rootScope.log.info "Using custom Java path"
+      $rootScope.log.info "Using custom Java"
     else
       $rootScope.log.info "Using bundled Java"
 
@@ -425,19 +452,24 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     stdio  = 'inherit'
     stdio  = 'pipe' if ($rootScope.captureGame && !detach)
 
-    $rootScope.log.info "Using Java bin path: #{javaBinDir}"
+    $rootScope.log.indent.entry "bin path: #{javaBinDir}"
     $rootScope.log.info "Child process: " + if detach then 'detached' else 'attached'
 
 
+    $rootScope.log.info "Custom java args:"
+    $rootScope.log.indent.entry $scope.launcherOptions.javaArgs
+
     # Argument builder
     args = []
+    # JVM args
     args.push('-verbose:jni')                    if $rootScope.verbose
     args.push('-Djava.net.preferIPv4Stack=true')
     args.push("-Xmn#{$scope.memory.earlyGen}M")
     args.push("-Xms#{$scope.memory.initial}M")
     args.push("-Xmx#{$scope.memory.max}M")
-    args.push('-Xincgc')
-    args.push('-server')                         if (os.arch() == "x64")
+    # Custom args
+    args.push arg  for arg in $scope.launcherOptions.javaArgs.split(" ")
+    # Jar args
     args.push('-jar')
     args.push(starmadeJar)
     args.push('-force')                      unless dedicatedServer
