@@ -103,6 +103,26 @@ div.backupDialog {
     margin-top: 0.5em;
     font-size:   75%;
   }
+  textarea {
+    width:         100%;
+    min-height:    2.5em;
+    max-height:     10em;
+    outline-color: #1f7282;  /* chrome */
+    resize:        vertical;
+    font-size:     80%;
+  }
+
+  form.side-by-side {
+    &.progress textarea {
+      min-height: 2.5em;
+      max-height:   6em;
+    }
+
+    &.error textarea {
+      min-height:  5em;
+      max-height: 10em;
+    }
+  }
 }
 
 
@@ -241,7 +261,7 @@ form {
     }
   }
 
-  select, input {
+  select, input, textarea {
     background-color: #191F29;
     border: 2px solid #30303C;
     color: #FFFFFF;

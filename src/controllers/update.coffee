@@ -15,7 +15,7 @@ fileExists  = require('../fileexists').fileExists
 
 app = angular.module 'launcher'
 
-app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgress) ->
+app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater, updaterProgress) ->
   argv = remote.getGlobal('argv')
 
   $scope.versions = []
@@ -105,9 +105,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       updater.update($scope.versions[$scope.selectedVersion], sanitizePath($scope.popupData.installDir), true)
 
 
-    $rootScope.log.important("Sanitizing path", $rootScope.log.levels.debug)
-    $rootScope.log.indent.debug "From: #{$scope.popupData.installDir}"
-    $rootScope.log.indent.debug "To:   #{sanitizePath( $scope.popupData.installDir )}"
+    $rootScope.log.debug "Sanitizing path"
+    $rootScope.log.indent.entry "From: #{$scope.popupData.installDir}",                 $rootScope.log.levels.debug
+    $rootScope.log.indent.entry "To:   #{sanitizePath( $scope.popupData.installDir )}", $rootScope.log.levels.debug
 
 
     $scope.branch           = $scope.popupData.branch
@@ -347,7 +347,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       if not fileExists(path.join(dir, "StarMade.jar"))
         if _do_logging
           $rootScope.log.info "Fresh install"
-          $rootScope.log.indent.debug "game install path: #{dir}"
+          $rootScope.log.indent.debug "Game install path: #{dir}"
           $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
         return null  # unknown version -> suggest updating to latest
 
@@ -355,7 +355,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
         # Otherwise... indeterminable game state with (at least) version.txt missing.
         if _do_logging
           $rootScope.log.error "Unable to determine version of installed game: version.txt missing"
-          $rootScope.log.indent.debug "game install path: #{dir}"
+          $rootScope.log.indent.debug "Game install path: #{dir}"
           $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
         # Indeterminable game state requires an update to resolve.
         $scope.updaterProgress.indeterminateState = true
@@ -368,8 +368,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     if not data.match(/^[0-9]{1,3}\.[0-9]{1,3}(\.[0-9]{1,3})?#[0-9]{8}_[0-9]+$/)?   # backwards-compatibility with previous 0.xxx version numbering
       if _do_logging
         $rootScope.log.error "Unable to determine version of installed game: version.txt contains unexpected data"
-        $rootScope.log.indent.debug "game install path: #{dir}"
-        $rootScope.log.indent.debug "version contents:  #{data}"
+        $rootScope.log.indent.debug "Game install path: #{dir}"
+        $rootScope.log.indent.debug "Version contents:  #{data}"
         $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       # Requires an update to resolve.
       $scope.updaterProgress.indeterminateState = true
@@ -396,9 +396,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
 
   copyDir = (source, dest) ->
-    $rootScope.log.verbose "copyDir"
-    $rootScope.log.indent.entry "source: #{source}", $rootScope.log.levels.verbose
-    $rootScope.log.indent.entry "dest:   #{dest}",   $rootScope.log.levels.verbose
+    $rootScope.log.verbose "copyDir()"
+    $rootScope.log.indent.entry "Source: #{source}", $rootScope.log.levels.verbose
+    $rootScope.log.indent.entry "Dest:   #{dest}",   $rootScope.log.levels.verbose
     return new Promise (resolve, reject) ->
       ncp source, dest, (err) ->
         reject(err)  if     err?
@@ -409,10 +409,14 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
   backupFolder = (name, backupPath, itemPath) ->
     $rootScope.log.entry "Backing up: #{name}..."
     return new Promise (resolve, reject) ->
+      $rootScope.log.indent()
       copyDir(path.join($scope.installDir, itemPath),  path.join(backupPath, itemPath))
-      .then  ()    -> resolve()
+      .then () ->
+        $rootScope.log.outdent()
+        resolve()
       .catch (err) ->
-        $rootScope.log.indent.entry "Failed"
+        $rootScope.log.entry "Failed"
+        $rootScope.log.outdent()
         $scope.backupDialogErrorDetailsSection = name
         reject(err)
 
@@ -461,24 +465,23 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
     backupPath += " to (#{version.version}#{version.hotfix || ''})"
     backupPath  = path.resolve( path.join( path.resolve($scope.installDir), "backups", backupPath) )
 
-    $rootScope.log.verbose "destination: #{backupPath}"
+    $rootScope.log.verbose "Destination: #{backupPath}"
 
     try
       fs.mkdirSync path.join( path.resolve($scope.installDir), "backups")
       $rootScope.log.verbose "Created parent backups folder"
 
     catch err
-      if err.code != "EEXIST"  # Very likely this already exists
+      if err.code != "EEXIST"  # This very likely already exists
         # build error description
-        desc  = ""
-        desc += err.code + ": "  if err.code?
-        desc += (err.message || "unknown")
+        desc = (err.message || "unknown")
         # Log
         $rootScope.log.error "Error creating parent backups folder"
         $rootScope.log.indent.entry desc
-        # Show error dialog
-        $scope.backupDialogError        = true
-        $scope.backupDialogErrorDetails = desc
+        # Show error dialog (using $timeout to wait for the next $digest cycle; it will not show otherwise)
+        $timeout ->
+          $scope.backupDialogError        = true
+          $scope.backupDialogErrorDetails = desc
         # And exit
         $rootScope.log.outdent()
         return
@@ -490,8 +493,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       if err.code == "EEXIST"
         # This can happen if someone tries creating a second backup too quickly, or sets their clock back.
         $rootScope.log.error "Aborting backup: directory already exists"
-        $scope.backupDialogError        = true
-        $scope.backupDialogErrorDetails = "Backup directory already exists.  Please try again"
+        $timeout ->
+          $scope.backupDialogError        = true
+          $scope.backupDialogErrorDetails = "Backup directory already exists.  Please try again"
       else
         # build error description
         desc  = ""
@@ -501,8 +505,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
         $rootScope.log.error "Error creating backup folder"
         $rootScope.log.indent.entry desc
         # Show error dialog
-        $scope.backupDialogError        = true
-        $scope.backupDialogErrorDetails = desc
+        $timeout ->
+          $scope.backupDialogError        = true
+          $scope.backupDialogErrorDetails = desc
 
       $rootScope.log.outdent()
       return
@@ -511,45 +516,96 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
 
 
 
-    # Perform backup
-    new Promise (resolve, reject) ->
-      resolve() # Empty promise allows using $scope.$apply() to update the dialog at each step.
+    # Backup configs
+    backupConfigs = new Promise (resolve, reject) ->
+      $rootScope.log.entry "Backing up: Configs..."
+      $rootScope.log.indent.verbose "From: #{$scope.installDir}"
+      $rootScope.log.indent.verbose "To:   #{backupPath}"
 
-    .then () ->
-      # Worlds
+      $timeout ->
+        $scope.backupDialogProgressConfigs = true
+
+
+      # Copy each config in turn
+      configs               = ["settings.cfg", "server.cfg", "keyboard.cfg", "joystick.cfg"]
+      configPromises        = []
+      window._found_configs = false
+
+      for config in configs
+        source = path.resolve( path.join($scope.installDir, config) )
+        if fileExists source
+          window._found_configs = true
+          $rootScope.log.indent.verbose "Copying #{config}"
+          configPromises.push new Promise (resolve, reject) ->
+            # To copy a single file with NCP, the destination must also include the filename
+            ncp source, path.join(backupPath, config), (err) ->
+              resolve(config)  if not err
+              if err
+                $rootScope.log.indent.error "Error copying config: #{err}"
+                $timeout ->
+                  $scope.backupDialogProgressWorlds = "error"
+                reject(err)
+
+
+      # Wait for copying to finish
+      $q.all(configPromises).then () ->  # (Success)
+          resolve()  # and continue with the backup
+
+          if window._found_configs
+            $rootScope.log.verbose "Configs backed up successfully"
+            $timeout ->
+              $scope.backupDialogProgressConfigs = "complete"
+          else
+            $rootScope.log.indent.entry "No configs found"
+            $timeout ->
+              $scope.backupDialogProgressConfigs = "skipped"
+
+        , (err) ->  # (Failure, Rosebud)
+          $rootScope.log.indent.error "Error backing up configs"
+          reject(err)
+
+
+    # Backup worlds
+    backupWorlds = backupConfigs.then () -> return new Promise (resolve, reject) ->
       if fileExists path.resolve( path.join($scope.installDir, "server-database") )
         $scope.backupDialogProgressWorlds = true
-        $scope.$apply()
-        backupFolder("Worlds", backupPath, "server-database")
-        $scope.backupDialogProgressWorlds = "complete"
-        $scope.$apply()
+        backupFolder("Worlds", backupPath, "server-database").then () ->
+          $rootScope.log.verbose "Worlds backed up successfully"
+          resolve()
+          $timeout ->
+            $scope.backupDialogProgressWorlds = "complete"
       else
         $rootScope.log.info "Worlds folder does not exist"
-        $scope.backupDialogProgressWorlds = "skipped"
-        $scope.$apply()
+        resolve()
+        $timeout ->
+          $scope.backupDialogProgressWorlds = "skipped"
 
-    .then () ->
-      # Blueprints
+
+    # Backup blueprints
+    backupBlueprints = backupWorlds.then () -> return new Promise (resolve, reject) ->
       if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
         $scope.backupDialogProgressBlueprints = true
-        $scope.$apply()
-        backupFolder("Blueprints", backupPath, "blueprints")
-        $scope.backupDialogProgressBlueprints = "complete"
-        $scope.$apply()
+        backupFolder("Blueprints", backupPath, "blueprints").then () ->
+          $rootScope.log.verbose "Blueprints backed up successfully"
+          resolve()
+          $timeout ->
+            $scope.backupDialogProgressBlueprints = "complete"
       else
         $rootScope.log.info "Blueprints folder does not exist"
-        $scope.backupDialogProgressBlueprints = "skipped"
-        $scope.$apply()
+        resolve()
+        $timeout ->
+          $scope.backupDialogProgressBlueprints = "skipped"
 
-    .then () ->
-      # Complete!
-      $scope.backupDialogProgressComplete = true
-      $scope.backupDialogPath = backupPath
-      $rootScope.log.entry "Complete"
+
+    # Complete!
+    $q.all([backupConfigs, backupWorlds, backupBlueprints]).then () ->  # Success
+      $rootScope.log.entry "Backup complete"
       $rootScope.log.outdent()
-      $scope.$apply()
+      $timeout ->
+        $scope.backupDialogProgressComplete = true
+        $scope.backupDialogPath             = backupPath
 
-    .catch (err) ->
+    , (err) ->  # Failure
       $rootScope.log.error "Aborted backup. Reason:"
       msgs = ["unknown"]
       msgs = [err]          if err?
@@ -561,9 +617,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, updater, updaterProgr
       $rootScope.log.outdent()
 
       # Display error dialog
-      $scope.backupDialogError        = true
-      $scope.backupDialogErrorDetails = msgs.join(". ").trim()
-      $scope.$apply()
+      $timeout ->
+        $scope.backupDialogError        = true
+        $scope.backupDialogErrorDetails = msgs.join(". ").trim()
 
 
 
