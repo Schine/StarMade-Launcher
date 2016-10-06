@@ -190,6 +190,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       $scope.status = ""
       $scope.status_updateWarning = "Click to install StarMade"
 
+    $rootScope.log.indent.entry "Status:  #{$scope.status}",               $rootScope.log.levels.verbose
+    $rootScope.log.indent.entry "Status2: #{$scope.status_updateWarning}", $rootScope.log.levels.verbose
 
 
 
@@ -203,7 +205,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
 
   branchChange = (newVal) ->
-    $rootScope.log.verbose "branchChange(#{newVal})"
+    $rootScope.log.event "Changing branch to #{newVal.charAt(0).toUpperCase()}#{newVal.slice(1)}"  # Capitalize first character
     $scope.switchingBranch = true
     updater.getVersions newVal
       .then (versions) ->
@@ -285,6 +287,10 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
   $scope.$watch 'popupData.selectedVersion', (newVal) ->
     $scope.selectedVersion = newVal
+    return if not newVal?
+
+    version = $scope.versions[$scope.selectedVersion]
+    $rootScope.log.event "Changed selected version to #{version.version}#{version.hotfix || ''}#{if $scope.selectedVersion == '0' then ' (Latest)' else ''}"
 
   $scope.$watch 'serverPort', (newVal) ->
     localStorage.setItem 'serverPort', newVal
