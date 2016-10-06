@@ -458,15 +458,16 @@ body.getting_started {
 
       div.content {
         a#closeChangelogBg {
-          background-image: url(../images/getting_started/continue_btn.png);
+          position:          absolute;
+          top:               338px;
+          left:              0;
+          width:             200px;
+          height:            166px;
+          background-image:  url(../images/getting_started/continue_btn.png);
           background-repeat: no-repeat;
-          left: 0;
-          height: 166px;
-          position: absolute;
-          transition: .3s;
-          top: 338px;
-          width: 200px;
-          z-index: 0;
+          cursor:            default;
+          z-index:           0;
+          transition:        0.3s;
 
 
           &.hover {
