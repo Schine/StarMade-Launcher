@@ -160,9 +160,9 @@ html(ng-app='launcher')
         progress-bar(ng-show='updaterProgress.inProgress' cur-value='{{updaterProgress.curValue}}' max-value='{{updaterProgress.maxValue}}')
 
         div.backupDialog
-          popup(title="Backup" type="settings" opened='backupDialog')
+          popup(title="Backup" type="settings" opened='backupDialog.visible')
             //- Initial query
-            div(ng-show="!backupDialogError && !backupDialogProgress")
+            div(ng-show="!backupDialog.error.visible && !backupDialog.progress.visible")
               form.side-by-side.initial
                 b Would you like to perform a backup prior to updating?
                 p This will create a backup of your worlds and blueprints, preserving your game data in the unlikely event of something going wrong. The backup will be stored in the backups folder within your game directory.
@@ -173,41 +173,41 @@ html(ng-app='launcher')
                     button(ng-click='backup()') Yes
                     button(ng-click='update()') No
             //- Progress
-            div(ng-show="backupDialogProgress && !backupDialogError")
+            div(ng-show="backupDialog.progress.visible && !backupDialog.error.visible")
               form.side-by-side.progress
                 b Backing up your game data
                 ul
-                  li(ng-show="backupDialogProgressConfigs"    ) Configs ... 
-                    span(ng-show="backupDialogProgressConfigs=='complete'") done
-                    span(ng-show="backupDialogProgressConfigs=='skipped'") skipped
-                  li(ng-show="backupDialogProgressWorlds"    ) Worlds ... 
-                    span(ng-show="backupDialogProgressWorlds=='complete'") done
-                    span(ng-show="backupDialogProgressWorlds=='skipped'") skipped
-                  li(ng-show="backupDialogProgressBlueprints") Blueprints ... 
-                    span(ng-show="backupDialogProgressBlueprints=='complete'") done
-                    span(ng-show="backupDialogProgressBlueprints=='skipped'") skipped
+                  li(ng-show="backupDialog.progress.configs") Configs ... 
+                    span(ng-show="backupDialog.progress.configs=='complete'") done
+                    span(ng-show="backupDialog.progress.configs=='skipped'") skipped
+                  li(ng-show="backupDialog.progress.worlds") Worlds ... 
+                    span(ng-show="backupDialog.progress.worlds=='complete'") done
+                    span(ng-show="backupDialog.progress.worlds=='skipped'") skipped
+                  li(ng-show="backupDialog.progress.blueprints") Blueprints ... 
+                    span(ng-show="backupDialog.progress.blueprints=='complete'") done
+                    span(ng-show="backupDialog.progress.blueprints=='skipped'") skipped
                 br
-                div(ng-show="backupDialogProgressComplete")
+                div(ng-show="backupDialog.progress.complete")
                   p Complete. 
-                    span(ng-show="backupDialogPath") Your backup is located here:
+                    span(ng-show="backupDialog.path") Your backup is located here:
                     textarea(id="backupPath" readonly)
-                      | {{backupDialogPath}}
+                      | {{backupDialog.path}}
                 br
-                span(style="size: 14px" ng-show="backupDialogProgressComplete").right Click update to continue
+                span(style="size: 14px" ng-show="backupDialog.progress.complete").right Click update to continue
                 .field-group.block
                   div
-                    button.right(ng-click='update()' ng-show="backupDialogProgressComplete") Update
+                    button.right(ng-click='update()' ng-show="backupDialog.progress.complete") Update
             //- Error
-            div(ng-show="backupDialogError")
+            div(ng-show="backupDialog.error.visible")
               form.side-by-side.error
                 p An error occured during the backup
-                  span(ng-show="backupDialogErrorDetailsSection")  of 
-                    span.highlight {{backupDialogErrorDetailsSection}}
+                  span(ng-show="backupDialog.error.detailsSection")  of 
+                    span.highlight {{backupDialog.error.detailsSection}}
                   | .
                   br
                   | Details follow:
                 textarea(readonly)
-                  | {{backupDialogErrorDetails || "No details available"}}
+                  | {{backupDialog.error.details || "No details available"}}
                 .field-group.block
                   div.right
                     button(ng-click='backup()'           ) Retry

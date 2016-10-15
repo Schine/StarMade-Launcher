@@ -29,6 +29,10 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
   $scope.popupData = {}
 
+  $scope.backupDialog           = {}
+  $scope.backupDialog.error     = {}
+  $scope.backupDialog.progress  = {}
+
   $scope.showPlayTab = ->
     $scope.onPlayTab = true
     $scope.onDedicatedTab = false
@@ -423,20 +427,20 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       .catch (err) ->
         $rootScope.log.entry "Failed"
         $rootScope.log.outdent()
-        $scope.backupDialogErrorDetailsSection = name
+        $scope.backupDialog.error.detailsSection = name
         reject(err)
 
 
   $scope.closeBackupDialog = () ->
-    if $scope.backupDialog?
+    if $scope.backupDialog.visible?
       $rootScope.log.verbose "Closing backup dialog"
-    $scope.backupDialog                    = null
-    $scope.backupDialogError               = null
-    $scope.backupDialogErrorDetails        = null
-    $scope.backupDialogErrorDetailsSection = null
-    $scope.backupDialogProgress            = null
-    $scope.backupDialogProgressWorlds      = null
-    $scope.backupDialogProgressBlueprints  = null
+    $scope.backupDialog.visible              = null
+    $scope.backupDialog.error.visible        = null
+    $scope.backupDialog.error.details        = null
+    $scope.backupDialog.error.detailsSection = null
+    $scope.backupDialog.progress.visible     = null
+    $scope.backupDialog.progress.worlds      = null
+    $scope.backupDialog.progress.blueprints  = null
 
 
   $scope.backup = () ->
@@ -444,7 +448,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     $rootScope.log.indent()
 
     # Show backup progress dialog
-    $scope.backupDialogProgress = true
+    $scope.backupDialog.progress.visible = true
 
 
     now = new Date
@@ -486,8 +490,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
         $rootScope.log.indent.entry desc
         # Show error dialog (using $timeout to wait for the next $digest cycle; it will not show otherwise)
         $timeout ->
-          $scope.backupDialogError        = true
-          $scope.backupDialogErrorDetails = desc
+          $scope.backupDialog.error.visible = true
+          $scope.backupDialog.error.details = desc
         # And exit
         $rootScope.log.outdent()
         return
@@ -500,8 +504,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
         # This can happen if someone tries creating a second backup too quickly, or sets their clock back.
         $rootScope.log.error "Aborting backup: directory already exists"
         $timeout ->
-          $scope.backupDialogError        = true
-          $scope.backupDialogErrorDetails = "Backup directory already exists.  Please try again"
+          $scope.backupDialog.error.visible = true
+          $scope.backupDialog.error.details = "Backup directory already exists.  Please try again"
       else
         # build error description
         desc  = ""
@@ -512,8 +516,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
         $rootScope.log.indent.entry desc
         # Show error dialog
         $timeout ->
-          $scope.backupDialogError        = true
-          $scope.backupDialogErrorDetails = desc
+          $scope.backupDialog.error.visible = true
+          $scope.backupDialog.error.details = desc
 
       $rootScope.log.outdent()
       return
@@ -529,7 +533,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       $rootScope.log.indent.verbose "To:   #{backupPath}"
 
       $timeout ->
-        $scope.backupDialogProgressConfigs = true
+        $scope.backupDialog.progress.configs = true
 
 
       # Copy each config in turn
@@ -549,7 +553,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
               if err
                 $rootScope.log.indent.error "Error copying config: #{err}"
                 $timeout ->
-                  $scope.backupDialogProgressWorlds = "error"
+                  $scope.backupDialog.progress.worlds = "error"
                 reject(err)
 
 
@@ -560,11 +564,11 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
           if window._found_configs
             $rootScope.log.verbose "Configs backed up successfully"
             $timeout ->
-              $scope.backupDialogProgressConfigs = "complete"
+              $scope.backupDialog.progress.configs = "complete"
           else
             $rootScope.log.indent.entry "No configs found"
             $timeout ->
-              $scope.backupDialogProgressConfigs = "skipped"
+              $scope.backupDialog.progress.configs = "skipped"
 
         , (err) ->  # (Failure, Rosebud)
           $rootScope.log.indent.error "Error backing up configs"
@@ -574,33 +578,33 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     # Backup worlds
     backupWorlds = backupConfigs.then () -> return new Promise (resolve, reject) ->
       if fileExists path.resolve( path.join($scope.installDir, "server-database") )
-        $scope.backupDialogProgressWorlds = true
+        $scope.backupDialog.progress.worlds = true
         backupFolder("Worlds", backupPath, "server-database").then () ->
           $rootScope.log.verbose "Worlds backed up successfully"
           resolve()
           $timeout ->
-            $scope.backupDialogProgressWorlds = "complete"
+            $scope.backupDialog.progress.worlds = "complete"
       else
         $rootScope.log.info "Worlds folder does not exist"
         resolve()
         $timeout ->
-          $scope.backupDialogProgressWorlds = "skipped"
+          $scope.backupDialog.progress.worlds = "skipped"
 
 
     # Backup blueprints
     backupBlueprints = backupWorlds.then () -> return new Promise (resolve, reject) ->
       if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
-        $scope.backupDialogProgressBlueprints = true
+        $scope.backupDialog.progress.blueprints = true
         backupFolder("Blueprints", backupPath, "blueprints").then () ->
           $rootScope.log.verbose "Blueprints backed up successfully"
           resolve()
           $timeout ->
-            $scope.backupDialogProgressBlueprints = "complete"
+            $scope.backupDialog.progress.blueprints = "complete"
       else
         $rootScope.log.info "Blueprints folder does not exist"
         resolve()
         $timeout ->
-          $scope.backupDialogProgressBlueprints = "skipped"
+          $scope.backupDialog.progress.blueprints = "skipped"
 
 
     # Complete!
@@ -608,8 +612,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       $rootScope.log.entry "Backup complete"
       $rootScope.log.outdent()
       $timeout ->
-        $scope.backupDialogProgressComplete = true
-        $scope.backupDialogPath             = backupPath
+        $scope.backupDialog.progress.complete = true
+        $scope.backupDialog.path              = backupPath
 
     , (err) ->  # Failure
       $rootScope.log.error "Aborted backup. Reason:"
@@ -624,8 +628,8 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
       # Display error dialog
       $timeout ->
-        $scope.backupDialogError        = true
-        $scope.backupDialogErrorDetails = msgs.join(". ").trim()
+        $scope.backupDialog.error         = true
+        $scope.backupDialog.error.details = msgs.join(". ").trim()
 
 
 
@@ -647,7 +651,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     if blueprints or database
       # Show backup dialog
       $scope.update_force = force
-      $scope.backupDialog = true
+      $scope.backupDialog.visible = true
     else
       # Otherwise, continue with the update
       $rootScope.log.info "Backup"
