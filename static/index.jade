@@ -164,13 +164,26 @@ html(ng-app='launcher')
             //- Initial query
             div(ng-show="!backupDialog.error.visible && !backupDialog.progress.visible")
               form.side-by-side.initial
-                b Would you like to perform a backup prior to updating?
-                p This will create a backup of your worlds and blueprints, preserving your game data in the unlikely event of something going wrong. The backup will be stored in the backups folder within your game directory.
+                b.bright Would you like to perform a backup prior to updating?
+                p This will preserve your game data in the unlikely event of something going wrong. The backup will be stored in the backups folder within your game directory.
+                br
+                | Please select what you would like backed up:
+                .backupOptions.field-group.block
+                  input(type="checkbox" ng-model="backupOptions.configs")
+                  span Include Configs
+                  br
+                  input(type="checkbox" ng-model="backupOptions.worlds")
+                  span Include Worlds
+                  br
+                  input(type="checkbox" ng-model="backupOptions.blueprints")
+                  span Include Blueprints
+                  br
+
                 .field-group.block
                   div.right
                     button(ng-click='closeBackupDialog()') Cancel
                   div.left
-                    button(ng-click='backup()') Yes
+                    button(ng-click='backup()' ng-disabled="!(backupOptions.configs || backupOptions.worlds || backupOptions.blueprints)") Yes
                     button(ng-click='update()') No
             //- Progress
             div(ng-show="backupDialog.progress.visible && !backupDialog.error.visible")
@@ -187,8 +200,9 @@ html(ng-app='launcher')
                     span(ng-show="backupDialog.progress.blueprints=='complete'") done
                     span(ng-show="backupDialog.progress.blueprints=='skipped'") skipped
                 br
-                div(ng-show="backupDialog.progress.complete")
-                  p Complete. 
+                div(ng-show=" backupDialog.progress.complete")
+                  p(ng-show=" backupDialog.skipped") Backup Skipped!
+                  p(ng-show="!backupDialog.skipped") Complete. 
                     span(ng-show="backupDialog.path") Your backup is located here:
                     textarea(id="backupPath" readonly)
                       | {{backupDialog.path}}

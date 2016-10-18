@@ -29,9 +29,51 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
   $scope.popupData = {}
 
+
+  strToBool = (str) ->
+    return true   if str == "true"
+    return false  if str == "false"
+    null
+
+  $scope.backupOptions            = {}
+  # localStorage values are always strings, hence strToBool()
+  $scope.backupOptions.configs    = strToBool localStorage.getItem('backupConfigs')
+  $scope.backupOptions.worlds     = strToBool localStorage.getItem('backupWorlds')
+  $scope.backupOptions.blueprints = strToBool localStorage.getItem('backupBlueprints')
+  # Set Defaults   (as unset values are falsey, || won't work)
+  $scope.backupOptions.configs    = true  if $scope.backupOptions.configs    == null
+  $scope.backupOptions.worlds     = true  if $scope.backupOptions.worlds     == null
+  $scope.backupOptions.blueprints = true  if $scope.backupOptions.blueprints == null
+
+  $rootScope.log.info "Backup options:",  $rootScope.log.levels.verbose
+  $rootScope.log.indent.entry "configs:    #{$scope.backupOptions.configs}",    $rootScope.log.levels.verbose
+  $rootScope.log.indent.entry "worlds:     #{$scope.backupOptions.worlds}",     $rootScope.log.levels.verbose
+  $rootScope.log.indent.entry "blueprints: #{$scope.backupOptions.blueprints}", $rootScope.log.levels.verbose
+
+
   $scope.backupDialog           = {}
   $scope.backupDialog.error     = {}
+  $scope.backupDialog.skipped   = false
   $scope.backupDialog.progress  = {}
+
+
+  # Save backup options for subsequent sessions
+  $scope.$watch 'backupOptions.configs', (newVal) ->
+    localStorage.setItem 'backupConfigs', newVal
+    $timeout () ->
+      $rootScope.log.verbose "set backupConfigs    to #{newVal} (localStorage reread: #{localStorage.getItem('backupConfigs')})"
+
+  $scope.$watch 'backupOptions.worlds', (newVal) ->
+    localStorage.setItem 'backupWorlds', newVal
+    $timeout () ->
+      $rootScope.log.verbose "set backupWorlds     to #{newVal} (localStorage reread: #{localStorage.getItem('backupWorlds')})"
+
+  $scope.$watch 'backupOptions.blueprints', (newVal) ->
+    localStorage.setItem 'backupBlueprints', newVal
+    $timeout () ->
+      $rootScope.log.verbose "set backupBlueprints to #{newVal} (localStorage reread: #{localStorage.getItem('backupBlueprints')})"
+
+
 
   $scope.showPlayTab = ->
     $scope.onPlayTab = true
@@ -444,6 +486,22 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
 
   $scope.backup = () ->
+
+    if not ($scope.backupOptions.configs || $scope.backupOptions.worlds || $scope.backupOptions.blueprints)
+      $rootScope.log.event "Skipping backup"
+      $timeout () ->
+        # Show progress with everything as skipped
+        $scope.backupDialog.progress.visible    = true
+        $scope.backupDialog.progress.configs    = "skipped"
+        $scope.backupDialog.progress.worlds     = "skipped"
+        $scope.backupDialog.progress.blueprints = "skipped"
+        # And mark as complete and show skipped message
+        $scope.backupDialog.progress.complete   = true
+        $scope.backupDialog.skipped             = true
+      return
+
+
+
     $rootScope.log.event "Performing backup"
     $rootScope.log.indent()
 
@@ -528,6 +586,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
     # Backup configs
     backupConfigs = new Promise (resolve, reject) ->
+      if not $scope.backupOptions.configs
+        $rootScope.log.entry "Skipping: Configs"
+        resolve()
+        $timeout ->
+          $scope.backupDialog.progress.configs = "skipped"
+        return
+
       $rootScope.log.entry "Backing up: Configs..."
       $rootScope.log.indent.verbose "From: #{$scope.installDir}"
       $rootScope.log.indent.verbose "To:   #{backupPath}"
@@ -560,6 +625,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       # Wait for copying to finish
       $q.all(configPromises).then () ->  # (Success)
           resolve()  # and continue with the backup
+          if not $scope.backupOptions.configs
+            # Don't bother logging anything if skipped
+            return
 
           if window._found_configs
             $rootScope.log.verbose "Configs backed up successfully"
@@ -577,6 +645,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
     # Backup worlds
     backupWorlds = backupConfigs.then () -> return new Promise (resolve, reject) ->
+      if not $scope.backupOptions.worlds
+        $rootScope.log.entry "Skipping: Worlds"
+        resolve()
+        $timeout ->
+          $scope.backupDialog.progress.worlds = "skipped"
+        return
+
       if fileExists path.resolve( path.join($scope.installDir, "server-database") )
         $scope.backupDialog.progress.worlds = true
         backupFolder("Worlds", backupPath, "server-database").then () ->
@@ -593,6 +668,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
     # Backup blueprints
     backupBlueprints = backupWorlds.then () -> return new Promise (resolve, reject) ->
+      if not $scope.backupOptions.blueprints
+        $rootScope.log.entry "Skipping: Blueprints"
+        resolve()
+        $timeout () ->
+          $scope.backupDialog.progress.blueprints = "skipped"
+        return
+
       if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
         $scope.backupDialog.progress.blueprints = true
         backupFolder("Blueprints", backupPath, "blueprints").then () ->
@@ -649,8 +731,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     database   = fileExists path.resolve( path.join($scope.installDir, "server-database") )
 
     if blueprints or database
+      if $scope.backupDialog.visible == true
+        # Don't log if already visible.
+        return
+
       # Show backup dialog
-      $scope.update_force = force
+      $rootScope.log.event "Presenting backup dialog"
+      $scope.update_force = force  # preserve `force` param
       $scope.backupDialog.visible = true
     else
       # Otherwise, continue with the update
