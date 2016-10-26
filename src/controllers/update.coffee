@@ -6,6 +6,7 @@ ncp      = require('ncp')  # beans
 path     = require('path')
 remote   = require('remote')
 sanitize = require('sanitize-filename')
+archiver = require('archiver')  # compression
 
 dialog      = remote.require('dialog')
 electronApp = remote.require('app')
@@ -35,20 +36,33 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     return false  if str == "false"
     null
 
-  $scope.backupOptions            = {}
-  # localStorage values are always strings, hence strToBool()
-  $scope.backupOptions.configs    = strToBool localStorage.getItem('backupConfigs')
-  $scope.backupOptions.worlds     = strToBool localStorage.getItem('backupWorlds')
-  $scope.backupOptions.blueprints = strToBool localStorage.getItem('backupBlueprints')
+  $scope.backupOptions = {}
+  # localStorage values are always strings, hence strToBool() for the checkboxes
+  $scope.backupOptions.configs         = strToBool localStorage.getItem('backupConfigs')
+  $scope.backupOptions.worlds          = strToBool localStorage.getItem('backupWorlds')
+  $scope.backupOptions.blueprints      = strToBool localStorage.getItem('backupBlueprints')
+  $scope.backupOptions.compressionType =           localStorage.getItem('backupCompressionType')
   # Set Defaults   (as unset values are falsey, || won't work)
   $scope.backupOptions.configs    = true  if $scope.backupOptions.configs    == null
   $scope.backupOptions.worlds     = true  if $scope.backupOptions.worlds     == null
   $scope.backupOptions.blueprints = true  if $scope.backupOptions.blueprints == null
+  $scope.backupOptions.blueprints = true  if $scope.backupOptions.blueprints == null
+  if $scope.backupOptions.compressionType not in ['zip', 'targz']  # invalid & `null` cases
+    if os.platform() == "win32"
+      localStorage.setItem('backupCompressionType', 'zip')
+      $scope.backupOptions.compressionType = 'zip'
+    else
+      localStorage.setItem('backupCompressionType', 'targz')
+      $scope.backupOptions.compressionType = 'targz'
+
+
 
   $rootScope.log.info "Backup options:",  $rootScope.log.levels.verbose
-  $rootScope.log.indent.entry "configs:    #{$scope.backupOptions.configs}",    $rootScope.log.levels.verbose
-  $rootScope.log.indent.entry "worlds:     #{$scope.backupOptions.worlds}",     $rootScope.log.levels.verbose
-  $rootScope.log.indent.entry "blueprints: #{$scope.backupOptions.blueprints}", $rootScope.log.levels.verbose
+  $rootScope.log.indent.entry "configs:         #{$scope.backupOptions.configs}",         $rootScope.log.levels.verbose
+  $rootScope.log.indent.entry "worlds:          #{$scope.backupOptions.worlds}",          $rootScope.log.levels.verbose
+  $rootScope.log.indent.entry "blueprints:      #{$scope.backupOptions.blueprints}",      $rootScope.log.levels.verbose
+  $rootScope.log.indent.entry "compressionType: #{$scope.backupOptions.compressionType}", $rootScope.log.levels.verbose
+
 
 
   $scope.backupDialog           = {}
@@ -471,6 +485,15 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
         $rootScope.log.outdent()
         $scope.backupDialog.error.detailsSection = name
         reject(err)
+
+  # Called by zip/targz radio buttons in index.jade
+  $scope.set_zip_compression   = () -> set_backup_compression('zip');
+  $scope.set_targz_compression = () -> set_backup_compression('targz');
+
+  set_backup_compression = (newVal) ->
+    localStorage.setItem('backupCompressionType', newVal)
+    $scope.backupOptions.compressionType = newVal
+    $rootScope.log.event "Changed backup compression type to #{localStorage.getItem('backupCompressionType')}"
 
 
   $scope.closeBackupDialog = () ->

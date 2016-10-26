@@ -137,6 +137,41 @@ div.backupDialog {
 }
 
 
+input[type="radio"].toggle {
+  display: none;
+}
+
+input[type="radio"].toggle + label {
+  width:            6em !important;  // Override `form input` fixed-width
+  padding:          0.25em 0.5em;
+  border:           1px solid #1c2431;
+  background:       linear-gradient(to top, #202a3a, #191F29);
+  color:            #666;
+
+  &:first-of-type {
+    border-top-left-radius:     1em;
+    border-bottom-left-radius:  1em;
+  }
+  &:last-of-type {
+    border-top-right-radius:    1em;
+    border-bottom-right-radius: 1em;
+  }
+}
+
+input[type="radio"].toggle:checked + label {
+  border-color:     #345;
+  background:       linear-gradient(to bottom, #3a4454, #252540);
+  color:            white; // #1f7282
+}
+
+input[type="radio"].toggle:nth-of-type(1+n) + label {
+  margin-left: -3px;
+}
+
+
+
+
+
 div.backupDialog, div.envJavaOptionsWarning {
   .field-group {
     margin: 0.5em 0 0 0 !important;

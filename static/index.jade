@@ -167,7 +167,12 @@ html(ng-app='launcher')
                 b.bright Would you like to perform a backup prior to updating?
                 p This will preserve your game data in the unlikely event of something going wrong. The backup will be stored in the backups folder within your game directory.
                 br
-                | Please select what you would like backed up:
+                | Please select what you would like backed up, and the archive format:
+                .field-group.block
+                  input(type="radio" id="zip" name="compressionType" ng-checked="backupOptions.compressionType == 'zip'" ng-click="set_zip_compression()").toggle
+                  label(for="zip") .zip
+                  input(type="radio" id="targz" name="compressionType" ng-checked="backupOptions.compressionType == 'targz'" ng-click="set_targz_compression()").toggle
+                  label(for="targz") .tar.gz
                 .backupOptions.field-group.block
                   input(type="checkbox" ng-model="backupOptions.configs")
                   span Include Configs
