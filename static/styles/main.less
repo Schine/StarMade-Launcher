@@ -137,6 +137,8 @@ div.backupDialog {
 }
 
 
+
+/* Radio toggle buttons (tested with 2, not 3+) */
 input[type="radio"].toggle {
   display: none;
 }
@@ -145,6 +147,7 @@ input[type="radio"].toggle + label {
   width:            6em !important;  // Override `form input` fixed-width
   padding:          0.25em 0.5em;
   border:           1px solid #1c2431;
+  text-align:       center;
   background:       linear-gradient(to top, #202a3a, #191F29);
   color:            #666;
 
@@ -164,7 +167,7 @@ input[type="radio"].toggle:checked + label {
   color:            white; // #1f7282
 }
 
-input[type="radio"].toggle:nth-of-type(1+n) + label {
+input[type="radio"].toggle:nth-of-type(n+2) + label {
   margin-left: -3px;
 }
 
