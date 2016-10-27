@@ -2,7 +2,6 @@
 
 fs       = require('fs')
 os       = require('os')
-ncp      = require('ncp')  # beans
 path     = require('path')
 remote   = require('remote')
 sanitize = require('sanitize-filename')
@@ -460,32 +459,6 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     $rootScope.log.error("UpdateCtrl: installDir not set")
 
 
-
-  copyDir = (source, dest) ->
-    $rootScope.log.verbose "copyDir()"
-    $rootScope.log.indent.entry "Source: #{source}", $rootScope.log.levels.verbose
-    $rootScope.log.indent.entry "Dest:   #{dest}",   $rootScope.log.levels.verbose
-    return new Promise (resolve, reject) ->
-      ncp source, dest, (err) ->
-        reject(err)  if     err?
-        resolve()    if not err?
-
-
-  # Backup specific folder
-  backupFolder = (name, backupPath, itemPath) ->
-    $rootScope.log.entry "Backing up: #{name}..."
-    return new Promise (resolve, reject) ->
-      $rootScope.log.indent()
-      copyDir(path.join($scope.installDir, itemPath),  path.join(backupPath, itemPath))
-      .then () ->
-        $rootScope.log.outdent()
-        resolve()
-      .catch (err) ->
-        $rootScope.log.entry "Failed"
-        $rootScope.log.outdent()
-        $scope.backupDialog.error.detailsSection = name
-        reject(err)
-
   # Called by zip/targz radio buttons in index.jade
   $scope.set_zip_compression   = () -> set_backup_compression('zip');
   $scope.set_targz_compression = () -> set_backup_compression('targz');
@@ -493,7 +466,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
   set_backup_compression = (newVal) ->
     localStorage.setItem('backupCompressionType', newVal)
     $scope.backupOptions.compressionType = newVal
-    $rootScope.log.event "Changed backup compression type to #{localStorage.getItem('backupCompressionType')}"
+    $rootScope.log.entry "Changed backup compression type to #{localStorage.getItem('backupCompressionType')}"
 
 
   $scope.closeBackupDialog = () ->
@@ -532,6 +505,27 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     $scope.backupDialog.progress.visible = true
 
 
+    try
+      fs.mkdirSync path.join( path.resolve($scope.installDir), "backups")
+      $rootScope.log.verbose "Created backups folder"
+
+    catch err
+      if err.code != "EEXIST"  # This very likely already exists
+        # build error description
+        desc = (err.message || "unknown")
+        # Log
+        $rootScope.log.error "Error creating parent backups folder"
+        $rootScope.log.indent.entry desc
+        # Show error dialog (using $timeout to wait for the next $digest cycle; it will not show otherwise)
+        $timeout ->
+          $scope.backupDialog.error.visible = true
+          $scope.backupDialog.error.details = desc
+        # And exit
+        $rootScope.log.outdent()
+        return
+
+
+
     now = new Date
     # Get date/time portions
     month   = now.getMonth()+1    # 0-indexed
@@ -549,178 +543,36 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     version = $scope.versions[$scope.selectedVersion]
 
 
-    # Format: game/backups/2016-09-06 at 17_08_46 from (0.199.132a) to (0.199.169)
+    # Format: game/backups/2016-09-06 at 17_08_46 from (0.199.132a) to (0.199.169).tar.gz
     backupPath  = "#{now.getFullYear()}-#{month}-#{day}"
     backupPath += " at #{hours}_#{minutes}_#{seconds}"
     backupPath += " from (#{$scope.lastUsedVersionHotfix})"
     backupPath += " to (#{version.version}#{version.hotfix || ''})"
+    backupPath += ".zip"     if $scope.backupOptions.compressionType == "zip"
+    backupPath += ".tar.gz"  if $scope.backupOptions.compressionType == "targz"
     backupPath  = path.resolve( path.join( path.resolve($scope.installDir), "backups", backupPath) )
 
     $rootScope.log.verbose "Destination: #{backupPath}"
 
-    try
-      fs.mkdirSync path.join( path.resolve($scope.installDir), "backups")
-      $rootScope.log.verbose "Created parent backups folder"
 
-    catch err
-      if err.code != "EEXIST"  # This very likely already exists
-        # build error description
-        desc = (err.message || "unknown")
-        # Log
-        $rootScope.log.error "Error creating parent backups folder"
-        $rootScope.log.indent.entry desc
-        # Show error dialog (using $timeout to wait for the next $digest cycle; it will not show otherwise)
-        $timeout ->
-          $scope.backupDialog.error.visible = true
-          $scope.backupDialog.error.details = desc
-        # And exit
-        $rootScope.log.outdent()
-        return
+    # Create archive stream
+    _format  = "zip"
+    _options = {}
 
-    # Create backup folder
-    try
-      fs.mkdirSync backupPath
-    catch err
-      if err.code == "EEXIST"
-        # This can happen if someone tries creating a second backup too quickly, or sets their clock back.
-        $rootScope.log.error "Aborting backup: directory already exists"
-        $timeout ->
-          $scope.backupDialog.error.visible = true
-          $scope.backupDialog.error.details = "Backup directory already exists.  Please try again"
-      else
-        # build error description
-        desc  = ""
-        desc += err.code + ": "  if err.code?
-        desc += (err.message || "unknown")
-        # Log
-        $rootScope.log.error "Error creating backup folder"
-        $rootScope.log.indent.entry desc
-        # Show error dialog
-        $timeout ->
-          $scope.backupDialog.error.visible = true
-          $scope.backupDialog.error.details = desc
-
-      $rootScope.log.outdent()
-      return
-
-    $rootScope.log.verbose "Created backup folder"
+    if $scope.backupOptions.compressionType == "targz"
+      _format = "tar"
+      _options = {
+        gzip: true,
+        gzipOptions: {
+          level: 1
+        }
+      }
+    archive            = archiver _format, _options
+    archiveWriteStream = fs.createWriteStream backupPath
 
 
-
-    # Backup configs
-    backupConfigs = new Promise (resolve, reject) ->
-      if not $scope.backupOptions.configs
-        $rootScope.log.entry "Skipping: Configs"
-        resolve()
-        $timeout ->
-          $scope.backupDialog.progress.configs = "skipped"
-        return
-
-      $rootScope.log.entry "Backing up: Configs..."
-      $rootScope.log.indent.verbose "From: #{$scope.installDir}"
-      $rootScope.log.indent.verbose "To:   #{backupPath}"
-
-      $timeout ->
-        $scope.backupDialog.progress.configs = true
-
-
-      # Copy each config in turn
-      configs               = ["settings.cfg", "server.cfg", "keyboard.cfg", "joystick.cfg"]
-      configPromises        = []
-      window._found_configs = false
-
-      for config in configs
-        source = path.resolve( path.join($scope.installDir, config) )
-        if fileExists source
-          window._found_configs = true
-          $rootScope.log.indent.verbose "Copying #{config}"
-          configPromises.push new Promise (resolve, reject) ->
-            # To copy a single file with NCP, the destination must also include the filename
-            ncp source, path.join(backupPath, config), (err) ->
-              resolve(config)  if not err
-              if err
-                $rootScope.log.indent.error "Error copying config: #{err}"
-                $timeout ->
-                  $scope.backupDialog.progress.worlds = "error"
-                reject(err)
-
-
-      # Wait for copying to finish
-      $q.all(configPromises).then () ->  # (Success)
-          resolve()  # and continue with the backup
-          if not $scope.backupOptions.configs
-            # Don't bother logging anything if skipped
-            return
-
-          if window._found_configs
-            $rootScope.log.verbose "Configs backed up successfully"
-            $timeout ->
-              $scope.backupDialog.progress.configs = "complete"
-          else
-            $rootScope.log.indent.entry "No configs found"
-            $timeout ->
-              $scope.backupDialog.progress.configs = "skipped"
-
-        , (err) ->  # (Failure, Rosebud)
-          $rootScope.log.indent.error "Error backing up configs"
-          reject(err)
-
-
-    # Backup worlds
-    backupWorlds = backupConfigs.then () -> return new Promise (resolve, reject) ->
-      if not $scope.backupOptions.worlds
-        $rootScope.log.entry "Skipping: Worlds"
-        resolve()
-        $timeout ->
-          $scope.backupDialog.progress.worlds = "skipped"
-        return
-
-      if fileExists path.resolve( path.join($scope.installDir, "server-database") )
-        $scope.backupDialog.progress.worlds = true
-        backupFolder("Worlds", backupPath, "server-database").then () ->
-          $rootScope.log.verbose "Worlds backed up successfully"
-          resolve()
-          $timeout ->
-            $scope.backupDialog.progress.worlds = "complete"
-      else
-        $rootScope.log.info "Worlds folder does not exist"
-        resolve()
-        $timeout ->
-          $scope.backupDialog.progress.worlds = "skipped"
-
-
-    # Backup blueprints
-    backupBlueprints = backupWorlds.then () -> return new Promise (resolve, reject) ->
-      if not $scope.backupOptions.blueprints
-        $rootScope.log.entry "Skipping: Blueprints"
-        resolve()
-        $timeout () ->
-          $scope.backupDialog.progress.blueprints = "skipped"
-        return
-
-      if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
-        $scope.backupDialog.progress.blueprints = true
-        backupFolder("Blueprints", backupPath, "blueprints").then () ->
-          $rootScope.log.verbose "Blueprints backed up successfully"
-          resolve()
-          $timeout ->
-            $scope.backupDialog.progress.blueprints = "complete"
-      else
-        $rootScope.log.info "Blueprints folder does not exist"
-        resolve()
-        $timeout ->
-          $scope.backupDialog.progress.blueprints = "skipped"
-
-
-    # Complete!
-    $q.all([backupConfigs, backupWorlds, backupBlueprints]).then () ->  # Success
-      $rootScope.log.entry "Backup complete"
-      $rootScope.log.outdent()
-      $timeout ->
-        $scope.backupDialog.progress.complete = true
-        $scope.backupDialog.path              = backupPath
-
-    , (err) ->  # Failure
+    # Error handlers
+    _error_handler = (err) ->
       $rootScope.log.error "Aborted backup. Reason:"
       msgs = ["unknown"]
       msgs = [err]          if err?
@@ -733,8 +585,80 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
       # Display error dialog
       $timeout ->
-        $scope.backupDialog.error         = true
+        $scope.backupDialog.error.visible         = true
         $scope.backupDialog.error.details = msgs.join(". ").trim()
+      return
+    archive.on            'error', (err) -> _error_handler(err)
+    archiveWriteStream.on 'error', (err) -> _error_handler(err)
+
+
+
+    # Complete handler
+    archive.on 'end', () ->
+      $rootScope.log.info  "File size: #{archive.pointer()} bytes"
+      $rootScope.log.entry "Backup complete"
+      $rootScope.log.outdent()
+      $timeout () ->
+        # Show complete dialog
+        $scope.backupDialog.progress.complete   = true
+        $scope.backupDialog.path                = backupPath
+
+
+
+    # Show progress page
+    $timeout () ->
+      $scope.backupDialog.progress.visible = true
+
+
+    # Add configs
+    if $scope.backupOptions.configs
+      $timeout () -> $scope.backupDialog.progress.configs = true
+      configs = ["settings.cfg", "server.cfg", "keyboard.cfg", "joystick.cfg"]
+      _found = false
+      for config in configs
+        # Skip configs that do not exist, e.g. "joystick.cfg"
+        continue  if not fileExists path.resolve( path.join($scope.installDir, config) )
+        _found = true
+        archive.file(
+          path.resolve(path.join($scope.installDir, config)),
+          {name: config}
+        )
+      if not _found
+        $timeout () -> $scope.backupDialog.progress.configs = "missing"
+    else
+      $timeout () ->  $scope.backupDialog.progress.configs = "skipped"
+
+
+    # Add worlds
+    if $scope.backupOptions.worlds
+      $timeout () -> $scope.backupDialog.progress.worlds = true
+      if fileExists path.resolve( path.join($scope.installDir, "server-database") )
+        archive.directory(
+          path.resolve(path.join($scope.installDir, "server-database")),
+          "server-database"
+        )
+      else $scope.backupDialog.progress.worlds = "missing"
+    else $scope.backupDialog.progress.worlds = "skipped"
+
+
+    # Add blueprints
+    if $scope.backupOptions.blueprints
+      $timeout () -> $scope.backupDialog.progress.blueprints = true
+      if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
+        archive.directory(
+          path.resolve(path.join($scope.installDir, "blueprints")),
+          "blueprints"
+        )
+      else $scope.backupDialog.progress.blueprints = "missing"
+    else $scope.backupDialog.progress.blueprints = "skipped"
+
+
+    # Finalize
+    archive.finalize()
+    archive.pipe(archiveWriteStream)
+    return
+
+
 
 
 

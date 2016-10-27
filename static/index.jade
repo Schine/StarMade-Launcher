@@ -198,12 +198,15 @@ html(ng-app='launcher')
                   li(ng-show="backupDialog.progress.configs") Configs ... 
                     span(ng-show="backupDialog.progress.configs=='complete'") done
                     span(ng-show="backupDialog.progress.configs=='skipped'") skipped
+                    span(ng-show="backupDialog.progress.configs=='missing'") not present
                   li(ng-show="backupDialog.progress.worlds") Worlds ... 
                     span(ng-show="backupDialog.progress.worlds=='complete'") done
                     span(ng-show="backupDialog.progress.worlds=='skipped'") skipped
+                    span(ng-show="backupDialog.progress.worlds=='missing'") not present
                   li(ng-show="backupDialog.progress.blueprints") Blueprints ... 
                     span(ng-show="backupDialog.progress.blueprints=='complete'") done
                     span(ng-show="backupDialog.progress.blueprints=='skipped'") skipped
+                    span(ng-show="backupDialog.progress.blueprints=='missing'") not present
                 br
                 div(ng-show=" backupDialog.progress.complete")
                   p(ng-show=" backupDialog.skipped") Backup Skipped!
