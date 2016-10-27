@@ -36,7 +36,6 @@
     "angular-moment": "^0.10.3",
     "angular-resource": "^1.5.3",
     "angular-ui-router": "^0.2.18",
-    "archiver": "^1.1.0",
     "async": "^0.9.0",
     "bignumber.js": "^2.0.7",
     "librato-node": "^4.0.2",
@@ -47,6 +46,7 @@
     "sanitize-filename": "^1.6.0",
     "truncate-utf8-bytes": "^1.0.1",
     "tar-fs": "^1.8.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "archiver": "^1.1.0"
   }
 }
