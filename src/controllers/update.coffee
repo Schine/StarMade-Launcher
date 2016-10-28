@@ -5,7 +5,7 @@ os       = require('os')
 path     = require('path')
 remote   = require('remote')
 sanitize = require('sanitize-filename')
-archiver = require('archiver')  # compression
+# archiver = require('archiver')  # compression
 
 dialog      = remote.require('dialog')
 electronApp = remote.require('app')
