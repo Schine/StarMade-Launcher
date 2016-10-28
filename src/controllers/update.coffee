@@ -498,164 +498,164 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
 
 
-    $rootScope.log.event "Performing backup"
-    $rootScope.log.indent()
+    $rootScope.log.event "Performing backup (DISABLED FOR DEBUGGING)"
+    # $rootScope.log.indent()
 
     # Show backup progress dialog
     $scope.backupDialog.progress.visible = true
 
 
-    try
-      fs.mkdirSync path.join( path.resolve($scope.installDir), "backups")
-      $rootScope.log.verbose "Created backups folder"
+    # try
+    #   fs.mkdirSync path.join( path.resolve($scope.installDir), "backups")
+    #   $rootScope.log.verbose "Created backups folder"
 
-    catch err
-      if err.code != "EEXIST"  # This very likely already exists
-        # build error description
-        desc = (err.message || "unknown")
-        # Log
-        $rootScope.log.error "Error creating parent backups folder"
-        $rootScope.log.indent.entry desc
-        # Show error dialog (using $timeout to wait for the next $digest cycle; it will not show otherwise)
-        $timeout ->
-          $scope.backupDialog.error.visible = true
-          $scope.backupDialog.error.details = desc
-        # And exit
-        $rootScope.log.outdent()
-        return
-
-
-
-    now = new Date
-    # Get date/time portions
-    month   = now.getMonth()+1    # 0-indexed
-    day     = now.getDate()       # 1-indexed
-    hours   = now.getHours()      # 1-indexed
-    minutes = now.getMinutes()    # 1-indexed
-    seconds = now.getSeconds()+1  # 0-indexed
-    # prefix with zeros
-    month   = "0#{month}"    if month   < 10
-    day     = "0#{day}"      if day     < 10
-    hours   = "0#{hours}"    if hours   < 10
-    minutes = "0#{minutes}"  if minutes < 10
-    seconds = "0#{seconds}"  if seconds < 10
-
-    version = $scope.versions[$scope.selectedVersion]
-
-
-    # Format: game/backups/2016-09-06 at 17_08_46 from (0.199.132a) to (0.199.169).tar.gz
-    backupPath  = "#{now.getFullYear()}-#{month}-#{day}"
-    backupPath += " at #{hours}_#{minutes}_#{seconds}"
-    backupPath += " from (#{$scope.lastUsedVersionHotfix})"
-    backupPath += " to (#{version.version}#{version.hotfix || ''})"
-    backupPath += ".zip"     if $scope.backupOptions.compressionType == "zip"
-    backupPath += ".tar.gz"  if $scope.backupOptions.compressionType == "targz"
-    backupPath  = path.resolve( path.join( path.resolve($scope.installDir), "backups", backupPath) )
-
-    $rootScope.log.verbose "Destination: #{backupPath}"
-
-
-    # Create archive stream
-    _format  = "zip"
-    _options = {}
-
-    if $scope.backupOptions.compressionType == "targz"
-      _format = "tar"
-      _options = {
-        gzip: true,
-        gzipOptions: {
-          level: 1
-        }
-      }
-    archive            = archiver _format, _options
-    archiveWriteStream = fs.createWriteStream backupPath
-
-
-    # Error handlers
-    _error_handler = (err) ->
-      $rootScope.log.error "Aborted backup. Reason:"
-      msgs = ["unknown"]
-      msgs = [err]          if err?
-      msgs = [err.message]  if err.message?
-      if typeof err != 'string'  and  Object.keys(err).length > 0
-        msgs = []
-        msgs.push "#{key}: #{err[key]}"  for key in Object.keys(err)
-      $rootScope.log.indent.entry msg  for msg in msgs
-      $rootScope.log.outdent()
-
-      # Display error dialog
-      $timeout ->
-        $scope.backupDialog.error.visible         = true
-        $scope.backupDialog.error.details = msgs.join(". ").trim()
-      return
-    archive.on            'error', (err) -> _error_handler(err)
-    archiveWriteStream.on 'error', (err) -> _error_handler(err)
+    # catch err
+    #   if err.code != "EEXIST"  # This very likely already exists
+    #     # build error description
+    #     desc = (err.message || "unknown")
+    #     # Log
+    #     $rootScope.log.error "Error creating parent backups folder"
+    #     $rootScope.log.indent.entry desc
+    #     # Show error dialog (using $timeout to wait for the next $digest cycle; it will not show otherwise)
+    #     $timeout ->
+    #       $scope.backupDialog.error.visible = true
+    #       $scope.backupDialog.error.details = desc
+    #     # And exit
+    #     $rootScope.log.outdent()
+    #     return
 
 
 
-    # Complete handler
-    archive.on 'end', () ->
-      $rootScope.log.info  "File size: #{archive.pointer()} bytes"
-      $rootScope.log.entry "Backup complete"
-      $rootScope.log.outdent()
-      $timeout () ->
-        # Show complete dialog
-        $scope.backupDialog.progress.complete   = true
-        $scope.backupDialog.path                = backupPath
+    # now = new Date
+    # # Get date/time portions
+    # month   = now.getMonth()+1    # 0-indexed
+    # day     = now.getDate()       # 1-indexed
+    # hours   = now.getHours()      # 1-indexed
+    # minutes = now.getMinutes()    # 1-indexed
+    # seconds = now.getSeconds()+1  # 0-indexed
+    # # prefix with zeros
+    # month   = "0#{month}"    if month   < 10
+    # day     = "0#{day}"      if day     < 10
+    # hours   = "0#{hours}"    if hours   < 10
+    # minutes = "0#{minutes}"  if minutes < 10
+    # seconds = "0#{seconds}"  if seconds < 10
+
+    # version = $scope.versions[$scope.selectedVersion]
+
+
+    # # Format: game/backups/2016-09-06 at 17_08_46 from (0.199.132a) to (0.199.169).tar.gz
+    # backupPath  = "#{now.getFullYear()}-#{month}-#{day}"
+    # backupPath += " at #{hours}_#{minutes}_#{seconds}"
+    # backupPath += " from (#{$scope.lastUsedVersionHotfix})"
+    # backupPath += " to (#{version.version}#{version.hotfix || ''})"
+    # backupPath += ".zip"     if $scope.backupOptions.compressionType == "zip"
+    # backupPath += ".tar.gz"  if $scope.backupOptions.compressionType == "targz"
+    # backupPath  = path.resolve( path.join( path.resolve($scope.installDir), "backups", backupPath) )
+
+    # $rootScope.log.verbose "Destination: #{backupPath}"
+
+
+    # # Create archive stream
+    # _format  = "zip"
+    # _options = {}
+
+    # if $scope.backupOptions.compressionType == "targz"
+    #   _format = "tar"
+    #   _options = {
+    #     gzip: true,
+    #     gzipOptions: {
+    #       level: 1
+    #     }
+    #   }
+    # archive            = archiver _format, _options
+    # archiveWriteStream = fs.createWriteStream backupPath
+
+
+    # # Error handlers
+    # _error_handler = (err) ->
+    #   $rootScope.log.error "Aborted backup. Reason:"
+    #   msgs = ["unknown"]
+    #   msgs = [err]          if err?
+    #   msgs = [err.message]  if err.message?
+    #   if typeof err != 'string'  and  Object.keys(err).length > 0
+    #     msgs = []
+    #     msgs.push "#{key}: #{err[key]}"  for key in Object.keys(err)
+    #   $rootScope.log.indent.entry msg  for msg in msgs
+    #   $rootScope.log.outdent()
+
+    #   # Display error dialog
+    #   $timeout ->
+    #     $scope.backupDialog.error.visible         = true
+    #     $scope.backupDialog.error.details = msgs.join(". ").trim()
+    #   return
+    # archive.on            'error', (err) -> _error_handler(err)
+    # archiveWriteStream.on 'error', (err) -> _error_handler(err)
 
 
 
-    # Show progress page
-    $timeout () ->
-      $scope.backupDialog.progress.visible = true
+    # # Complete handler
+    # archive.on 'end', () ->
+    #   $rootScope.log.info  "File size: #{archive.pointer()} bytes"
+    #   $rootScope.log.entry "Backup complete"
+    #   $rootScope.log.outdent()
+    #   $timeout () ->
+    #     # Show complete dialog
+    #     $scope.backupDialog.progress.complete   = true
+    #     $scope.backupDialog.path                = backupPath
 
 
-    # Add configs
-    if $scope.backupOptions.configs
-      $timeout () -> $scope.backupDialog.progress.configs = true
-      configs = ["settings.cfg", "server.cfg", "keyboard.cfg", "joystick.cfg"]
-      _found = false
-      for config in configs
-        # Skip configs that do not exist, e.g. "joystick.cfg"
-        continue  if not fileExists path.resolve( path.join($scope.installDir, config) )
-        _found = true
-        archive.file(
-          path.resolve(path.join($scope.installDir, config)),
-          {name: config}
-        )
-      if not _found
-        $timeout () -> $scope.backupDialog.progress.configs = "missing"
-    else
-      $timeout () ->  $scope.backupDialog.progress.configs = "skipped"
+
+    # # Show progress page
+    # $timeout () ->
+    #   $scope.backupDialog.progress.visible = true
 
 
-    # Add worlds
-    if $scope.backupOptions.worlds
-      $timeout () -> $scope.backupDialog.progress.worlds = true
-      if fileExists path.resolve( path.join($scope.installDir, "server-database") )
-        archive.directory(
-          path.resolve(path.join($scope.installDir, "server-database")),
-          "server-database"
-        )
-      else $scope.backupDialog.progress.worlds = "missing"
-    else $scope.backupDialog.progress.worlds = "skipped"
+    # # Add configs
+    # if $scope.backupOptions.configs
+    #   $timeout () -> $scope.backupDialog.progress.configs = true
+    #   configs = ["settings.cfg", "server.cfg", "keyboard.cfg", "joystick.cfg"]
+    #   _found = false
+    #   for config in configs
+    #     # Skip configs that do not exist, e.g. "joystick.cfg"
+    #     continue  if not fileExists path.resolve( path.join($scope.installDir, config) )
+    #     _found = true
+    #     archive.file(
+    #       path.resolve(path.join($scope.installDir, config)),
+    #       {name: config}
+    #     )
+    #   if not _found
+    #     $timeout () -> $scope.backupDialog.progress.configs = "missing"
+    # else
+    #   $timeout () ->  $scope.backupDialog.progress.configs = "skipped"
 
 
-    # Add blueprints
-    if $scope.backupOptions.blueprints
-      $timeout () -> $scope.backupDialog.progress.blueprints = true
-      if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
-        archive.directory(
-          path.resolve(path.join($scope.installDir, "blueprints")),
-          "blueprints"
-        )
-      else $scope.backupDialog.progress.blueprints = "missing"
-    else $scope.backupDialog.progress.blueprints = "skipped"
+    # # Add worlds
+    # if $scope.backupOptions.worlds
+    #   $timeout () -> $scope.backupDialog.progress.worlds = true
+    #   if fileExists path.resolve( path.join($scope.installDir, "server-database") )
+    #     archive.directory(
+    #       path.resolve(path.join($scope.installDir, "server-database")),
+    #       "server-database"
+    #     )
+    #   else $scope.backupDialog.progress.worlds = "missing"
+    # else $scope.backupDialog.progress.worlds = "skipped"
 
 
-    # Finalize
-    archive.finalize()
-    archive.pipe(archiveWriteStream)
+    # # Add blueprints
+    # if $scope.backupOptions.blueprints
+    #   $timeout () -> $scope.backupDialog.progress.blueprints = true
+    #   if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
+    #     archive.directory(
+    #       path.resolve(path.join($scope.installDir, "blueprints")),
+    #       "blueprints"
+    #     )
+    #   else $scope.backupDialog.progress.blueprints = "missing"
+    # else $scope.backupDialog.progress.blueprints = "skipped"
+
+
+    # # Finalize
+    # archive.finalize()
+    # archive.pipe(archiveWriteStream)
     return
 
 
