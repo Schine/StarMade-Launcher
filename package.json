@@ -47,6 +47,6 @@
     "truncate-utf8-bytes": "^1.0.1",
     "tar-fs": "^1.8.1",
     "underscore": "^1.8.3",
-    "archiver": "1.0.1"
+    "archiver": "0.21.0"
   }
 }
