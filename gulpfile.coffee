@@ -401,6 +401,7 @@ acknowledgeModuleTask = (name, dir = paths.nodeModules.dir) ->
 
   (callback) ->
     moduleLicense = path.join dir, name, 'LICENSE'
+    moduleLicenseMIT = path.join dir, name, 'LICENSE-MIT'
     moduleLicenseMd = path.join dir, name, 'LICENSE.md'
     moduleLicenseLower = path.join dir, name, 'license'
     moduleLicence = path.join dir, name, 'LICENCE'
@@ -410,6 +411,11 @@ acknowledgeModuleTask = (name, dir = paths.nodeModules.dir) ->
 
     if fs.existsSync moduleLicense
       fs.readFile moduleLicense, (err, contents) ->
+        return callback(err) if err
+        data += contents.toString() + '\n\n'
+        fs.appendFile licenses, data, callback
+    else if fs.existsSync moduleLicenseMIT
+      fs.readFile moduleLicenseMIT, (err, contents) ->
         return callback(err) if err
         data += contents.toString() + '\n\n'
         fs.appendFile licenses, data, callback
