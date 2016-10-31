@@ -30,12 +30,15 @@ angular.module('app', []).config ($provide) ->
       $rootScope = $injector.get("$rootScope");
 
       $rootScope.log.error "Uncaught Error"
+      $rootScope.log.indent.debug "exception: #{exception}"
+      $rootScope.log.indent.debug "cause:     #{cause}"
+
       msgs = ["unknown"]
-      msgs = [err]          if err?
-      msgs = [err.message]  if err.message?
-      if typeof err != 'string'  and  Object.keys(err).length > 0
+      msgs = [exception]          if exception?
+      msgs = [exception.message]  if exception.message?
+      if typeof exception != 'string'  and  Object.keys(exception).length > 0
         msgs = []
-        msgs.push "#{key}: #{err[key]}"  for key in Object.keys(err)
+        msgs.push "#{key}: #{exception[key]}"  for key in Object.keys(exception)
       $rootScope.log.indent.entry msg  for msg in msgs
       $rootScope.log.outdent()
 
