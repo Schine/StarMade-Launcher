@@ -22,6 +22,27 @@ app = angular.module 'launcher', [
   'xml'
 ]
 
+
+# Catch unhandled errors
+angular.module('app', []).config ($provide) ->
+  $provide.decorator "$exceptionHandler", ($delegate, $injector) ->
+    (exception, cause) ->
+      $rootScope = $injector.get("$rootScope");
+
+      $rootScope.log.error "Uncaught Error"
+      msgs = ["unknown"]
+      msgs = [err]          if err?
+      msgs = [err.message]  if err.message?
+      if typeof err != 'string'  and  Object.keys(err).length > 0
+        msgs = []
+        msgs.push "#{key}: #{err[key]}"  for key in Object.keys(err)
+      $rootScope.log.indent.entry msg  for msg in msgs
+      $rootScope.log.outdent()
+
+      $delegate(exception, cause);
+
+
+
 app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $urlRouterProvider.otherwise '/'
 
