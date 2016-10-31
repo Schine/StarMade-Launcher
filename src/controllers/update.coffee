@@ -15,6 +15,31 @@ fileExists  = require('../fileexists').fileExists
 
 app = angular.module 'launcher'
 
+
+# Catch unhandled errors
+angular.module('app', []).config ($provide) ->
+  $provide.decorator "$exceptionHandler", ($delegate, $injector) ->
+    (exception, cause) ->
+      $rootScope = $injector.get("$rootScope");
+
+      $rootScope.log.error "Uncaught Error"
+      $rootScope.log.indent.debug "exception: #{exception}"
+      $rootScope.log.indent.debug "cause:     #{cause}"
+
+      msgs = ["unknown"]
+      msgs = [exception]          if exception?
+      msgs = [exception.message]  if exception.message?
+      if typeof exception != 'string'  and  Object.keys(exception).length > 0
+        msgs = []
+        msgs.push "#{key}: #{exception[key]}"  for key in Object.keys(exception)
+      $rootScope.log.indent.entry msg  for msg in msgs
+      $rootScope.log.outdent()
+
+      $delegate(exception, cause);
+
+
+
+
 app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater, updaterProgress) ->
   argv = remote.getGlobal('argv')
 
