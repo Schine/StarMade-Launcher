@@ -53,6 +53,7 @@
     "brace-expansion": "1.1.6",
     "concat-map": "0.0.1",
     "balanced-match": "0.4.2",
-    "wrappy": "1.0.2"
+    "wrappy": "1.0.2",
+    "crc32-stream": "1.0.0"
   }
 }
