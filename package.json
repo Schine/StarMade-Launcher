@@ -49,6 +49,7 @@
     "underscore": "^1.8.3",
     "archiver": "^1.0.1",
 
-    "fs.realpath":"1.0.0"
+    "fs.realpath":"1.0.0",
+    "brace-expansion":"1.1.6"
   }
 }
