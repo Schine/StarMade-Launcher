@@ -410,7 +410,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
       if _do_logging
         $rootScope.log.debug "Using custom Java"
-        $rootScope.log.indent.entry "path: #{newPath}"
+        $rootScope.log.indent.entry "path: #{newPath}", $rootScope.log.levels.debug
         $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
       return
 
