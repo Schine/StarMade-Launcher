@@ -6,6 +6,7 @@ path   = require('path')
 shell  = require('shell')
 remote = require('remote')
 
+pkg    = require(path.join(path.dirname(__dirname), 'package.json'))
 util   = require('./util')
 log    = require('./log-helpers')
 
@@ -149,6 +150,7 @@ if not localStorage.getItem('gotStarted')? and localStorage.getItem('acceptedEul
 log.verbose "Getting Started window.location.href: #{window.location.href}"
 
 if localStorage.getItem('gotStarted')?
+  log.debug "already got started"
   if window.location.href.split('?')[1] == 'licenses'
     showLicenses()
     remote.getCurrentWindow().show()
@@ -165,7 +167,7 @@ if localStorage.getItem('gotStarted')?
     remote.getCurrentWindow().show()
   else
     # Show changelog, if needed.
-    if localStorage.getItem("presented-changelog")?
+    if localStorage.getItem("presented-changelog") == pkg.version
       log.debug "Already presented changelog"
       window.close()
       return
@@ -173,9 +175,15 @@ if localStorage.getItem('gotStarted')?
     log.event "Presenting changelog"
     step0.style.display     = 'none'
     changelog.style.display = 'block'
-    localStorage.setItem "presented-changelog", true
+    localStorage.setItem "presented-changelog", pkg.version
     remote.getCurrentWindow().show()
 else
+  # Fresh install; bypass changelog.
+  log.debug "fresh install; bypassing changelog"
+  log.indent.debug "set version to #{pkg.version}"
+  localStorage.setItem("presented-changelog", pkg.version)
+
+
   currentStep = 0
   log.event "Initial Setup: Step 0 (EULA)"
   acceptEula() if localStorage.getItem('acceptedEula')?

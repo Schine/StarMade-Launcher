@@ -321,7 +321,7 @@ html(ng-app='launcher')
                   label.low_memory_warning(ng-show='memory.initial < 256') Note: Setting initial memory below 256mb may cause problems
 
                 .field-group.block.right
-                  button(ng-click='saveClientOptions()' ng-disabled="memory.earlyGen >= memory.initial") Save
+                  button(ng-click='saveClientOptions()' ng-disabled='!validateMemorySettings()') Save
                   button(ng-click='closeClientOptions()') Cancel
 
           a.gear.gear-memory(ng-click="openClientMemoryOptions()") &nbsp;

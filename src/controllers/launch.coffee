@@ -328,6 +328,19 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     updateMemorySlider()
 
 
+  $scope.validateMemorySettings = ->
+    # Memory values aren't loaded for quite awhile
+    return false  if not $scope.memory?
+
+    # Validate memory settings
+    return false  if not $scope.memory.earlyGen?   # catch `undefined` from invalid values
+    return false  if not $scope.memory.initial?    # catch `undefined` from invalid values
+    return false  if     $scope.memory.earlyGen >= $scope.memory.initial
+    return false  if     $scope.memory.max      <  $scope.memory.initial + $scope.memory.earlyGen
+    return false  if     $scope.memory.max      >= $scope.memory.ceiling
+    return true
+
+
   $scope.openClientMemoryOptions = ->
     loadMemorySettings()
     $scope.clientMemoryOptions = true

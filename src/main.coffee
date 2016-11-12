@@ -230,10 +230,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           ipc.once 'updating-opened', ->
             updater.updateLauncher(versions[0], launcherDir)
               .then ->
-                $rootScope.log.entry   "Launcher updated!"
-                $rootScope.log.end     "Restarting"
-                $rootScope.log.verbose "Presenting changelog next launch"
-                localStorage.removeItem("presented-changelog")
+                $rootScope.log.entry "Launcher updated!"
+                $rootScope.log.end   "Restarting"
                 $rootScope.log.indent.verbose "launcher exec path: #{launcherExec}"
 
                 ipc.send 'close-updating'
