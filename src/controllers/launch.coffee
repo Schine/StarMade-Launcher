@@ -86,7 +86,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     return false  if not $scope.memory.validate.earlyGen()
     return false  if     $scope.memory.earlyGen >=  $scope.memory.initial
     return false  if     $scope.memory.max      <   $scope.memory.initial + $scope.memory.earlyGen
-    return false  if     $scope.memory.max      >=  $scope.memory.ceiling
+    return false  if     $scope.memory.max      >   $scope.memory.ceiling
     return true
 
   $scope.memory.validate.initial = ->
