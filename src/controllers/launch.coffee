@@ -53,12 +53,71 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       ceiling:  totalRam  # maximum value allowed
 
 
+
+  # Load memory settings from storage, or set the defaults
+
+  _do_logging = false
+  if not $rootScope.alreadyExecuted 'Loading memory settings'
+    $rootScope.log.event "Loading memory settings"
+    _do_logging = true
+
+  # Cap max memory to physical ram
+  _max = Number(localStorage.getItem('maxMemory')) || Number(defaults[os.arch()].max)
+  $rootScope.log.indent.info "Max memory capped to physical ram"  if _max > defaults[os.arch()].ceiling && _do_logging
+  _max = Math.min( _max, defaults[os.arch()].ceiling )
+
+  $scope.memory =
+    max:      _max
+    initial:  Number(localStorage.getItem('initialMemory'))  || Number(defaults[os.arch()].initial)
+    earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
+    ceiling:  Number( defaults[os.arch()].ceiling )
+    step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
+    validate: {}   # Validation checks reside here
+
+  if _do_logging
+    $rootScope.log.indent.entry "maxMemory:      #{$scope.memory.max}"
+    $rootScope.log.indent.entry "initialMemory:  #{$scope.memory.initial}"
+    $rootScope.log.indent.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
+    $rootScope.log.indent.entry "ceiling:        #{$scope.memory.ceiling}"
+
+  $scope.memory.validate = ->
+    # Validate memory settings
+    return false  if not $scope.memory.validate.initial()
+    return false  if not $scope.memory.validate.earlyGen()
+    return false  if     $scope.memory.earlyGen >=  $scope.memory.initial
+    return false  if     $scope.memory.max      <   $scope.memory.initial + $scope.memory.earlyGen
+    return false  if     $scope.memory.max      >=  $scope.memory.ceiling
+    return true
+
+  $scope.memory.validate.initial = ->
+    return false  if not $scope.memory.initial?    # catch `undefined` from invalid values
+    return true
+
+  $scope.memory.validate.earlyGen = ->
+    return false  if not $scope.memory.earlyGen?   # catch `undefined` from invalid values
+    return true
+
+
+
+
+  # Load launcher settings from storage, or set the defaults
+
+  _do_logging = false
+  if not $rootScope.alreadyExecuted "Loading launcher options"
+    $rootScope.log.event "Loading launcher options"
+    _do_logging = true
+
   $scope.launcherOptions = {}
 
   # restore previous settings, or use the defaults
   $scope.serverPort               = localStorage.getItem('serverPort') || 4242
   $scope.launcherOptions.javaPath = localStorage.getItem('javaPath')   || ""
   $scope.launcherOptions.javaArgs = localStorage.getItem("javaArgs")    # Defaults set below
+
+  if _do_logging
+    $rootScope.log.indent.entry "serverPort: #{$scope.serverPort}"
+    $rootScope.log.indent.entry "javaPath:   #{$scope.launcherOptions.javaPath}"
+    # javaArgs logged below
 
 
   # Custom java args (and defaults)
@@ -79,6 +138,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   # Set default javaArgs when not set
   if not $scope.launcherOptions.javaArgs?
     $scope.resetJavaArgs()
+  # and log them
+  if _do_logging
+    $rootScope.log.indent.entry "javaArgs:   #{$scope.launcherOptions.javaArgs}"
+
 
 
   $scope.setJavaArgs = () ->
@@ -133,9 +196,12 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     localStorage.setItem 'serverPort', newVal
 
   $scope.$watch 'memory.earlyGen', (newVal) ->
+    return  if not document.getElementById("maxMemorySlider")?  # Ensure markup has loaded
     return  if (typeof $scope.memory == "undefined")
     updateMemorySlider(newVal, $scope.memory.initial)
+
   $scope.$watch 'memory.initial', (newVal) ->
+    return  if not document.getElementById("maxMemorySlider")?  # Ensure markup has loaded
     return  if (typeof $scope.memory == "undefined")
     updateMemorySlider($scope.memory.earlyGen, newVal)
 
@@ -157,7 +223,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       # Snap to nearest pow2 (higher than the lower bound, capped at memory ceiling)
       $scope.memory.max = Math.max(_floor, Math.min(_nearest_pow_2, $scope.memory.ceiling))
 
-  
+
     # Allow snapping up to end of slider, power of 2 or not
     if $scope.memory.max != $scope.memory.ceiling
       if newVal >= ($scope.memory.max + $scope.memory.ceiling) / 2
@@ -272,12 +338,13 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     return  if typeof earlyGen == "undefined"
     return  if typeof initial  == "undefined"
 
-    _do_logging = true if not $rootScope.alreadyExecuted("Log - updateMemorySlider", 800)
+    _do_logging = true if not $rootScope.alreadyExecuted("Log - updateMemorySlider", 1000)
 
     if _do_logging?
       $rootScope.log.event("Updating memory slider", $rootScope.log.levels.verbose)
       $rootScope.log.indent.verbose "earlyGen: #{earlyGen}"
       $rootScope.log.indent.verbose "initial:  #{initial}"
+      $rootScope.log.indent()
 
     updateMemoryFloor()  # update floor whenever initial/earlyGen change
 
@@ -287,6 +354,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     update_slider_class() # toggles green and labels when at a power of 2
 
     if _do_logging?
+      $rootScope.log.outdent()
       $rootScope.log.indent.verbose "max:      #{$scope.memory.max}"
       $rootScope.log.indent.verbose "slider:   #{$scope.memory.slider}"
 
@@ -299,50 +367,15 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   updateMemoryFloor = () ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
     $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
-    if not $rootScope.alreadyExecuted("Log - updateMemoryFloor", 800)
+    if not $rootScope.alreadyExecuted("Log - updateMemoryFloor", 1000)
       $rootScope.log.event("Updating memory floor", $rootScope.log.levels.verbose)
       $rootScope.log.indent.verbose "setting memory.floor to #{$scope.memory.floor}"
 
 
-  # Load memory settings from storage or set the defaults
-  loadMemorySettings = ->
-    $rootScope.log.event "Loading memory settings"
-
-    # Cap max memory to physical ram
-    _max = Number(localStorage.getItem('maxMemory')) || Number(defaults[os.arch()].max)
-    $rootScope.log.indent.info "Max memory capped to physical ram"  if _max > defaults[os.arch()].ceiling
-    _max = Math.min( _max, defaults[os.arch()].ceiling )
-
-    $scope.memory =
-      max:      _max
-      initial:  Number(localStorage.getItem('initialMemory'))  || Number(defaults[os.arch()].initial)
-      earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
-      ceiling:  Number( defaults[os.arch()].ceiling )
-      step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
-
-    $rootScope.log.indent.entry "maxMemory:      #{$scope.memory.max}"
-    $rootScope.log.indent.entry "initialMemory:  #{$scope.memory.initial}"
-    $rootScope.log.indent.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
-    $rootScope.log.indent.entry "ceiling:        #{$scope.memory.ceiling}"
-
-    updateMemorySlider()
-
-
-  $scope.validateMemorySettings = ->
-    # Memory values aren't loaded for quite awhile
-    return false  if not $scope.memory?
-
-    # Validate memory settings
-    return false  if not $scope.memory.earlyGen?   # catch `undefined` from invalid values
-    return false  if not $scope.memory.initial?    # catch `undefined` from invalid values
-    return false  if     $scope.memory.earlyGen >= $scope.memory.initial
-    return false  if     $scope.memory.max      <  $scope.memory.initial + $scope.memory.earlyGen
-    return false  if     $scope.memory.max      >= $scope.memory.ceiling
-    return true
 
 
   $scope.openClientMemoryOptions = ->
-    loadMemorySettings()
+    updateMemorySlider()
     $scope.clientMemoryOptions = true
 
   $scope.closeClientOptions = ->
@@ -437,7 +470,6 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   $scope.launch = (dedicatedServer = false) =>
     $rootScope.log.event "Launching game"
-    loadMemorySettings()
     $scope.verifyJavaPath()
 
     customJavaPath = null
