@@ -236,6 +236,25 @@ div.clientMemoryOptions {
     }
   }
 
+  input[type="number"] {
+    outline-color: #075465;
+
+    &.invalid, &.critical {
+      color: red;
+      border-color: #622;
+      outline-color: firebrick;
+    }
+
+    &.warning {
+      color: orange;
+      border-color: #640;
+      outline-color: orange;
+    }
+  }
+
+
+
+
   .field-group {
 
     input.slider-group {

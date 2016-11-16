@@ -282,8 +282,8 @@ html(ng-app='launcher')
                 .field-group.primary
                   label(for='maxMemory')
                     | Maximum Memory (MB):
-                  input.slider-group(name="maxMemoryInput" id="maxMemoryInput" type="number" ng-model="memory.max" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" step="{{memory.step}}" ng-change="set_memory_slider_value(memory.max)")
-                  input.wide.slider-group(name="maxMemorySlider" id="maxMemorySlider" type="range"  ng-model="memory.slider" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" ng-change="snap_memory(memory.slider)")
+                  input.slider-group(name="maxMemoryInput" id="maxMemoryInput" type="number" ng-model="memory.max" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" step="{{memory.step}}" ng-change="set_memory_slider_value(memory.max)" ng-class="memory.validate.max.class()")
+                  input.wide.slider-group(name="maxMemorySlider" id="maxMemorySlider" type="range"  ng-model="memory.slider" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" ng-change="snap_memory(memory.slider)" ng-class="memory.validate.max.class()")
                   br
                   label.right.critically_low_memory_warning(ng-show="memory.max < 2048")
                     | Insufficient memory. The game will very likely encounter problems.
@@ -304,13 +304,13 @@ html(ng-app='launcher')
                     label(for='initialMemory')
                       | Initial Memory (MB):
                     br
-                    input(name="initialMemory" id='initialMemory' type="number" ng-model='memory.initial' min="64")
+                    input(name="initialMemory" id='initialMemory' type="number" ng-model='memory.initial' min="64" ng-class="memory.validate.initial.class()")
                     
                   .field-group
                     label(for='earlyGenMemory')
                       | Early Gen Memory:
                     br
-                    input(name="earlyGenMemory" id='earlyGenMemory' type="number" ng-model='memory.earlyGen' min="64")
+                    input(name="earlyGenMemory" id='earlyGenMemory' type="number" ng-model='memory.earlyGen' min="64" ng-class="memory.validate.earlyGen.class()")
 
                   br.clearfix
                   label.critically_low_memory_warning(ng-hide='memory.validate.earlyGen() && memory.validate.initial()')
