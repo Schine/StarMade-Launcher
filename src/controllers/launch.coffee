@@ -55,72 +55,74 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
   # Load memory settings from storage, or set the defaults
+  loadMemorySettings = ->
+    _do_logging = false
+    if not $rootScope.alreadyExecuted 'Loading memory settings', 1000
+      $rootScope.log.event "Loading memory settings"
+      _do_logging = true
 
-  _do_logging = false
-  if not $rootScope.alreadyExecuted 'Loading memory settings'
-    $rootScope.log.event "Loading memory settings"
-    _do_logging = true
+    # Cap max memory to physical ram
+    _max = Number(localStorage.getItem('maxMemory')) || Number(defaults[os.arch()].max)
+    $rootScope.log.indent.info "Max memory capped to physical ram"  if _max > defaults[os.arch()].ceiling && _do_logging
+    _max = Math.min( _max, defaults[os.arch()].ceiling )
 
-  # Cap max memory to physical ram
-  _max = Number(localStorage.getItem('maxMemory')) || Number(defaults[os.arch()].max)
-  $rootScope.log.indent.info "Max memory capped to physical ram"  if _max > defaults[os.arch()].ceiling && _do_logging
-  _max = Math.min( _max, defaults[os.arch()].ceiling )
+    $scope.memory =
+      max:      _max
+      initial:  Number(localStorage.getItem('initialMemory'))  || Number(defaults[os.arch()].initial)
+      earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
+      ceiling:  Number( defaults[os.arch()].ceiling )
+      step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
+      validate: {}   # Validation checks reside here
 
-  $scope.memory =
-    max:      _max
-    initial:  Number(localStorage.getItem('initialMemory'))  || Number(defaults[os.arch()].initial)
-    earlyGen: Number(localStorage.getItem('earlyGenMemory')) || Number(defaults[os.arch()].earlyGen)
-    ceiling:  Number( defaults[os.arch()].ceiling )
-    step:     256  # Used by #maxMemoryInput.  See AngularJS workaround in $scope.closeClientOptions() below for why this isn't hardcoded.
-    validate: {}   # Validation checks reside here
+    if _do_logging
+      $rootScope.log.indent.entry "maxMemory:      #{$scope.memory.max}"
+      $rootScope.log.indent.entry "initialMemory:  #{$scope.memory.initial}"
+      $rootScope.log.indent.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
+      $rootScope.log.indent.entry "ceiling:        #{$scope.memory.ceiling}"
 
-  if _do_logging
-    $rootScope.log.indent.entry "maxMemory:      #{$scope.memory.max}"
-    $rootScope.log.indent.entry "initialMemory:  #{$scope.memory.initial}"
-    $rootScope.log.indent.entry "earlyGenMemory: #{$scope.memory.earlyGen}"
-    $rootScope.log.indent.entry "ceiling:        #{$scope.memory.ceiling}"
+    $scope.memory.validate = ->
+      # Validate memory settings
+      return false  if not $scope.memory.validate.initial()
+      return false  if not $scope.memory.validate.earlyGen()
+      return false  if not $scope.memory.validate.max()
+      return false  if     $scope.memory.earlyGen >= $scope.memory.initial
+      return false  if     $scope.memory.max      <  $scope.memory.initial + $scope.memory.earlyGen
+      return false  if     $scope.memory.max      >  $scope.memory.ceiling
+      return true
 
-  $scope.memory.validate = ->
-    # Validate memory settings
-    return false  if not $scope.memory.validate.initial()
-    return false  if not $scope.memory.validate.earlyGen()
-    return false  if not $scope.memory.validate.max()
-    return false  if     $scope.memory.earlyGen >= $scope.memory.initial
-    return false  if     $scope.memory.max      <  $scope.memory.initial + $scope.memory.earlyGen
-    return false  if     $scope.memory.max      >  $scope.memory.ceiling
-    return true
+    $scope.memory.validate.max = ->
+      # catch `undefined` from invalid values
+      return false  if not $scope.memory.max?
+      return false  if not typeof $scope.memory.max == "number"
 
-  $scope.memory.validate.max = ->
-    # catch `undefined` from invalid values
-    return false  if not $scope.memory.max?
-    return false  if not typeof $scope.memory.max == "number"
+      _max = $scope.memory.max
+      return false  if     _max >  $scope.memory.ceiling
+      return false  if     _max < ($scope.memory.initial + $scope.memory.earlyGen)
+      return true
 
-    _max = $scope.memory.max
-    return false  if     _max >  $scope.memory.ceiling
-    return false  if     _max < ($scope.memory.initial + $scope.memory.earlyGen)
-    return true
+    $scope.memory.validate.initial = ->
+      return false  if not $scope.memory.initial?    # catch `undefined` from invalid values
+      return true
 
-  $scope.memory.validate.initial = ->
-    return false  if not $scope.memory.initial?    # catch `undefined` from invalid values
-    return true
-
-  $scope.memory.validate.earlyGen = ->
-    return false  if not $scope.memory.earlyGen?   # catch `undefined` from invalid values
-    return true
-
-
-  $scope.memory.validate.max.class      = ->
-    return "invalid"  if not $scope.memory.validate.max()
-    return "critical" if     $scope.memory.max < 2048
-    return "warning"  if     $scope.memory.max < 4096
-  $scope.memory.validate.initial.class  = ->
-    return "invalid"  if not $scope.memory.validate.initial()
-    return "invalid"  if     $scope.memory.initial <= $scope.memory.earlyGen
-    return "warning"  if     $scope.memory.initial <  256
-  $scope.memory.validate.earlyGen.class = ->
-    return "invalid"  if not $scope.memory.validate.earlyGen()
+    $scope.memory.validate.earlyGen = ->
+      return false  if not $scope.memory.earlyGen?   # catch `undefined` from invalid values
+      return true
 
 
+    $scope.memory.validate.max.class      = ->
+      return "invalid"  if not $scope.memory.validate.max()
+      return "critical" if     $scope.memory.max < 2048
+      return "warning"  if     $scope.memory.max < 4096
+    $scope.memory.validate.initial.class  = ->
+      return "invalid"  if not $scope.memory.validate.initial()
+      return "invalid"  if     $scope.memory.initial <= $scope.memory.earlyGen
+      return "warning"  if     $scope.memory.initial <  256
+    $scope.memory.validate.earlyGen.class = ->
+      return "invalid"  if not $scope.memory.validate.earlyGen()
+
+
+  # load memory settings immediately
+  loadMemorySettings()
 
 
   # Load launcher settings from storage, or set the defaults
@@ -398,6 +400,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
   $scope.openClientMemoryOptions = ->
+    loadMemorySettings()
     updateMemorySlider()
     $scope.clientMemoryOptions = true
 
