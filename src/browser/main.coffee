@@ -251,6 +251,7 @@ app.on 'window-all-closed', ->
   app.quit()
 
 app.on 'ready', ->
+  log.event "App ready.", log.levels.verbose
   protocol = require('protocol')
 
   openGettingStartedWindow()
