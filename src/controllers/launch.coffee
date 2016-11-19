@@ -497,6 +497,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
   $scope.launch = (dedicatedServer = false) =>
     $rootScope.log.event "Launching game"
     $scope.verifyJavaPath()
+    loadMemorySettings()
 
     customJavaPath = null
 
