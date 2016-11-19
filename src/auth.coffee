@@ -19,6 +19,7 @@ guestLink = document.getElementById 'guestLink'
 uplinkForm = document.getElementById 'uplink'
 uplinkSubmit = document.getElementById 'uplinkSubmit'
 status = document.getElementById 'status'
+statusGuest = document.getElementById 'statusGuest'
 rememberMe = false
 rememberMeLabel = document.getElementById 'rememberMeLabel'
 rememberMeBox = document.getElementById 'rememberMe'
@@ -107,13 +108,13 @@ doLogin = (event) ->
   request.post REGISTRY_TOKEN_URL,
     form:
       grant_type: 'password'
-      username: document.getElementById('username').value,
+      username: document.getElementById('username').value.trim(),
       password: document.getElementById('password').value,
       scope: 'public read_citizen_info client'
     (err, res, body) ->
       body = JSON.parse body
       if !err && res.statusCode == 200
-        log.entry "Logged in as #{document.getElementById('username').value}"
+        log.entry "Logged in as #{document.getElementById('username').value.trim()}"
         ipc.send 'finish-auth', body
       else if res.statusCode == 401
         log.entry "Invalid login credentials"
@@ -139,9 +140,15 @@ registerLink.addEventListener 'click', showRegister
 
 doGuest = (event) ->
   event.preventDefault()
-  log.entry "Guest login: #{document.getElementById('playerName').value}"
+
+  playerName = document.getElementById('playerName').value.trim()
+  unless !!playerName && playerName.length >= 3
+    statusGuest.innerHTML = "Invalid username"
+    return
+
+  log.entry "Guest login: #{playerName}"
   ipc.send 'finish-auth',
-    playerName: document.getElementById('playerName').value
+    playerName: playerName
 
 guestForm.addEventListener 'submit', doGuest
 guestSubmit.addEventListener 'click', doGuest
