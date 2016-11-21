@@ -171,7 +171,6 @@ launcherUpdating = false
 
 
 
-
 # Disable caching so that files like the build index and checksums aren't cached
 app.commandLine.appendSwitch('disable-http-cache')
 
@@ -246,19 +245,32 @@ openGettingStartedWindow = (args) ->
   gettingStartedWindow.on 'closed', ->
     gettingStartedWindow = null
 
+
+
 app.on 'window-all-closed', ->
   log.end "All windows closed.  Exiting."
   app.quit()
 
+
+loadFailure = setTimeout ->
+    log.fatal "App failed to load"
+    log.end   "Exiting"
+    process.exit(1)
+  , 50
+
 app.on 'ready', ->
-  log.event "App ready.", log.levels.verbose
+  log.event "App ready", log.levels.verbose
+  # clearTimeout(loadFailure)
   protocol = require('protocol')
 
   openGettingStartedWindow()
 
+
 app.on 'before-quit', ->
   log.end "Exiting"
   quitting = true
+
+
 
 ipc.on 'open-changelog', ->
   log.event "Opening changelog"
