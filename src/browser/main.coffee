@@ -260,7 +260,7 @@ loadFailure = setTimeout ->
 
 app.on 'ready', ->
   log.event "App ready", log.levels.verbose
-  # clearTimeout(loadFailure)
+  clearTimeout(loadFailure)
   protocol = require('protocol')
 
   openGettingStartedWindow()
