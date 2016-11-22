@@ -256,7 +256,7 @@ loadFailure = setTimeout ->
     log.fatal "App failed to load"
     log.end   "Exiting"
     process.exit(1)
-  , 50
+  , 6000
 
 app.on 'ready', ->
   log.event "App ready", log.levels.verbose
