@@ -491,7 +491,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
   set_backup_compression = (newVal) ->
     localStorage.setItem('backupCompressionType', newVal)
     $scope.backupOptions.compressionType = newVal
-    $rootScope.log.entry "Changed backup compression type to #{localStorage.getItem('backupCompressionType')}"
+    $rootScope.log.entry "Set backup compression type to #{localStorage.getItem('backupCompressionType')}"
 
 
   $scope.closeBackupDialog = () ->
