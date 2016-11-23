@@ -150,7 +150,7 @@ if not localStorage.getItem('gotStarted')? and localStorage.getItem('acceptedEul
 log.verbose "Getting Started window.location.href: #{window.location.href}"
 
 if localStorage.getItem('gotStarted')?
-  log.debug "already got started"
+  log.debug "Already got started"
   if window.location.href.split('?')[1] == 'licenses'
     showLicenses()
     remote.getCurrentWindow().show()
