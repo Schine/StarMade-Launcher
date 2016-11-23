@@ -466,7 +466,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     if !newPath  # blank path uses bundled java instead
       $scope.launcherOptions.invalidJavaPath = false
-      $scope.launcherOptions.javaPathStatus = "-- Using bundled Java version --"
+      $scope.launcherOptions.javaPathStatus  = "-- Using bundled Java version --"
 
       if _do_logging
         $rootScope.log.debug "Using bundled Java"
@@ -477,8 +477,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     if fileExists( path.join(newPath, "java") )  || # osx+linux
        fileExists( path.join(newPath, "java.exe") ) # windows
-      $scope.launcherOptions.javaPathStatus = "-- Using custom Java install --"
-      $scope.launcherOptions.invalidJavaPath  = false
+      $scope.launcherOptions.javaPathStatus  = "-- Using custom Java install --"
+      $scope.launcherOptions.invalidJavaPath = false
 
       if _do_logging
         $rootScope.log.debug "Using custom Java"
