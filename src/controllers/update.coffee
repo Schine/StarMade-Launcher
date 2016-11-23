@@ -99,17 +99,17 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
   $scope.$watch 'backupOptions.configs', (newVal) ->
     localStorage.setItem 'backupConfigs', newVal
     $timeout () ->
-      $rootScope.log.verbose "set backupConfigs    to #{newVal} (localStorage reread: #{localStorage.getItem('backupConfigs')})"
+      $rootScope.log.verbose "Set backupConfigs    to #{newVal} (localStorage reread: #{localStorage.getItem('backupConfigs')})"
 
   $scope.$watch 'backupOptions.worlds', (newVal) ->
     localStorage.setItem 'backupWorlds', newVal
     $timeout () ->
-      $rootScope.log.verbose "set backupWorlds     to #{newVal} (localStorage reread: #{localStorage.getItem('backupWorlds')})"
+      $rootScope.log.verbose "Set backupWorlds     to #{newVal} (localStorage reread: #{localStorage.getItem('backupWorlds')})"
 
   $scope.$watch 'backupOptions.blueprints', (newVal) ->
     localStorage.setItem 'backupBlueprints', newVal
     $timeout () ->
-      $rootScope.log.verbose "set backupBlueprints to #{newVal} (localStorage reread: #{localStorage.getItem('backupBlueprints')})"
+      $rootScope.log.verbose "Set backupBlueprints to #{newVal} (localStorage reread: #{localStorage.getItem('backupBlueprints')})"
 
 
 

@@ -553,11 +553,11 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
 
     # Debug output
-    $rootScope.log.debug "command:"
+    $rootScope.log.debug "Command:"
     command = javaExec + " " + args.join(" ")
     $rootScope.log.indent.debug  cmd_slice  for cmd_slice in command.match /.{1,128}/g
 
-    $rootScope.log.debug "options:"
+    $rootScope.log.debug "Options:"
     $rootScope.log.indent()
     $rootScope.log.debug   "cwd: #{installDir}"
     $rootScope.log.debug   "stdio: #{stdio}"
