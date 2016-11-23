@@ -120,7 +120,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.log.entry "Steam:     #{$rootScope.steamLaunch}"
   # attach with --steam or --attach; --detach overrides
   $rootScope.log.entry "Attach:    #{($rootScope.steamLaunch || $rootScope.attach) && !$rootScope.detach}"  ##TODO: migrate to using this in launch.coffee
-  $rootScope.log.entry "capture:   #{$rootScope.captureGame}"
+  $rootScope.log.entry "Capture:   #{$rootScope.captureGame}"
   $rootScope.log.outdent()
 
 
