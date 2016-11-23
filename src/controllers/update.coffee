@@ -489,6 +489,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
   $scope.set_targz_compression = () -> set_backup_compression('targz');
 
   set_backup_compression = (newVal) ->
+    return  if localStorage.getItem('backupCompressionType') == newVal
     localStorage.setItem('backupCompressionType', newVal)
     $scope.backupOptions.compressionType = newVal
     $rootScope.log.entry "Set backup compression type to #{localStorage.getItem('backupCompressionType')}"
