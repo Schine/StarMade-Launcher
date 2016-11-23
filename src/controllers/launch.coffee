@@ -461,7 +461,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     _do_logging = true  if not $rootScope.alreadyExecuted('log verifyJavaPath', 1000)
 
     if _do_logging
-      $rootScope.log.verbose "Verifiying Java path"
+      $rootScope.log.verbose "Verifying Java path"
       $rootScope.log.indent(1, $rootScope.log.levels.verbose)
 
     if !newPath  # blank path uses bundled java instead
