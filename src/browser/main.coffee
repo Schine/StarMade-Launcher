@@ -22,7 +22,7 @@ process.argv.slice(1).forEach (arg, index) ->
 global.argv      = argv
 global.version   = require(path.join(__dirname, '..', '..', 'package.json')).version
 global.buildHash = require('../buildHash.js').buildHash
-global.qa        = true
+global.qa        = false
 
 
 if argv.help?
