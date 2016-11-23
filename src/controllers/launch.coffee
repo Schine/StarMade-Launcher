@@ -38,7 +38,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     x64max = 2048
     if not $rootScope.alreadyExecuted 'log low system memory'
       $rootScope.log.info "Low system memory (#{totalRam}mb)"
-      $rootScope.log.indent.entry "Decreased default max memory from 4gb to 2gb"
+      if os.arch() == "x64"
+        $rootScope.log.indent.entry "Decreased default max memory from 4gb to 2gb"
 
   defaults =
     ia32:
