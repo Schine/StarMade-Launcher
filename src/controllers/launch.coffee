@@ -367,9 +367,9 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     _do_logging = true if not $rootScope.alreadyExecuted("Log - updateMemorySlider", 1000)
 
     if _do_logging?
-      $rootScope.log.event("Updating memory slider", $rootScope.log.levels.verbose)
-      $rootScope.log.indent.verbose "earlyGen: #{earlyGen}"
-      $rootScope.log.indent.verbose "initial:  #{initial}"
+      $rootScope.log.verbose "Updating memory slider"
+      $rootScope.log.indent.entry "earlyGen: #{earlyGen}", $rootScope.log.levels.verbose
+      $rootScope.log.indent.entry "initial:  #{initial}",  $rootScope.log.levels.verbose
       $rootScope.log.indent()
 
     updateMemoryFloor()  # update floor whenever initial/earlyGen change
@@ -381,8 +381,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     if _do_logging?
       $rootScope.log.outdent()
-      $rootScope.log.indent.verbose "max:      #{$scope.memory.max}"
-      $rootScope.log.indent.verbose "slider:   #{$scope.memory.slider}"
+      $rootScope.log.indent.entry "max:      #{$scope.memory.max}",    $rootScope.log.levels.verbose
+      $rootScope.log.indent.entry "slider:   #{$scope.memory.slider}", $rootScope.log.levels.verbose
 
     # Workaround for Angular's range bug  (https://github.com/angular/angular.js/issues/6726)
     $timeout ->
