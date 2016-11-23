@@ -142,7 +142,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   if _do_logging
     $rootScope.log.indent.entry "serverPort: #{$scope.serverPort}"
-    $rootScope.log.indent.entry "javaPath:   #{$scope.launcherOptions.javaPath}"
+    $rootScope.log.indent.entry "javaPath:   #{$scope.launcherOptions.javaPath || '(none)'}"
     # javaArgs logged below
 
 
@@ -394,8 +394,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     # deleting the contents of the `earlyGen` and/or `initial` textboxes causes problems.  setting a min value here fixes it.
     $scope.memory.floor = Math.max($scope.memory.earlyGen + $scope.memory.initial, 256)  # 256 minimum
     if not $rootScope.alreadyExecuted("Log - updateMemoryFloor", 1000)
-      $rootScope.log.event("Updating memory floor", $rootScope.log.levels.verbose)
-      $rootScope.log.indent.verbose "setting memory.floor to #{$scope.memory.floor}"
+      $rootScope.log.verbose "Updating memory floor"
+      $rootScope.log.indent.entry "setting memory.floor to #{$scope.memory.floor}", $rootScope.log.levels.verbose
 
 
 
