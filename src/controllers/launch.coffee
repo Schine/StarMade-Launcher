@@ -169,6 +169,10 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $rootScope.log.indent.entry "javaArgs:   #{$scope.launcherOptions.javaArgs}"
 
 
+  loadJavaArgs = () ->
+    $rootScope.log.info "Loading java args"
+    $scope.launcherOptions.javaArgs = localStorage.getItem("javaArgs")
+    $rootScope.log.indent.entry $scope.launcherOptions.javaArgs
 
   $scope.setJavaArgs = () ->
     return  if $scope.launcherOptions.javaArgs == localStorage.getItem("javaArgs")
@@ -499,6 +503,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $rootScope.log.event "Launching game"
     $scope.verifyJavaPath()
     loadMemorySettings()
+    loadJavaArgs()
 
     customJavaPath = null
 
