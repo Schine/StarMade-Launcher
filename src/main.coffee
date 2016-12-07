@@ -73,7 +73,7 @@ app.config ($httpProvider, $stateProvider, $urlRouterProvider) ->
   $httpProvider.interceptors.push 'xmlHttpInterceptor'
   $httpProvider.interceptors.push 'tokenInterceptor'
 
-app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updater) ->
+app.run ($q, $rootScope, $state, $timeout, settings, accessToken, api, refreshToken, updater) ->
   argv       = remote.getGlobal('argv')
   rememberMe = util.parseBoolean localStorage.getItem 'rememberMe'
 
@@ -123,6 +123,10 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
   $rootScope.log.entry "Capture:   #{$rootScope.captureGame}"
   $rootScope.log.outdent()
 
+
+  $rootScope.showSettingsDialog = () ->
+    $rootScope.log.event "Presenting settings dialog"
+    settings.dialog.show()
 
 
   # Prevent multiple executions, optionally within a specified cooldown
@@ -316,6 +320,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 # Controllers
 require('./controllers/citizenBroadcast')
 require('./controllers/council')
+require('./controllers/settings')
 require('./controllers/launch')
 require('./controllers/news')
 require('./controllers/update')
@@ -327,12 +332,14 @@ require('./directives/faqEntry')
 require('./directives/minimizeButton')
 require('./directives/newsBody')
 require('./directives/popup')
+require('./directives/settingsDialog')
 require('./directives/progressBar')
 
 # Filters
 require('./filters/ordinalDate')
 
 # Services
+require('./services/settings')
 require('./services/Checksum')
 require('./services/NewsSidebarEntry')
 require('./services/Version')

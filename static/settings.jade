@@ -1,0 +1,51 @@
+settings-dialog.launcher-options-popup(title='Launcher Options' type='settings' opened='dialog.visible')
+  form.popup-body
+    .field-group.launcher-options
+      label Launcher Settings
+      br
+      button(ng-click='switchUser()') Switch User
+      span.description
+        | You are currently logged in as:
+        br
+        span.highlight {{playerName}}
+      br
+      button(ng-click='showChangelog()') Show Changelog
+      span.description
+        | Launcher 
+        span.highlight v{{version}} 
+        | installed
+        br
+        | (build 
+        span.highlight {{buildHash}}
+        | )
+      br
+      button(ng-click='openDownloadPage()') Launcher Download Page
+      span.description
+
+
+    .field-group.launcher-options(ng-if='currentUser' ng-hide="!steamLaunch")
+      label Steam Settings
+      br
+      button(ng-if='!steamAccountLinked' ng-click='openSteamLink()') Link Registry Account to Steam
+      button(ng-if='steamAccountLinked' ng-disabled='true') Registry Account Linked to Steam
+
+    .field-group.launcher-options(ng-controller="LaunchCtrl")
+      label Java Settings
+      br
+      input(type="text" ng-model='launcherOptions.javaArgs' ng-blur="setJavaArgs()")
+      span.description
+        | These options are passed to Java, along with memory settings, etc.
+      br
+      button(ng-click="resetJavaArgs()") Reset to Default
+      span.description
+      br
+      input(type="text" ng-model='launcherOptions.javaPath' ng-blur="verifyJavaPath()")
+      span.description
+        | Enter a custom java path, or leave
+        | blank to use the bundled version.
+      button(ng-click="launcherOptions.javaPathBrowse()") Browse
+      br
+      span.description.error(ng-show="launcherOptions.invalidJavaPath")
+        | There is no java executable in the specified path.
+      span.description.status(ng-hide="launcherOptions.invalidJavaPath")
+        | {{launcherOptions.javaPathStatus}}
