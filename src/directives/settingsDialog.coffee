@@ -14,6 +14,5 @@ app.directive 'settingsDialog', ($rootScope, settings) ->
       type:   '@'
     link: (scope, element, attributes, controller, transclude) ->
       scope.close = ->
-        $rootScope.log.entry "Closing settings dialog"
         settings.dialog.hide()
   }

@@ -1,0 +1,107 @@
+div.launcher-options-popup {
+  div.popup-container {
+    left:   100px;
+    top:    100px;
+    width:  calc(~"100% - 200px");
+    height: calc(~"100% - 200px");
+
+    div.popup-body {
+      height: calc(~"100% - 68px");
+      padding: 0px;
+    }
+  }
+  .menu {
+    float:      left;
+    width:      150px;
+    height:     280px;
+    padding:      1em;
+    border-right: 1px solid #223;
+    background: rgba(0,0,10, 0.2);  // darken and tint
+
+    .item {
+      padding: 0 0.25em;
+    }
+
+    .item {
+      &.active {
+        background:  rgba(0,150,200, 0.2);  // Fallback highlight
+        background:  radial-gradient(circle at 40% 50%, rgba(0,150,200, 0.4) 0%, rgba(0,0,10, 0.1) 100%);
+        .name { color: white; }
+      }
+
+      &.invalid {
+        background:  rgba(255,0,0, 0.2);  // Fallback highlight
+        background:  radial-gradient(circle at 40% 50%, rgba(255,0,0, 0.2) 0%, rgba(255,75,0, 0) 100%);
+        .name { color: firebrick; }
+
+        &.active {
+          background:  rgba(255,0,0, 0.3);  // Fallback highlight
+          background:  radial-gradient(circle at 40% 50%, rgba(255,0,0, 0.3) 0%, rgba(255,75,0, 0) 100%);
+          .name { color: white; }
+        }
+      }
+
+      .icon {
+        display:       inline-block;
+        float:         left;
+        width:         24px;
+        height:        24px;
+        padding-right:  1em;
+      }
+
+      .name {
+        display:        inline-block;
+        line-height:    24px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+
+  div.panes {
+    float:      left;
+    width:      calc(~"100% - 150px");
+    height:     calc(280px - 36px);
+    background: rgba(0,100,200, 0.05);  // Fallback color
+    background: radial-gradient(circle at 60% 0px, rgba(0,100,200, 0.1) 0%, rgba(0,0,10, 0.1) 100%);  // Nice gradient
+
+    div.pane {
+      width:    100%;
+      height:   100%;
+      padding:  1em;
+      overflow: auto;
+    }
+  }
+
+  div.controls {
+    float:         left;  // TODO: May want to use pos:abs instead of relying on perfectly-fitting floats
+    width:         calc(~"100% - 150px");
+    height:         36px;
+    padding-right: 0.5em;
+    border-top:    1px solid #223;
+
+
+    button {
+      float:  right;
+      margin: 0.5em;
+    }
+
+    button.save   {
+      color:      lightgreen;
+      background: darkgreen;
+    }
+    button.cancel {
+      color:      darkgray;
+    }
+
+    div.validation {
+      padding:       0.75em 0;
+      padding-left:    1em;
+      font-size:     110%;
+
+      span.invalid    { color: red;  }
+      span.validating { color: teal; }
+    }
+  }
+
+}

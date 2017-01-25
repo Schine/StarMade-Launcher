@@ -271,65 +271,8 @@ html(ng-app='launcher')
                     button(ng-click='clearEnvJavaOptions()') Clear and continue
 
 
-
-          div.clientMemoryOptions
-            popup(title='Client Memory Settings' type='settings' opened='clientMemoryOptions')
-              p
-                | The recommended memory for StarMade is 4096mb.
-                | Smaller values will work, but may significantly reduce gameplay quality.
-
-              form.side-by-side
-                .field-group.primary
-                  label(for='maxMemory')
-                    | Maximum Memory (MB):
-                  input.slider-group(name="maxMemoryInput" id="maxMemoryInput" type="number" ng-model="memory.max" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" step="{{memory.step}}" ng-change="set_memory_slider_value(memory.max)" ng-class="memory.validate.max.class()")
-                  input.wide.slider-group(name="maxMemorySlider" id="maxMemorySlider" type="range"  ng-model="memory.slider" string-to-number min="{{memory.floor}}" max="{{memory.ceiling}}" ng-change="snap_memory(memory.slider)" ng-class="memory.validate.max.class()")
-                  br
-                  label.right.critically_low_memory_warning(ng-show="memory.max < 2048")
-                    | Insufficient memory. The game will very likely encounter problems.
-                  label.right.low_memory_warning(ng-show="memory.max >= 2048 && memory.max < 4096")
-                    | Less than 4096mb is not recommended, and may cause issues.
-                  label.right.non-power-of-2(ng-show="!memory.power_of_2 && memory.max >= 4096")
-                    | Some Java versions require max memory to be a power of 2
-                  label.right.power-of-2(ng-show="memory.power_of_2 && memory.max >= 4096")
-                    | Max memory is a power of 2
-
-                br.clearfix
-                hr(ng-hide="launcherOptions.showAdvancedMemory")
-                a(name="__advClick" href="#" ng-click="launcherOptions.showAdvancedMemory = true" ng-hide="launcherOptions.showAdvancedMemory")
-                  | Show advanced options
-
-                div.advanced-memory(ng-show="launcherOptions.showAdvancedMemory")
-                  .field-group
-                    label(for='initialMemory')
-                      | Initial Memory (MB):
-                    br
-                    input(name="initialMemory" id='initialMemory' type="number" ng-model='memory.initial' min="64" ng-class="memory.validate.initial.class()")
-                    
-                  .field-group
-                    label(for='earlyGenMemory')
-                      | Early Gen Memory:
-                    br
-                    input(name="earlyGenMemory" id='earlyGenMemory' type="number" ng-model='memory.earlyGen' min="64" ng-class="memory.validate.earlyGen.class()")
-
-                  br.clearfix
-                  label.critically_low_memory_warning(ng-hide='memory.validate.earlyGen() && memory.validate.initial()')
-                    | Values must be at least 64mb
-                    br
-                  label.critically_low_memory_warning(ng-show='memory.earlyGen >= memory.initial')
-                    | Initial memory 
-                    i must 
-                    | be larger than earlyGen.
-                    br
-                  label.low_memory_warning(ng-show='(memory.initial < 256) || !memory.validate.initial()') Note: Setting initial memory below 256mb may cause problems
-
-                .field-group.block.right
-                  button(ng-click='saveClientOptions()' ng-disabled='!memory.validate()') Save
-                  button(ng-click='closeClientOptions()') Cancel
-
           a.gear.gear-memory(ng-click="openClientMemoryOptions()") &nbsp;
           .launch-bg(ng-class='{hover: launchHover}' ng-hide='updaterProgress.needsUpdating || updaterProgress.inProgress')
           a.launch(ng-controller='LaunchCtrl' ng-click='launch(onDedicatedTab)' ng-hide='updaterProgress.inProgress || updaterProgress.needsUpdating' ng-mouseenter='launchMouseEnter()' ng-mouseleave='launchMouseLeave()')
 
-    div(ng-controller="SettingsCtrl")
-      include settings.jade
+    include settings.jade

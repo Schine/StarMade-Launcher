@@ -1,51 +1,118 @@
-settings-dialog.launcher-options-popup(title='Launcher Options' type='settings' opened='dialog.visible')
-  form.popup-body
-    .field-group.launcher-options
-      label Launcher Settings
-      br
-      button(ng-click='switchUser()') Switch User
-      span.description
-        | You are currently logged in as:
-        br
-        span.highlight {{playerName}}
-      br
-      button(ng-click='showChangelog()') Show Changelog
-      span.description
-        | Launcher 
-        span.highlight v{{version}} 
-        | installed
-        br
-        | (build 
-        span.highlight {{buildHash}}
-        | )
-      br
-      button(ng-click='openDownloadPage()') Launcher Download Page
-      span.description
+div(ng-controller="SettingsCtrl")
+  settings-dialog.launcher-options-popup(title='Launcher Settings' type='settings' opened='dialog.visible')
+    form.popup-body
+      div.menu
+        div.item(ng-repeat="pane in panes" ng-click="show(pane.name)" ng-class="pane.$classes()")
+          img.icon(src="{{pane.icon}}")
+          label.name {{pane.displayName}}
+      div.panes
+        div.pane.clientMemoryOptions(ng-hide="!panes.memory.active")
+          p
+            | The recommended memory for StarMade is 4096mb.
+            | Smaller values will work, but may significantly reduce gameplay quality.
+
+          form.side-by-side
+            .field-group.primary
+              label(for='maxMemory')
+                | Maximum Memory (MB):
+              input.slider-group(name="maxMemoryInput" id="maxMemoryInput" type="number" ng-model="panes.memory.max"  min="{{panes.memory.floor}}" max="{{panes.memory.ceiling}}" step="{{panes.memory.step}}" ng-change="panes.memory.set_memory_slider_value(panes.memory.max)" ng-class="panes.memory.validate.max.class()" ng-blur="panes.memory.validate.stub()")
+              input.wide.slider-group(name="maxMemorySlider" id="maxMemorySlider" type="range"  ng-model="panes.memory.slider" string-to-number min="{{panes.memory.floor}}" max="{{panes.memory.ceiling}}" ng-change="panes.memory.snapSlider(panes.memory.slider)" ng-class="panes.memory.validate.max.class()" ng-blur="panes.memory.validate.stub()")
+              br
+              label.right.invalid_memory_warning(ng-show="panes.memory.validate.max.valid == false")
+                | Invalid setting
+              label.right.critically_low_memory_warning(ng-show="panes.memory.max < 2048")
+                | Insufficient memory. The game will very likely encounter problems
+              label.right.low_memory_warning(ng-show="panes.memory.max >= 2048 && panes.memory.max < 4096")
+                | Less than 4096mb is not recommended, and may cause issues
+              label.right.non-power-of-2(ng-show="!panes.memory.power_of_2 && panes.memory.max >= 4096")
+                | Some Java versions require max memory to be a power of 2
+              label.right.power-of-2(ng-show="panes.memory.power_of_2 && panes.memory.max >= 4096")
+                | Max memory is a power of 2
+
+            br.clearfix
+            hr
+            a(name="__showAdvMemory" href="#" ng-click="panes.memory.showAdvanced = true"  ng-hide="panes.memory.showAdvanced")
+              | Show advanced options
+
+            div.advanced-memory(ng-show="panes.memory.showAdvanced")
+              .field-group
+                label(for='initialMemory')
+                  | Initial Memory (MB):
+                br
+                input(name="initialMemory" id='initialMemory' type="number" ng-model='panes.memory.initial' min="64" ng-class="panes.memory.validate.initial.class()" ng-blur="panes.memory.validate.stub()")
+
+              .field-group
+                label(for='earlyGenMemory')
+                  | Early Gen Memory:
+                br
+                input(name="earlyGenMemory" id='earlyGenMemory' type="number" ng-model='panes.memory.earlyGen' min="64" ng-class="panes.memory.validate.earlyGen.class()" ng-blur="panes.memory.validate.stub()")
+
+              br.clearfix
+              label.critically_low_memory_warning(ng-hide='panes.memory.validate.earlyGen.valid && panes.memory.validate.initial.valid')
+                | Values must be at least 64mb
+                br
+              label.critically_low_memory_warning(ng-show='panes.memory.earlyGen >= panes.memory.initial')
+                | Initial memory 
+                i must 
+                | be larger than earlyGen.
+                br
+              label.low_memory_warning(ng-show='(panes.memory.initial < 256) || !panes.memory.validate.initial.valid') Note: Setting initial memory below 256mb may cause problems
 
 
-    .field-group.launcher-options(ng-if='currentUser' ng-hide="!steamLaunch")
-      label Steam Settings
-      br
-      button(ng-if='!steamAccountLinked' ng-click='openSteamLink()') Link Registry Account to Steam
-      button(ng-if='steamAccountLinked' ng-disabled='true') Registry Account Linked to Steam
+        div.pane(ng-hide="!panes.launcher.active")
+          .field-group.launcher-options
+            button(ng-click='switchUser()') Switch User
+            span.description
+              | You are currently logged in as:
+              br
+              span.highlight {{playerName}}
+            br
+            button(ng-click='showChangelog()') Show Changelog
+            span.description
+              | Launcher 
+              span.highlight v{{version}} 
+              | installed
+              br
+              | (build 
+              span.highlight {{buildHash}}
+              | )
+            br
+            button(ng-click='openDownloadPage()') Launcher Download Page
+            span.description
 
-    .field-group.launcher-options(ng-controller="LaunchCtrl")
-      label Java Settings
-      br
-      input(type="text" ng-model='launcherOptions.javaArgs' ng-blur="setJavaArgs()")
-      span.description
-        | These options are passed to Java, along with memory settings, etc.
-      br
-      button(ng-click="resetJavaArgs()") Reset to Default
-      span.description
-      br
-      input(type="text" ng-model='launcherOptions.javaPath' ng-blur="verifyJavaPath()")
-      span.description
-        | Enter a custom java path, or leave
-        | blank to use the bundled version.
-      button(ng-click="launcherOptions.javaPathBrowse()") Browse
-      br
-      span.description.error(ng-show="launcherOptions.invalidJavaPath")
-        | There is no java executable in the specified path.
-      span.description.status(ng-hide="launcherOptions.invalidJavaPath")
-        | {{launcherOptions.javaPathStatus}}
+          .field-group.launcher-options(ng-if='currentUser' ng-hide="!steamLaunch")
+            label Steam Settings
+            br
+            button(ng-if='!steamAccountLinked' ng-click='openSteamLink()') Link Registry Account to Steam
+            button(ng-if='steamAccountLinked' ng-disabled='true') Registry Account Linked to Steam
+
+        div.pane(ng-hide="!panes.java.active")
+          .field-group.launcher-options(ng-controller="LaunchCtrl")
+            label Java Settings
+            br
+            input(type="text" ng-model='panes.java.args' ng-blur="panes.java.setArgs()")
+            span.description
+              | These options are passed to Java, along with memory settings, etc.
+            br
+            button(id="java-resetArgs" name="java-resetArgs" ng-click="panes.java.resetArgs()") Reset to Default
+            span.description
+            br
+            input(id="java-path" type="text" ng-model='panes.java.path' ng-blur="panes.java.validate.stub()" ng-class="panes.java.validate.path.class()")
+            span.description
+              | Enter a custom java path, or leave
+              | blank to use the bundled version.
+            button(ng-click="panes.java.browse()") Browse
+            br
+            span.description.error( ng-show="panes.java.validate.pathStatus == 'invalid'")
+              | There is no java executable at the specified location.
+            span.description.status(ng-show="panes.java.validate.pathStatus == 'bundled'")
+              | -- Using bundled Java version --
+            span.description.status(ng-show="panes.java.validate.pathStatus == 'custom'")
+              | -- Using custom Java install --
+
+      div.controls
+        button.cancel(ng-click="dialog.hide()") Cancel
+        button.save(ng-click="save()") Save
+        div.validation
+          span.validating(ng-show="validate.status == 'validating'") Validating...
+          span.invalid(ng-show="validate.status == 'invalid'") {{ validate.error || "" }}

@@ -234,6 +234,10 @@ div.clientMemoryOptions {
     &.critically_low_memory_warning {
       color: red;
     }
+
+    &.invalid_memory_warning {
+      color: red;
+    }
   }
 
   input[type="number"] {
@@ -275,7 +279,7 @@ div.clientMemoryOptions {
   }
 
   hr {
-    margin-bottom: 3px;
+    margin:        5px;
     border-bottom: 1px solid rgba(255,255,255, 0.1);
   }
   
@@ -289,11 +293,20 @@ form {
 
   div.advanced-memory {
     .field-group {
+      margin: 6px 2em 1em 1em !important;
+      float:  left            !important;
+
+      &.primary {
+        margin: 0;
+      }
       &:first {
         margin-left: 0px !important;
         background-color: cyan !important;
       }
-      margin-top:  16px !important;
+
+      hr {
+        margin: 0;
+      }
     }
   }
 
@@ -677,6 +690,7 @@ div.launcher-options-popup {
 
   div.popup-body {
     div.field-group {
+      // TODO: merge this into settings.less
       &.launcher-options {
         overflow: hidden; // clearfix
 
@@ -685,6 +699,11 @@ div.launcher-options-popup {
           float:    left;
           width:    231px;
           font-size: 75%;
+        }
+
+        input#java-path {
+          &.error  { color: #c80a0a; }
+          &.status { color: #1f7282; }
         }
 
         button {
@@ -802,3 +821,4 @@ ul.side {
 @import 'progressBar.less';
 @import 'support.less';
 @import 'update.less';
+@import 'settings.less';

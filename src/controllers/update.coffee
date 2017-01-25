@@ -40,7 +40,7 @@ angular.module('app', []).config ($provide) ->
 
 
 
-app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater, updaterProgress) ->
+app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater, updaterProgress, settings) ->
   argv = remote.getGlobal('argv')
 
   $scope.versions = []
@@ -362,6 +362,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     branchChange(newVal)
 
   $scope.$watch 'installDir', (newVal) ->
+    return unless newVal?
     localStorage.setItem 'installDir', newVal
 
   $scope.$watch 'lastVersion', (newVal) ->
@@ -395,6 +396,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     if !newVal # Not in progress
       updateStatus($scope.selectedVersion)
 
+  #TODO: Move to settings
   # Override settings with supplied arguments
   if argv['install-dir']?
     localStorage.setItem('installDir', argv['install-dir'])
@@ -475,13 +477,15 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     return _build
 
 
-  $scope.installDir  = localStorage.getItem('installDir')  # If this isn't set, we have a serious problem.
-  $scope.branch      = localStorage.getItem('branch')     || 'release'
-  $scope.serverPort  = localStorage.getItem('serverPort') || '4242'
-  $scope.lastVersion = getInstalledVersion()               # Installed build id
+  settings.ready.then ->
+    $rootScope.log.important "Update: Settings initialized"
+    $scope.installDir  = localStorage.getItem('installDir')  # If this isn't set, we have a serious problem.  ##TODO: offload install paths to settings dialog
+    $scope.branch      = localStorage.getItem('branch')     || 'release'
+    $scope.serverPort  = localStorage.getItem('serverPort') || '4242'
+    $scope.lastVersion = getInstalledVersion()               # Installed build id
 
-  if not $scope.installDir?
-    $rootScope.log.error("UpdateCtrl: installDir not set")
+    if not $scope.installDir?
+      $rootScope.log.error("UpdateCtrl: installDir not set")
 
 
   # Called by zip/targz radio buttons in index.jade

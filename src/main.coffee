@@ -125,6 +125,7 @@ app.run ($q, $rootScope, $state, $timeout, settings, accessToken, api, refreshTo
 
 
   $rootScope.showSettingsDialog = () ->
+    return  if settings.dialog.isVisible()
     $rootScope.log.event "Presenting settings dialog"
     settings.dialog.show()
 
@@ -150,22 +151,11 @@ app.run ($q, $rootScope, $state, $timeout, settings, accessToken, api, refreshTo
     $rootScope.alreadyExecuted.ids[id] = cooldown
     return false
 
-  $rootScope.showChangelog = ->
-    $rootScope.log.debug "showChangelog()"
-    localStorage.removeItem "presented-changelog"
-    ipc.send "open-changelog"
-
-  $rootScope.openDownloadPage = ->
-    $rootScope.log.event "Opening download page: http://star-made.org/download"
-    shell.openExternal 'http://star-made.org/download'
 
   $rootScope.openLicenses = ->
     $rootScope.log.event "Displaying licenses"
     ipc.send 'open-licenses'
 
-  $rootScope.openSteamLink = ->
-    $rootScope.log.event "opening: https://registry.star-made.org/profile/steam_link"
-    shell.openExternal 'https://registry.star-made.org/profile/steam_link'
 
   $rootScope.startAuth = ->
     $rootScope.log.event "Displaying auth"
