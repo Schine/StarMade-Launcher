@@ -2,6 +2,9 @@
 
 app = angular.module 'launcher'
 
-app.controller 'CitizenBroadcastCtrl', ($scope, $sce) ->
-  $scope.message = $sce.trustAsHtml 'Attention StarMade citizens,<br><br>You all are awesome.'
-  $scope.unread = false
+app.controller 'CitizenBroadcastCtrl', ($scope, $sce, citizenBroadcastApi, $rootScope) ->
+  citizenBroadcastApi.get().then (message) ->
+    return unless message?
+
+    $scope.message = $sce.trustAsHtml message
+    $scope.unread = true

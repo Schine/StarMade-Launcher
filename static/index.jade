@@ -36,8 +36,8 @@ html(ng-app='launcher')
               | Options
       .content(ui-view)
       div(ng-controller='CitizenBroadcastCtrl')
-        popup(title='Citizen Broadcast' type='notification' opened='unread')
-          div(ng-bind-html='message')
+        popup.broadcast(title='Citizen Broadcast' type='notification' opened='unread')
+          div.message(ng-bind-html='message')
       .footer(ng-controller='UpdateCtrl')
         popup(title='Build Type' type='tooltip' opened='buildTypeTooltip')
           p
