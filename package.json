@@ -2,7 +2,7 @@
   "name": "starmade-launcher",
   "productName": "StarMade Launcher",
   "private": true,
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Launcher for StarMade",
   "main": "lib/browser/main.js",
   "electronVersion": "0.30.7",

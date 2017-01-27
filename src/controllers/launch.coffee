@@ -516,7 +516,12 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
       javaBinDir = customJavaPath || path.join path.dirname(path.dirname(path.dirname(path.dirname(path.dirname(process.execPath))))), 'MacOS', 'dep', 'java', javaJreDirectory, 'bin'
     else
       javaBinDir = customJavaPath || path.join path.dirname(process.execPath), "dep/java/#{javaJreDirectory}/bin"
-    javaExec = path.join javaBinDir, 'java'
+
+    # Use the javaw binary (with extension) on Windows
+    if process.platform == 'win32'
+      javaExec = path.join javaBinDir, 'javaw.exe'
+    else
+      javaExec = path.join javaBinDir, 'java'
 
     # attach with --steam or --attach; --detach overrides
     detach = (!$rootScope.steamLaunch && !$rootScope.attach) || $rootScope.detach
