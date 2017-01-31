@@ -3,7 +3,7 @@ div(ng-controller="SettingsCtrl")
     form.popup-body
       div.menu
         div.item(ng-repeat="pane in panes" ng-click="show(pane.name)" ng-class="pane.$classes()")
-          img.icon(src="{{pane.icon}}")
+          img.icon(src="{{pane.$icon()}}")
           label.name {{pane.displayName}}
       div.panes
         div.pane.clientMemoryOptions(ng-hide="!panes.memory.active")

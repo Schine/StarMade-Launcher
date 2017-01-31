@@ -14,12 +14,12 @@ div.launcher-options-popup {
     float:      left;
     width:      150px;
     height:     280px;
-    padding:      1em;
+    padding:      1em 0;
     border-right: 1px solid #223;
     background: rgba(0,0,10, 0.2);  // darken and tint
 
     .item {
-      padding: 0 0.25em;
+      padding: 0.25em;
     }
 
     .item {
@@ -44,9 +44,11 @@ div.launcher-options-popup {
       .icon {
         display:       inline-block;
         float:         left;
-        width:         24px;
-        height:        24px;
-        padding-right:  1em;
+        clear:         both;
+        // Resize icons
+        width:         19px;
+        padding:       1px 9px 0 3px;  // 0.1em 0.75em 0 0.25em
+        box-sizing:    content-box;
       }
 
       .name {

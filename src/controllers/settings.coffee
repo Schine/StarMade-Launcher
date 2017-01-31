@@ -57,6 +57,12 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
       beforeHide:     () -> return;
 
       # Internal use; do not overwrite
+      $icon:          ((pane) -> _pane = pane;  () -> (  # coffeescript requires `() -> (` to be on this line
+          icon_path = path.join("images","icons")
+          return path.join(icon_path, "invalid",  $scope.panes[pane].icon)  if $scope.panes[pane].invalid
+          return path.join(icon_path, "active",   $scope.panes[pane].icon)  if $scope.panes[pane].active
+          return path.join(icon_path, "inactive", $scope.panes[pane].icon)
+        ))(pane)
       $classes:       ((pane) -> _pane = pane;  () -> (  # coffeescript requires `() -> (` to be on this line
           result  = []
           for attribute in $scope.panes[_pane].classes
@@ -176,6 +182,7 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
     #
 
     $scope.panes.memory.displayName = "Game Memory"
+    $scope.panes.memory.icon        = "memory.png"
 
     # ----- load ----- #
 
@@ -516,6 +523,7 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
     #
 
     $scope.panes.launcher.displayName = "Launcher"
+    $scope.panes.launcher.icon        = "launcher.png"
 
     # ----- load ----- #
     $scope.panes.launcher.load     = () -> new Promise (resolve, reject) ->  resolve("$scope.panes.launcher.load() resolved")      # No loading    required
@@ -532,6 +540,7 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
     #
 
     $scope.panes.java.displayName = "Java"
+    $scope.panes.java.icon        = "java.png"
 
     # ----- load ----- #
 
