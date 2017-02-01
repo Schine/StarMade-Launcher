@@ -88,14 +88,17 @@ div(ng-controller="SettingsCtrl")
 
         div.pane(ng-hide="!panes.java.active")
           .field-group.launcher-options(ng-controller="LaunchCtrl")
-            label Java Settings
+            label Java args
             br
             input(type="text" ng-model='panes.java.args' ng-blur="panes.java.setArgs()")
             span.description
-              | These options are passed to Java, along with memory settings, etc.
+              | These options are passed to Java along with memory settings, etc.  
+              b Note: 
+              em They're passed after all other options specified by the launcher.
             br
             button(id="java-resetArgs" name="java-resetArgs" ng-click="panes.java.resetArgs()") Reset to Default
             span.description
+            label Custom Java path
             br
             input(id="java-path" type="text" ng-model='panes.java.path' ng-blur="panes.java.validate.stub()" ng-class="panes.java.validate.path.class()")
             span.description
