@@ -289,6 +289,10 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
 
   branchChange = (newVal) ->
+    unless validBranch(newVal)
+      $rootScope.log.error "Trying to change to an invalid branch (#{newVal})"
+      return
+
     $rootScope.log.event "Changing branch to #{newVal.charAt(0).toUpperCase()}#{newVal.slice(1)}"  # Capitalize first character
     $scope.switchingBranch = true
     updater.getVersions newVal
@@ -356,8 +360,20 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
   $rootScope.$watch 'launcherUpdating', (updating) ->
     branchChange($scope.branch) unless updating
 
+
+  validBranch = (branch) ->
+    branch in ['pre', 'dev', 'release', 'archive', 'launcher']
+
   $scope.$watch 'branch', (newVal) ->
-    return if $rootScope.launcherUpdating
+    return if     $rootScope.launcherUpdating
+    return unless newVal?  # likely just not set yet
+
+    unless validBranch(newVal)
+      $rootScope.log.error "Invalid branch set (#{newVal})"
+      $rootScope.log.indent.entry "Reverting to 'release'"
+      $scope.branch = newVal = 'release'
+
+    $rootScope.log.verbose "Branch set to: #{newVal}"
     localStorage.setItem 'branch', newVal
     branchChange(newVal)
 
