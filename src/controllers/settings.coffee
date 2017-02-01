@@ -532,6 +532,23 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
     # ----- save ----- #
     $scope.panes.launcher.save     = () -> new Promise (resolve, reject) ->  resolve("$scope.panes.launcher.save() resolved")      # No saving     required
 
+    # ---(internal)--- #
+
+    # switchUser() is on $rootScope, defined within main.coffee
+
+    $scope.panes.launcher.showChangelog = ->
+      $rootScope.log.debug "showChangelog()"
+      localStorage.removeItem "presented-changelog"
+      ipc.send "open-changelog"
+
+    $scope.panes.launcher.openDownloadPage = ->
+      $rootScope.log.event "Opening download page: https://star-made.org/download"
+      shell.openExternal 'https://star-made.org/download'
+
+    $scope.panes.launcher.openSteamLink = ->
+      $rootScope.log.event "opening: https://registry.star-made.org/profile/steam_link"
+      shell.openExternal 'https://registry.star-made.org/profile/steam_link'
+
 
     #
     #
@@ -899,19 +916,6 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
   ### Local functions ###
 
   # TODO: Move these into their pane's scope
-
-  $scope.showChangelog = ->
-    $rootScope.log.debug "showChangelog()"
-    localStorage.removeItem "presented-changelog"
-    ipc.send "open-changelog"
-
-  $scope.openDownloadPage = ->
-    $rootScope.log.event "Opening download page: https://star-made.org/download"
-    shell.openExternal 'https://star-made.org/download'
-
-  $scope.openSteamLink = ->
-    $rootScope.log.event "opening: https://registry.star-made.org/profile/steam_link"
-    shell.openExternal 'https://registry.star-made.org/profile/steam_link'
 
 
   nearestPow2_clear_bounds = () ->

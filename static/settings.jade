@@ -67,7 +67,7 @@ div(ng-controller="SettingsCtrl")
               br
               span.highlight {{playerName}}
             br
-            button(ng-click='showChangelog()') Show Changelog
+            button(ng-click='panes.launcher.showChangelog()') Show Changelog
             span.description
               | Launcher 
               span.highlight v{{version}} 
@@ -77,13 +77,13 @@ div(ng-controller="SettingsCtrl")
               span.highlight {{buildHash}}
               | )
             br
-            button(ng-click='openDownloadPage()') Launcher Download Page
+            button(ng-click='panes.launcher.openDownloadPage()') Launcher Download Page
             span.description
 
           .field-group.launcher-options(ng-if='currentUser' ng-hide="!steamLaunch")
             label Steam Settings
             br
-            button(ng-if='!steamAccountLinked' ng-click='openSteamLink()') Link Registry Account to Steam
+            button(ng-if='!steamAccountLinked' ng-click='panes.launcher.openSteamLink()') Link Registry Account to Steam
             button(ng-if='steamAccountLinked' ng-disabled='true') Registry Account Linked to Steam
 
         div.pane(ng-hide="!panes.java.active")
