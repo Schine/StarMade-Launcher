@@ -1,5 +1,5 @@
-# Starmade Launcher
-Written in node, this graphical fanciness allows the user to easily update/select their installed build of Starmade and its launch options.
+# StarMade Launcher
+Written in node, this graphical fanciness allows the user to easily update/select their installed build of StarMade and its launch options.
 
 To install, run these in the launcher directory:
   1) `npm install`*
