@@ -59,6 +59,27 @@ div(ng-controller="SettingsCtrl")
               label.low_memory_warning(ng-show='(panes.memory.initial < 256) || !panes.memory.validate.initial.valid') Note: Setting initial memory below 256mb may cause problems
 
 
+        div.pane(ng-hide="!panes.install.active")
+          //- .field-group
+          //-   label(for='popupBuildType')
+          //-     | Build Type
+          //-   br
+          //-   select(id='popupBuildType' ng-model='popupData.branch' ng-disabled='updaterProgress.inProgress || switchingBranch')
+          //-     option(value='release') Release (recommended)
+          //-     option(value='dev') Dev
+          //-     option(value='pre') Pre
+          //-     option(value='archive') Archive
+
+          .field-group
+            label(for='popupInstallDir')
+              | Game Installation Directory
+              span(ng-class="panes.install.validate.path.class" ng-show="!!panes.install.validate.path.message") {{panes.install.validate.path.message}}
+            br
+            input.wide(ng-model='panes.install.path' ng-disabled='updaterProgress.inProgress || switchingBranch' ng-blur="panes.install.sanitizePath()")
+            button(ng-click='panes.install.browse()' ng-disabled='updaterProgress.inProgress || switchingBranch') Browse
+
+
+
         div.pane(ng-hide="!panes.launcher.active")
           .field-group.launcher-options
             button(ng-click='switchUser()') Switch User
