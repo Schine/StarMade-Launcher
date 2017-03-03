@@ -32,6 +32,45 @@ app.directive 'stringToNumber', ->
   }
 
 
+
+  ### Validation info
+  #
+  # The validation here follows a very specific pattern:
+  #   $scope.validate() ->
+  #     $scope.panes[].validate() ->
+  #       new Promise ->
+  #         # (custom validation code)
+  #         $scope.validate.fail(pane, message)  if invalid?
+  #         $scope.validate.clear(pane)          if   valid?
+  #         resolve()
+  #
+  # $scope.validate() runs all panes' validations, and thereafter
+  # shows the first invalid pane and its validation error message.
+  #
+  # All $scope.panes[].validate() functions *always* resolve.
+  # This is to ensure all panes' validation functions run,
+  # rather than $scope.validate() stopping on the first reject.
+  #
+  # How each pane's validation works is up to you, so long as it
+  # reports/clears errors (see below) and returns a resolved promise.
+  # Typically these call per-control validation functions, which are
+  # separated out so they may used within the view (via ng-blur)
+  # for immediate user feedback.  Some of these per-control
+  # validation functions have stubs that handle promises, returning
+  # true/false instead, thereby preventing unhandled errors from
+  # showing up in the console.
+  #
+  #
+  # When a pane's validation fails, it calls:
+  #   $scope.validate.fail(pane, message)
+  # which marks the pane as invalid, sets its error message, etc.
+  # When a pane's validation passes, it calls
+  #   $scope.validate.clear(pane)
+  # which marks the pane as valid and clears its validation error.
+  #
+###
+
+
 app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, settings) ->
   $scope.controller = "SettingsCtrl"
   # Store the dialog object for 2-way binding of dialog visibility
