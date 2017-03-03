@@ -4,7 +4,6 @@ fs       = require('fs')
 os       = require('os')
 path     = require('path')
 remote   = require('remote')
-sanitize = require('sanitize-filename')
 archiver = require('archiver')  # compression
 
 dialog      = remote.require('dialog')
@@ -133,12 +132,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
   $scope.launchMouseLeave = ->
     $scope.launchHover = false
 
+  #TODO: remove
   $scope.openOptions = (name) ->
     switch name
       when 'buildType'
         $scope.buildTypeOptions = true
         $scope.popupData.branch = $scope.branch
-        $scope.popupData.installDir = path.resolve( $scope.installDir )
+        $scope.popupData.installDir = path.resolve( $scope.install.path )
       when 'buildVersion'
         $scope.buildVersionOptions = true
 
@@ -149,92 +149,6 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       when 'buildVersion'
         $scope.buildVersionOptions = false
 
-
-  $scope.browseInstallDir = ->
-    dialog.showOpenDialog remote.getCurrentWindow(),
-      title: 'Select Installation Directory'
-      properties: ['openDirectory']
-    , (newPath) ->
-      return unless newPath?
-      newPath = path.resolve(newPath[0])
-
-      # Scenario: existing install
-      if fs.existsSync( path.join(newPath, "StarMade.jar") )
-        # console.log "installBrowse(): Found StarMade.jar here:  #{path.join(newPath, "StarMade.jar")}"
-        $scope.popupData.installDir = newPath
-        return
-
-      # Scenario: StarMade/StarMade
-      if (path.basename(             newPath.toLowerCase())  == "starmade" &&
-          path.basename(path.dirname(newPath.toLowerCase())) == "starmade" )  # ridiculous, but functional
-        # console.log "installBrowse(): Path ends in StarMade/StarMade  (path: #{newPath})"
-        $scope.popupData.installDir = newPath
-        return
-
-      # Default: append StarMade
-      $scope.popupData.installDir = path.join(newPath, 'StarMade')
-
-
-  $scope.popupBuildTypeSave = ->
-    if $scope.popupData.installDir.trim() == ""
-      $scope.popupData.installDir_error = "Install path cannot be blank."
-      return
-
-    $scope.popupData.installDir_error = ""
-
-    if $scope.branch == $scope.popupData.branch && $scope.installDir != $scope.popupData.installDir
-      # Scan the new install directroy
-      $scope.status_updateWarning = ""  # Remove the warning, if present
-      ##TODO make this actually read the installed version from the new directory
-      updater.update($scope.versions[$scope.selectedVersion], sanitizePath($scope.popupData.installDir), true)
-
-
-    $rootScope.log.debug "Sanitizing path"
-    $rootScope.log.indent.entry "From: #{$scope.popupData.installDir}",                 $rootScope.log.levels.debug
-    $rootScope.log.indent.entry "To:   #{sanitizePath( $scope.popupData.installDir )}", $rootScope.log.levels.debug
-
-
-    $scope.branch           = $scope.popupData.branch
-    $scope.installDir       = sanitizePath( $scope.popupData.installDir )
-    $scope.buildTypeOptions = false
-
-
-  # Cross-platform path sanitizing
-  # Relies on the `sanitize-filename` npm package
-  ##! Possible issues:
-  #     * (Win32)  A malformed drive letter causes the malformed path to be treated as relative to the current directory.  This is due to the initial `path.resolve()`
-  sanitizePath = (str) ->
-    # Resolve into an absolute path first
-    str = path.resolve(str)
-    # and split the resulting path into tokens
-    tokens = str.split(path.sep)
-
-    # For Win32, retain the root drive
-    root = null
-    if os.platform() == "win32"
-      root = tokens.shift()
-      # Sanitize it, and add the ":" back
-      root = sanitize(root) + ":"
-
-    # Sanitize each token in turn
-    for token, index in tokens
-      tokens[index] = sanitize(token)
-
-    # Remove all empty elements
-    tokens.filter (n) ->
-      n != ""
-
-    # Rebuild array
-    new_path = tokens.join( path.sep )
-
-    # Restore the root of the path
-    if os.platform() == "win32"
-      new_path = path.join(root, new_path)  # Win32: drive letter
-    else
-      new_path = path.sep + new_path        # POSIX: leading /
-
-    # And return our new, sparkling-clean path
-    new_path
 
 
 
@@ -281,8 +195,20 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
   # Is StarMade is actually installed?
   isStarMadeInstalled = ->
+    $rootScope.log.info "Checking for StarMade install"
+    unless $scope.install.path?
+      $rootScope.log.indent.error "Install path not set!"
+      return null
+
     #TODO: Check for the presence of other files as well.  some files -> not intact; no files -> clean
-    $scope.starmadeInstalled = fileExists( path.join($scope.installDir, "StarMade.jar") )
+    $scope.starmadeInstalled = fileExists( path.join($scope.install.path, "StarMade.jar") )
+
+    $rootScope.log.indent.entry "Path:  #{path.join($scope.install.path, 'StarMade.jar')}",  $rootScope.log.levels.verbose
+
+    if $scope.starmadeInstalled
+      $rootScope.log.indent.entry "Installed"
+    else
+      $rootScope.log.indent.entry "Not Installed"
     return $scope.starmadeInstalled
 
   #TODO: isStarMadeIntact()
@@ -339,7 +265,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
               $scope.lastVersion = $scope.versions[0].build
               $scope.selectedVersion = '0'
 
-              updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, false)
+              updater.update($scope.versions[$scope.selectedVersion], $scope.install.path, false)
 
               $scope.$watch 'updaterProgress.inProgress', (newVal) ->
                 # Quit when done
@@ -347,7 +273,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
             else
               # Update only when selecting a different build version
               $scope.updaterProgress.needsUpdating = ($scope.versions[$scope.selectedVersion].build != $scope.lastVersion  ||  !isStarMadeInstalled() || $scope.updaterProgress.indeterminateState)
-              # updater.update($scope.versions[$scope.selectedVersion], $scope.installDir, true)
+              # updater.update($scope.versions[$scope.selectedVersion], $scope.install.path, true)
       , ->
         $scope.status = 'You are offline.' unless navigator.onLine
         $scope.switchingBranch = false
@@ -376,10 +302,6 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     $rootScope.log.verbose "Branch set to: #{newVal}"
     localStorage.setItem 'branch', newVal
     branchChange(newVal)
-
-  $scope.$watch 'installDir', (newVal) ->
-    return unless newVal?
-    localStorage.setItem 'installDir', newVal
 
   $scope.$watch 'lastVersion', (newVal) ->
     return unless newVal?
@@ -433,75 +355,111 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     localStorage.setItem('branch', 'release')
 
 
-  #TODO: make this public, have it accept a game id
-  getInstalledVersion = () ->
-    _do_logging = true  if not $rootScope.alreadyExecuted 'log getInstalledVersion'
+  # return {version, build, branch}
+  getInstalledVersion = (installpath) ->
+    $rootScope.log.event "Determining installed game version"
+    $rootScope.log.indent()
 
-    if _do_logging
-      $rootScope.log.event("Determining installed game version", $rootScope.log.levels.verbose)
-      $rootScope.log.indent(1, $rootScope.log.levels.verbose)
+    # This should not happen
+    unless installpath?
+      $rootScope.log.error "Invalid install path (#{installpath})"
+      $rootScope.log.outdent()
 
-    # get current install directory
-    dir = localStorage.getItem('installDir')
-    if not dir?
-      if _do_logging
-        $rootScope.log.error("UpdateCtrl: installDir not set")
-        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
-      return null
+      # (Cannot determine)
+      return game =
+               version: undefined
+               build:   undefined
+               branch:  undefined
+
+
+    $rootScope.log.indent.debug "path:  #{installpath}"
+
 
     # Edge-case: version.txt does not exist
-    if not fileExists(path.join(dir, "version.txt"))
+    unless fileExists(path.join(installpath, "version.txt"))
       # Is it a fresh install?
-      if not fileExists(path.join(dir, "StarMade.jar"))
-        if _do_logging
-          $rootScope.log.info "Fresh install"
-          $rootScope.log.indent.debug "Game install path: #{dir}"
-          $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
-        return null  # unknown version -> suggest updating to latest
+      unless fileExists(path.join(installpath, "StarMade.jar"))
+        $rootScope.log.info "Fresh install"
+        $rootScope.log.outdent()
+
+        # (No game installed)
+        return game =
+                 version: null
+                 build:   null
+                 branch:  null
 
       else
         # Otherwise... indeterminable game state with (at least) version.txt missing.
-        if _do_logging
-          $rootScope.log.error "Unable to determine version of installed game: version.txt missing"
-          $rootScope.log.indent.debug "Game install path: #{dir}"
-          $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+        $rootScope.log.error "Unable to determine version of installed game: version.txt missing"
+        $rootScope.log.outdent()
         # Indeterminable game state requires an update to resolve.
         $scope.updaterProgress.indeterminateState = true
-        return null  # unknown version -> suggest updating to latest
+
+        # (Cannot determine)
+        return game =
+                 version: undefined
+                 build:   undefined
+                 branch:  undefined
+
 
     # Parse version.txt  (Expected format: 0.199.132#20160802_134223)
-    data = fs.readFileSync(path.join(dir, "version.txt")).toString().trim()  # and strip newline, if present
+    data = fs.readFileSync(path.join(installpath, "version.txt")).toString().trim()  # and strip newline, if present
 
     # Edge-case: invalid data/format
-    if not data.match(/^[0-9]{1,3}\.[0-9]{1,3}(\.[0-9]{1,3})?#[0-9]{8}_[0-9]+$/)?   # backwards-compatibility with previous 0.xxx version numbering
-      if _do_logging
-        $rootScope.log.error "Unable to determine version of installed game: version.txt contains unexpected data"
-        $rootScope.log.indent.debug "Game install path: #{dir}"
-        $rootScope.log.indent.debug "Version contents:  #{data}"
-        $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+    unless data.match(/^[0-9]{1,3}\.[0-9]{1,3}(\.[0-9]{1,3})?#[0-9]{8}_[0-9]+$/)?   # backwards-compatibility with previous 0.xxx version numbering
+      $rootScope.log.error "Unable to determine version of installed game: version.txt contains unexpected data"
+      $rootScope.log.indent.entry "contents:  #{data}"
+      $rootScope.log.outdent()
       # Requires an update to resolve.
       $scope.updaterProgress.indeterminateState = true
-      return null  # unknown version -> suggest updating to latest
+
+      # (Cannot determine)
+      return game =
+                 version: undefined
+                 build:   undefined
+                 branch:  undefined
 
     # Return build data
     [_version, _build] = data.split('#')
 
-    if _do_logging
-      $rootScope.log.info "Installed game version: #{_version} (build #{_build})"
-      $rootScope.log.outdent(1, $rootScope.log.levels.verbose)
+    $rootScope.log.info "Installed game:"
+    $rootScope.log.indent.entry "version: #{_version}"
+    $rootScope.log.indent.entry "build:   #{_build}"
+    $rootScope.log.outdent()
 
-    return _build
+    return game =
+             version: _version
+             build:   _build
+             branch:  undefined
 
 
   settings.ready.then ->
     $rootScope.log.important "Update: Settings initialized"
-    $scope.installDir  = localStorage.getItem('installDir')  # If this isn't set, we have a serious problem.  ##TODO: offload install paths to settings dialog
-    $scope.branch      = localStorage.getItem('branch')     || 'release'
+    $scope.install     = settings.install  # If `install.path` isn't set, we have a serious problem.
+    $scope.branch      = localStorage.getItem('branch')     || 'release'  #TODO determine this from the build, preferring release
     $scope.serverPort  = localStorage.getItem('serverPort') || '4242'
-    $scope.lastVersion = getInstalledVersion()               # Installed build id
 
-    if not $scope.installDir?
-      $rootScope.log.error("UpdateCtrl: installDir not set")
+    if not $scope.install.path?
+      $rootScope.log.error "Install path not set!"
+      $rootScope.log.indent.entry "from settings:  #{settings.install.path}"
+
+
+  # On install directory change, parse the new version.txt and update accordingly
+  $scope.$watch 'install.path', (newVal) ->
+    return  unless newVal?
+    game = getInstalledVersion(newVal)
+    #TODO handle `undefined` (unknown build) and `null` (not installed) values
+    #TODO determine branch from build id, preferring 'release' over 'dev'
+    $scope.lastVersion = game.build
+
+    ## Do we still want this?
+    # if $scope.branch == $scope.panes.install.branch && $scope.path != $scope.panes.install.path
+    #   # Scan the new install directroy
+    #   $scope.status_updateWarning = ""  # Remove the warning, if present
+    #   ##TODO make this actually read the installed version from the new directory
+    #   updater.update($scope.versions[$scope.selectedVersion], $scope.panes.install.path, true)
+
+
 
 
   # Called by zip/targz radio buttons in index.jade
@@ -552,7 +510,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
 
 
     try
-      fs.mkdirSync path.join( path.resolve($scope.installDir), "backups")
+      fs.mkdirSync path.join( path.resolve($scope.install.path), "backups")
       $rootScope.log.verbose "Created backups folder"
 
     catch err
@@ -596,7 +554,7 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     backupPath += " to (#{version.version}#{version.hotfix || ''})"
     backupPath += ".zip"     if $scope.backupOptions.compressionType == "zip"
     backupPath += ".tar.gz"  if $scope.backupOptions.compressionType == "targz"
-    backupPath  = path.resolve( path.join( path.resolve($scope.installDir), "backups", backupPath) )
+    backupPath  = path.resolve( path.join( path.resolve($scope.install.path), "backups", backupPath) )
 
     $rootScope.log.verbose "Destination: #{backupPath}"
 
@@ -663,10 +621,10 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       _found = false
       for config in configs
         # Skip configs that do not exist, e.g. "joystick.cfg"
-        continue  if not fileExists path.resolve( path.join($scope.installDir, config) )
+        continue  if not fileExists path.resolve( path.join($scope.install.path, config) )
         _found = true
         archive.file(
-          path.resolve(path.join($scope.installDir, config)),
+          path.resolve(path.join($scope.install.path, config)),
           {name: config}
         )
       if not _found
@@ -678,9 +636,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     # Add worlds
     if $scope.backupOptions.worlds
       $timeout () -> $scope.backupDialog.progress.worlds = true
-      if fileExists path.resolve( path.join($scope.installDir, "server-database") )
+      if fileExists path.resolve( path.join($scope.install.path, "server-database") )
         archive.directory(
-          path.resolve(path.join($scope.installDir, "server-database")),
+          path.resolve(path.join($scope.install.path, "server-database")),
           "server-database"
         )
       else $scope.backupDialog.progress.worlds = "missing"
@@ -690,9 +648,9 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     # Add blueprints
     if $scope.backupOptions.blueprints
       $timeout () -> $scope.backupDialog.progress.blueprints = true
-      if fileExists path.resolve( path.join($scope.installDir, "blueprints") )
+      if fileExists path.resolve( path.join($scope.install.path, "blueprints") )
         archive.directory(
-          path.resolve(path.join($scope.installDir, "blueprints")),
+          path.resolve(path.join($scope.install.path, "blueprints")),
           "blueprints"
         )
       else $scope.backupDialog.progress.blueprints = "missing"
@@ -715,13 +673,13 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
       return $scope.update(force)
 
     # Ensure game directory exists
-    if not fileExists(path.resolve($scope.installDir))
+    if not fileExists(path.resolve($scope.install.path))
       $rootScope.log.info "Skipping backup: fresh install"
       return $scope.update(force)
 
     # Ensure at least one of [blueprints, server-database] exist
-    blueprints = fileExists path.resolve( path.join($scope.installDir, "blueprints") )
-    database   = fileExists path.resolve( path.join($scope.installDir, "server-database") )
+    blueprints = fileExists path.resolve( path.join($scope.install.path, "blueprints") )
+    database   = fileExists path.resolve( path.join($scope.install.path, "server-database") )
 
     if blueprints or database
       if $scope.backupDialog.visible == true
@@ -757,4 +715,4 @@ app.controller 'UpdateCtrl', ($filter, $rootScope, $scope, $q, $timeout, updater
     $scope.status_updateWarning = ""
     $scope.starmadeInstalled = true
     $scope.updaterProgress.indeterminateState = false
-    updater.update(version, $scope.installDir, false, force)
+    updater.update(version, $scope.install.path, false, force)
