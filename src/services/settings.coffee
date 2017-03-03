@@ -3,11 +3,18 @@
 app = angular.module 'launcher'
 
 app.service 'settings', () ->
-  # settings.ready promise to allow settings-dependent code chaining
-  @isReady  = () -> return false  # function for consistency
+
+  ### Status ###
+
+  # For polling
+  @isReady  = () -> return false
+  # Promise to allow settings-dependent code chaining
   @ready    = new Promise (resolve, reject) => @setReady = resolve  # public resolver: settings.setReady()
   @ready.then () => @isReady = () -> return true
 
+
+
+  ### Dialog control and visibility ###
 
   @dialog =
     visible:    false
@@ -19,6 +26,10 @@ app.service 'settings', () ->
   @dialog.showPane  = (pane) =>
     @dialog.visible = true
     @dialog.pane    = pane
+
+
+
+  ### Per-pane settings ###
 
   @java =
     path: null
