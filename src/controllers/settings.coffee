@@ -1,17 +1,18 @@
 'use strict'
 
-os         = require('os')
-fs         = require('fs')
-path       = require('path')
-shell      = require('shell')
-spawn      = require('child_process').spawn
-remote     = require('remote')
+os           = require('os')
+fs           = require('fs')
+path         = require('path')
+shell        = require('shell')
+spawn        = require('child_process').spawn
+remote       = require('remote')
 
-dialog     = remote.require('dialog')
+dialog       = remote.require('dialog')
 
-util       = require('../util')
-pkg        = require('../../package.json')
-fileExists = require('../fileexists').fileExists
+util         = require('../util')
+pkg          = require('../../package.json')
+fileExists   = require('../fileexists').fileExists
+sanitizePath = require('../sanitizepath').sanitize
 
 
 javaVersion      = pkg.javaVersion
@@ -37,7 +38,7 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
   $scope.dialog  = settings.dialog
 
   # Set up available panes
-  $scope.availablePanes = ["launcher","memory","java"]  # install, build, about
+  $scope.availablePanes = ["launcher","memory","install","java"]  # build, about, logging
   $scope.panes = {}
   for pane in $scope.availablePanes
     $scope.panes[pane] =
@@ -72,11 +73,6 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
         ))(pane)
 
 
-  ### DEBUG ###
-  $scope.$watch 'panes.java.active',     (newVal) -> $rootScope.log.important "Java pane: active?      #{newVal}"
-  $scope.$watch 'panes.memory.active',   (newVal) -> $rootScope.log.important "Memory pane: active?    #{newVal}"
-  $scope.$watch 'panes.launcher.active', (newVal) -> $rootScope.log.important "Launcher pane: active?  #{newVal}"
-  ### END ###
 
 
   # Reload settings when showing the dialog
@@ -702,6 +698,132 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
 
 
 
+
+    #
+    #
+    # --- Install --------------------------------------------------------------
+    #
+    #
+
+    $scope.panes.install.displayName = "Game Installs"
+    $scope.panes.install.icon        = "install.png"
+
+    # ----- load ----- #
+
+    # Load game installs
+    $scope.panes.install.load = (do_initial_logging) ->
+      new Promise (resolve, reject) ->
+        if do_initial_logging
+          $rootScope.log.entry "Game Installs"
+
+        $scope.panes.install.path = localStorage.getItem('installDir')
+        settings.install.setPath( $scope.panes.install.path )
+
+        if do_initial_logging
+          $rootScope.log.indent.entry "Path:   #{$scope.panes.install.path}"
+
+        resolve("$scope.panes.install.load() resolved")
+
+    # ----- save ----- #
+
+    $scope.panes.install.save = () ->
+      new Promise (resolve, rejected) ->
+        # Overkill, but will be useful for multiple installs in future updates
+
+        messages = []
+
+        if $scope.panes.install.path != localStorage.getItem('installDir')
+          messages.push "path:  #{$scope.panes.install.path}"
+          localStorage.setItem('installDir', $scope.panes.install.path)
+          settings.install.setPath($scope.panes.install.path)
+
+        if messages.length
+          $rootScope.log.event "Saving game install settings"
+          $rootScope.log.indent.entry message  for message in messages
+
+        resolve("$scope.panes.install.save() resolved")
+
+    # --- validate --- #
+
+    $scope.panes.install.validate = () ->
+      new Promise (resolve, reject) ->
+        $rootScope.log.debug "panes.install.validate()"
+        $rootScope.log.indent(1, $rootScope.log.levels.debug)
+
+        unless $scope.panes.install.validate.path()
+          $scope.validate.fail('install', "Install path cannot be blank.")
+          resolve()
+
+        $scope.validate.clear('install')
+
+        $rootScope.log.outdent(1, $rootScope.log.levels.debug)
+        resolve("$scope.panes.install.validate() resolved")
+
+
+
+    $scope.panes.install.validate.path = () ->
+      if $scope.panes.install.path.trim() == ""
+        $scope.panes.install.validate.path.message = "Cannot be blank"
+        $scope.panes.install.validate.path.class   = "error"
+        return false
+
+      # Sanitize the path and compare
+      from = $scope.panes.install.path
+      $scope.panes.install.sanitizePath()
+      to   = $scope.panes.install.path
+
+      unless from == to
+        $scope.panes.install.validate.path.message = "(Automatically stripped of illegal characters)"
+        $scope.panes.install.validate.path.class   = "warning"
+        return true
+
+      $scope.panes.install.validate.path.message = ""
+      $scope.panes.install.validate.path.class   = ""
+      return true
+
+
+
+
+    # ---(internal)--- #
+
+    $scope.panes.install.sanitizePath = () ->
+      $rootScope.log.verbose "Sanitizing path"
+      from = $scope.panes.install.path
+      to   = $scope.panes.install.path = sanitizePath(from)
+
+      unless from == to
+        $rootScope.log.indent.entry "from:  #{from}", $rootScope.log.levels.verbose
+        $rootScope.log.indent.entry "to:    #{to}",   $rootScope.log.levels.verbose
+
+
+
+    $scope.panes.install.browse = ->
+      dialog.showOpenDialog remote.getCurrentWindow(),
+        title: 'Select Installation Directory'
+        properties: ['openDirectory']
+      , (newPath) ->
+        return unless newPath?
+        newPath = path.resolve(newPath[0])
+
+        # Scenario: existing install
+        if fs.existsSync( path.join(newPath, "StarMade.jar") )
+          # console.log "installBrowse(): Found StarMade.jar here:  #{path.join(newPath, "StarMade.jar")}"
+          $scope.panes.install.path = newPath
+          return
+
+        # Scenario: StarMade/StarMade
+        if (path.basename(             newPath.toLowerCase())  == "starmade" &&
+            path.basename(path.dirname(newPath.toLowerCase())) == "starmade" )  # ridiculous, but functional
+          # console.log "installBrowse(): Path ends in StarMade/StarMade  (path: #{newPath})"
+          $scope.panes.install.path = newPath
+          return
+
+        # Default: append StarMade
+        $scope.panes.install.path = path.join(newPath, 'StarMade')
+
+
+
+
     #
     #
     # -------------------------------------------------------------------------
@@ -739,7 +861,7 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
 
       result.catch (err) ->
         $rootScope.log.error "Loading failed"
-        $rootScope.log.indent.entry (err || err.message || "(unknown error)")
+        $rootScope.log.indent.entry (err.message || err || "(unknown error)")
         $rootScope.log.outdent()
         reject()
 
