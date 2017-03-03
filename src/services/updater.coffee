@@ -359,6 +359,8 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
       uniqVersions @versions.branches[branch]
 
 
+  # This is required because the *buildindex files often contain duplicate rows.  Why? Who knows.
+  ##TODO: Integrate this into @versions.populate()
   uniqVersions = (versions) ->
     uniq = []
     return uniq  if versions.length == 0
