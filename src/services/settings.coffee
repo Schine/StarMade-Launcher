@@ -46,4 +46,9 @@ app.service 'settings', () ->
   @memory.setInitial  = (newVal) => @memory.initial  = newVal
   @memory.setEarlyGen = (newVal) => @memory.earlyGen = newVal
 
+  @install =
+    path:  null
+  @install.setPath = (newVal) => @install.path = newVal
+
+
   return
