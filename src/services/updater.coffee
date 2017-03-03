@@ -361,6 +361,7 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
 
   uniqVersions = (versions) ->
     uniq = []
+    return uniq  if versions.length == 0
     versions.forEach (version, index) ->
       if JSON.stringify(versions[index+1]) == JSON.stringify(version)
         return
