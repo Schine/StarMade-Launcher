@@ -46,7 +46,6 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
             updaterProgress.needsUpdating = false
             updaterProgress.inProgress = false
             $rootScope.log.info "Up to date"
-            # $rootScope.log.outdent()
             return
 
           downloadSize = 0
@@ -71,17 +70,14 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
             updaterProgress.inProgress = false
             updaterProgress.needsUpdating = false
             $rootScope.log.info "All files downloaded"
-            # $rootScope.log.outdent()
 
           if checkOnly
             updaterProgress.needsUpdating = true
             updaterProgress.inProgress = false
-            # $rootScope.log.outdent()
           else
             filesToDownload.forEach (checksum) ->
               q.push checksum, (err) ->
                 $rootScope.log.error err if err
-            # $rootScope.log.outdent()
 
         updaterProgress.text = 'Determining files to download...'
         updaterProgress.curValue = 0
@@ -257,40 +253,111 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
   @getEula = ->
     $http.get "#{BASE_URL}/smeula.txt"
 
-  @getVersions = (branch) ->
-    $q (resolve, reject) ->
-      $http.get BRANCH_INDEXES[branch]
-        .success (data) ->
-          # Entry format:  2.0.8#20170712_222922 ./build/starmade-launcher-build_20170712_222922
-          versions = []
 
-          lines = data.split '\n'
-          lines.forEach (line) ->
-            return if line == ''                  # Skip blank     entries
-            return if line.substring(0,1) == '#'  # Skip commented entries
 
-            tokens      = line.split ' '
-            build_id  = tokens[0].split '#'
+# @versions cache:
+#   Fetch and cache all branches' version data
+#   This doubles memory usage but reduces lookup from (http) to O(1)
+#
+#   .branches['release'] = [{path:,build:,version:,branch:}, ...]
+#   .builds[build]       = [{path:,build:,version:,branch:}, ...]
+#
+#   Note: As a build may exist in multiple branches, e.g. release and dev,
+#         `versions.builds[build_id]` will return an array containing at least one version object.
 
-            buildVersion = build_id[0]
-            buildBuild   = build_id[1]
+  @versions =
+    isReady: () -> return false
 
-            buildPath    = tokens[1]
+    builds:   {}
+    branches:
+      pre:      []
+      dev:      []
+      release:  []
+      archive:  []
+      launcher: []
 
-            # ignore malformed entries:
-            return if (!buildPath || !buildVersion || !buildBuild)  # missing segments
-            return if buildPath.indexOf('#') >= 0                   # two entries on a line
+  # Ready chainable with public resolver
+  @versions.ready = new Promise (resolve, reject) => @versions.setReady = resolve
+  # Add default handler to update isReady() poll
+  @versions.ready.then () => @versions.isReady = () -> return true
 
-            versions.push new Version(buildPath, buildVersion, buildBuild)
+  @versions.populate = () =>
+    new Promise (resolve, reject) =>
+      return resolve()  if @versions.isReady()
+      $rootScope.log.verbose "Populating versions"
 
-          resolve uniqVersions(versions)
-        .error (data, status, headers, config) ->
-          $rootScope.log.error "Error fetching #{branch} build index"
-          $rootScope.log.indent.debug   "URL:     #{config['url']}"
-          $rootScope.log.indent.debug   "Status:  #{status}"
-          $rootScope.log.indent.verbose "Headers: #{JSON.stringify headers}"
+      versionPromises = []
+      ["launcher","pre", "dev", "release", "archive"].forEach (branch) =>
+        versionPromises.push new Promise (resolve, reject) =>
+          $http.get BRANCH_INDEXES[branch]
+            .success (data) =>
+              $rootScope.log.entry "Populating versions: #{branch}..."
 
-          reject data, status, headers, config
+              # Entry format:  2.0.8#20170712_222922 ./build/starmade-launcher-build_20170712_222922
+              lines = data.split '\n'
+              lines.forEach (line) =>
+                return if line           == ''   # Skip blank     entries
+                return if line.charAt(0) == '#'  # Skip commented entries
+
+                tokens   = line.split ' '
+                buildstr = tokens[0].split '#'
+
+                # Catch malformed lines
+                if tokens.length != 2  || line.split('#').length != 2
+                  $rootScope.log.indent.warning "Found malformed version entry:  #{line}"
+                  return
+
+                version = {}
+                version.version = buildstr[0]
+                version.build   = buildstr[1]
+                version.path    = tokens[1]
+                version.branch  = branch
+
+                # Store via both build id and branch for easy lookup
+                @versions.branches[ version.branch ].push version
+
+                # Only store game versions by build
+                return  if version.branch == "launcher"
+
+
+                # Store builds in an array as they can be in multiple branches, e.g. release and dev
+                @versions.builds[ version.build ] ||= []
+                @versions.builds[ version.build ].push version
+
+              resolve()
+
+            .error (data, status, headers, config) ->
+              $rootScope.log.error "Error fetching #{branch} build index"
+              $rootScope.log.indent.entry   "Status:  #{status}"
+              $rootScope.log.indent.debug   "URL:     #{config['url']}"
+              $rootScope.log.indent.verbose "Headers: #{JSON.stringify headers()}"
+              $rootScope.log.indent.verbose "Data:    #{JSON.stringify data}"
+
+              # Resolve to allow setting `versions.ready` after populating all branches
+              resolve()
+
+      # After caching all of the versions, set ready
+      $q.all(versionPromises).then () =>
+        $rootScope.log.event "Versions populated"
+
+        @versions.setReady()
+        resolve()
+
+
+
+  # Get version for a specific branch
+  @getVersions = (branch) =>
+    # Populate versions if they aren't yet ready
+    # This should properly defer execution of all version-dependent code
+    prereq = {}
+    if @versions.isReady()
+      prereq = Promise.resolve()
+    else
+      prereq = @versions.populate()
+
+    prereq.then () =>
+      uniqVersions @versions.branches[branch]
+
 
   uniqVersions = (versions) ->
     uniq = []
