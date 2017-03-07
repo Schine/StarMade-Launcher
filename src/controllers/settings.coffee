@@ -77,7 +77,7 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
   $scope.dialog  = settings.dialog
 
   # Set up available panes
-  $scope.availablePanes = ["launcher","memory","install","java"]  # build, about, logging
+  $scope.availablePanes = ["launcher","memory","installs","java"]  # build, about, logging
   $scope.panes = {}
   for pane in $scope.availablePanes
     $scope.panes[pane] =
@@ -740,84 +740,84 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
 
     #
     #
-    # --- Install --------------------------------------------------------------
+    # --- Installs --------------------------------------------------------------
     #
     #
 
-    $scope.panes.install.displayName = "Game Installs"
-    $scope.panes.install.icon        = "install.png"
+    $scope.panes.installs.displayName = "Game Installs"
+    $scope.panes.installs.icon        = "install.png"
 
     # ----- load ----- #
 
     # Load game installs
-    $scope.panes.install.load = (do_initial_logging) ->
+    $scope.panes.installs.load = (do_initial_logging) ->
       new Promise (resolve, reject) ->
         if do_initial_logging
           $rootScope.log.entry "Game Installs"
 
-        $scope.panes.install.path = localStorage.getItem('installDir')
-        settings.install.setPath( $scope.panes.install.path )
+        $scope.panes.installs.path = localStorage.getItem('installDir')
+        settings.install.setPath( $scope.panes.installs.path )
 
         if do_initial_logging
-          $rootScope.log.indent.entry "Path:   #{$scope.panes.install.path}"
+          $rootScope.log.indent.entry "Path:   #{$scope.panes.installs.path}"
 
-        resolve("$scope.panes.install.load() resolved")
+        resolve("$scope.panes.installs.load() resolved")
 
     # ----- save ----- #
 
-    $scope.panes.install.save = () ->
+    $scope.panes.installs.save = () ->
       new Promise (resolve, rejected) ->
         # Overkill, but will be useful for multiple installs in future updates
 
         messages = []
 
-        if $scope.panes.install.path != localStorage.getItem('installDir')
-          messages.push "path:  #{$scope.panes.install.path}"
-          localStorage.setItem('installDir', $scope.panes.install.path)
-          settings.install.setPath($scope.panes.install.path)
+        if $scope.panes.installs.path != localStorage.getItem('installDir')
+          messages.push "path:  #{$scope.panes.installs.path}"
+          localStorage.setItem('installDir', $scope.panes.installs.path)
+          settings.install.setPath($scope.panes.installs.path)
 
         if messages.length
           $rootScope.log.event "Saving game install settings"
           $rootScope.log.indent.entry message  for message in messages
 
-        resolve("$scope.panes.install.save() resolved")
+        resolve("$scope.panes.installs.save() resolved")
 
     # --- validate --- #
 
-    $scope.panes.install.validate = () ->
+    $scope.panes.installs.validate = () ->
       new Promise (resolve, reject) ->
-        $rootScope.log.debug "panes.install.validate()"
+        $rootScope.log.debug "panes.installs.validate()"
         $rootScope.log.indent(1, $rootScope.log.levels.debug)
 
-        unless $scope.panes.install.validate.path()
-          $scope.validate.fail('install', "Install path cannot be blank.")
+        unless $scope.panes.installs.validate.path()
+          $scope.validate.fail('installs', "Install path cannot be blank.")
           resolve()
 
-        $scope.validate.clear('install')
+        $scope.validate.clear('installs')
 
         $rootScope.log.outdent(1, $rootScope.log.levels.debug)
-        resolve("$scope.panes.install.validate() resolved")
+        resolve("$scope.panes.installs.validate() resolved")
 
 
 
-    $scope.panes.install.validate.path = () ->
-      if $scope.panes.install.path.trim() == ""
-        $scope.panes.install.validate.path.message = "Cannot be blank"
-        $scope.panes.install.validate.path.class   = "error"
+    $scope.panes.installs.validate.path = () ->
+      if $scope.panes.installs.path.trim() == ""
+        $scope.panes.installs.validate.path.message = "Cannot be blank"
+        $scope.panes.installs.validate.path.class   = "error"
         return false
 
       # Sanitize the path and compare
-      from = $scope.panes.install.path
-      $scope.panes.install.sanitizePath()
-      to   = $scope.panes.install.path
+      from = $scope.panes.installs.path
+      $scope.panes.installs.sanitizePath()
+      to   = $scope.panes.installs.path
 
       unless from == to
-        $scope.panes.install.validate.path.message = "(Automatically stripped of illegal characters)"
-        $scope.panes.install.validate.path.class   = "warning"
+        $scope.panes.installs.validate.path.message = "(Automatically stripped of illegal characters)"
+        $scope.panes.installs.validate.path.class   = "warning"
         return true
 
-      $scope.panes.install.validate.path.message = ""
-      $scope.panes.install.validate.path.class   = ""
+      $scope.panes.installs.validate.path.message = ""
+      $scope.panes.installs.validate.path.class   = ""
       return true
 
 
@@ -825,10 +825,10 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
 
     # ---(internal)--- #
 
-    $scope.panes.install.sanitizePath = () ->
+    $scope.panes.installs.sanitizePath = () ->
       $rootScope.log.verbose "Sanitizing path"
-      from = $scope.panes.install.path
-      to   = $scope.panes.install.path = sanitizePath(from)
+      from = $scope.panes.installs.path
+      to   = $scope.panes.installs.path = sanitizePath(from)
 
       unless from == to
         $rootScope.log.indent.entry "from:  #{from}", $rootScope.log.levels.verbose
@@ -836,7 +836,7 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
 
 
 
-    $scope.panes.install.browse = ->
+    $scope.panes.installs.browse = ->
       dialog.showOpenDialog remote.getCurrentWindow(),
         title: 'Select Installation Directory'
         properties: ['openDirectory']
@@ -847,18 +847,18 @@ app.controller 'SettingsCtrl', ($scope, $rootScope, $timeout, $q, accessToken, s
         # Scenario: existing install
         if fs.existsSync( path.join(newPath, "StarMade.jar") )
           # console.log "installBrowse(): Found StarMade.jar here:  #{path.join(newPath, "StarMade.jar")}"
-          $scope.panes.install.path = newPath
+          $scope.panes.installs.path = newPath
           return
 
         # Scenario: StarMade/StarMade
         if (path.basename(             newPath.toLowerCase())  == "starmade" &&
             path.basename(path.dirname(newPath.toLowerCase())) == "starmade" )  # ridiculous, but functional
           # console.log "installBrowse(): Path ends in StarMade/StarMade  (path: #{newPath})"
-          $scope.panes.install.path = newPath
+          $scope.panes.installs.path = newPath
           return
 
         # Default: append StarMade
-        $scope.panes.install.path = path.join(newPath, 'StarMade')
+        $scope.panes.installs.path = path.join(newPath, 'StarMade')
 
 
 
