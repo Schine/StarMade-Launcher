@@ -1,0 +1,21 @@
+All source code is made available under the MIT license.
+
+The Schine and StarMade logo and artwork, including but not limited to images, icons, graphic resources and any StarMade related content are subject to the StarMade License (/res/licenses/starmade) and Terms of Conditions (https://www.star-made.org/terms_and_conditions).
+
+This software incorporates material from third parties and Schine GmbH under other copyright notices and/or licenses, including:
+
+Angular - Copyright (c) 2010-2015 Google, Inc. http://angularjs.org
+
+Bebas Neue - Copyright (c) 2010 Ryoichi Tsunekawa
+
+electron - Copyright (c) 2013-2019 GitHub Inc.
+
+greenworks - Copyright (c) 2013-2017 Greenheart Games Pty. Ltd. (http://www.greenheartgames.com)
+
+StarMade - Copyright (c) 2012 - 2019 Schine GmbH
+
+Ubuntu - Copyright (c) 2011 Canonical Ltd
+
+x2js - Copyright (c) 2011-2013 Abdulla Abdurakhmanov
+
+Licenses for the material listed above can be found in /res/licenses

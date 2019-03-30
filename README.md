@@ -33,3 +33,11 @@ Download the Java jre archive(s) from here:
   * win64: https://s3.amazonaws.com/sm-launcher/java/jre-7u80-windows-x64.tar.gz
 
 and manually extract the contents to `launcher/dep/java/(platform)`, e.g. `launcher/dep/java/win64`
+
+## Copyright / License
+
+Copyright (c) Schine GmbH.
+
+All **source code** is made available under the [MIT license](LICENSE.txt).
+
+For further information on licenses and copyright please see [NOTICE.txt](NOTICE.txt).
