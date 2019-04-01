@@ -1,6 +1,6 @@
 @echo off
 
-:: Name: Quick utility
+:: Name: Quick launch utility
 :: Desc: Provides quick packaging, copying, and launching functions
 :: Auth: Terra "calani" Rain
 :: Date: July 2016
