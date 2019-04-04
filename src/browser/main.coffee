@@ -45,14 +45,15 @@ if argv.help?
   process.exit(0)
 
 
-
-app           = require('app')
-dialog        = require('dialog')
-ipc           = require('ipc')
+electron      = require('electron')
 rimraf        = require('rimraf')
-shell         = require('shell')
-BrowserWindow = require('browser-window')
 log           = require('../log.js')
+
+app           = electron.app
+BrowserWindow = electron.BrowserWindow
+dialog        = electron.dialog
+ipc           = electron.ipcMain
+shell         = electron.shell
 
 
 # For some reason, windows open taller on OS X
@@ -188,7 +189,7 @@ openMainWindow = ->
     width: 800
     height: height
 
-  mainWindow.loadUrl "file://#{staticDir}/index.html"
+  mainWindow.loadURL "file://#{staticDir}/index.html"
   log.verbose "Opened Window: Main"
   mainWindow.openDevTools()  if argv.development
 
@@ -227,7 +228,7 @@ openGettingStartedWindow = (args) ->
   # Pass steam flag for automated install directory selection
   gettingStartedWindow.steamLaunch = !!argv.steam
 
-  gettingStartedWindow.loadUrl "file://#{staticDir}/getting_started.html?#{args}"
+  gettingStartedWindow.loadURL "file://#{staticDir}/getting_started.html?#{args}"
   gettingStartedWindow.openDevTools()  if argv.development
 
   gettingStartedWindow.on 'close', ->
@@ -261,7 +262,6 @@ loadFailure = setTimeout ->
 app.on 'ready', ->
   log.event "App ready", log.levels.verbose
   clearTimeout(loadFailure)
-  protocol = require('protocol')
 
   openGettingStartedWindow()
 
@@ -309,7 +309,7 @@ ipc.on 'start-auth', ->
 
   mainWindow.hide()
 
-  authWindow.loadUrl "file://#{staticDir}/auth.html"
+  authWindow.loadURL "file://#{staticDir}/auth.html"
   log.verbose "Opened Window: Auth"
   authWindow.openDevTools()  if argv.development
 

@@ -3,9 +3,11 @@
 REGISTRY_TOKEN_URL = 'https://registry.star-made.org/oauth/token'
 REGISTRY_REGISTER_URL = 'https://registry.star-made.org/api/v1/users.json'
 
-ipc     = require('ipc')
-remote  = require('remote')
-request = require('request')
+electron = require('electron')
+request  = require('request')
+
+ipc    = electron.ipcRenderer
+remote = electron.remote
 
 util    = require('./util')
 log     = require('./log-helpers')
@@ -44,7 +46,7 @@ originalHeight = window.innerHeight
 util.setupExternalLinks()
 
 close.addEventListener 'click', ->
-  remote.require('app').quit()
+  remote.app.quit()
 
 if localStorage.getItem('playerName')?
   # Set username and player name to last used player name

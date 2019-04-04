@@ -1,4 +1,4 @@
-ipc = require('ipc')
+ipc = require('electron').ipcRenderer
 
 
 # While ipc.sendSync() would be better for logging, using it kills AngularJS's $apply()

@@ -1,7 +1,7 @@
 'use strict'
 
 exports.setupExternalLinks = ->
-  shell = require('shell')
+  shell = require('electron').shell
 
   externalLinks = document.getElementsByClassName 'external'
 

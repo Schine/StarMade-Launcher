@@ -1,13 +1,14 @@
 'use strict'
 
-os      = require('os')
-ipc     = require('ipc')
-path    = require('path')
-remote  = require('remote')
-shell   = require('shell')
-spawn   = require('child_process').spawn
+os       = require('os')
+path     = require('path')
+electron = require('electron')
+spawn    = require('child_process').spawn
 
-electronApp = remote.require('app')
+ipc         = electron.ipcRenderer
+shell       = electron.shell
+remote      = electron.remote
+electronApp = remote.app
 
 buildHash  = require('./buildHash.js').buildHash
 util       = require('./util')
@@ -97,7 +98,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
 
   $rootScope.log.raw  "StarMade Launcher v#{version} build #{buildHash}" + (if qa then " (QA)" else "") + "\n"
-  
+
   $rootScope.log.info "Platform"
   $rootScope.log.indent()
   $rootScope.log.entry "OS:  #{process.platform} (#{os.arch()})"
@@ -178,7 +179,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
   getCurrentUser = ->
     api.getCurrentUser()
-      .success (data) ->
+      .then (data) ->
         $rootScope.currentUser = data.user
         $rootScope.playerName = $rootScope.currentUser.username
         $rootScope.log.info  "Using saved credentials"
@@ -187,7 +188,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           ipc.send 'start-steam-link'
         else
           remote.getCurrentWindow().show()
-      .error (data, status) ->
+      .catch (data, status) ->
         if status == 401
           $rootScope.log.info  "Using saved credentials"
           $rootScope.log.event "Requesting auth token"
@@ -257,7 +258,7 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           , 1000
 
 
-  ipc.on 'finish-auth', (args) ->
+  ipc.on 'finish-auth', (event, args) ->
     $rootScope.$apply (scope) ->
       if args.playerName?
         scope.playerName = args.playerName
@@ -267,7 +268,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
         accessToken.set args.access_token
         refreshToken.set args.refresh_token
         api.getCurrentUser()
-          .success (data) ->
+          .then (response) ->
+            data = response.data
             scope.currentUser = data.user
             scope.playerName = scope.currentUser.username
             localStorage.setItem 'playerName', scope.playerName

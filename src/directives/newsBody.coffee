@@ -1,6 +1,6 @@
 'use strict'
 
-shell = require('shell')
+shell = require('electron').shell
 
 app = angular.module 'launcher'
 

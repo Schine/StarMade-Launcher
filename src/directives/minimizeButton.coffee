@@ -1,6 +1,6 @@
 'use strict'
 
-remote = require('remote')
+remote = require('electron').remote
 
 app = angular.module 'launcher'
 
