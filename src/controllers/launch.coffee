@@ -546,10 +546,23 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     args.push("-Xms#{$scope.memory.initial}M")
     args.push("-Xmx#{$scope.memory.max}M")
     # Custom args
-    args.push arg  for arg in $scope.launcherOptions.javaArgs.split(" ")
+    noJar = false
+    # Split arg by space, while retaining "" and '' gropups.
+    javaArgsSplit = $scope.launcherOptions.javaArgs
+      .split(/([^ '"]+(?:"[^"]+")?(?:=(?:"[^"]+"|[^ ]+))?|"[^"]+")/)
+      .filter((s) -> !s.match /^[\s]*$/)
+
+    for arg in javaArgsSplit
+      # don't use -jar when -classpath or -cp is provided.
+      if arg.startsWith("-classpath") || arg.startsWith("-cp")
+        noJar = true
+      args.push arg
+
     # Jar args
-    args.push('-jar')
-    args.push(starmadeJar)
+    if !noJar
+      args.push('-jar')
+      args.push(starmadeJar)
+
     args.push('-force')                      unless dedicatedServer
     args.push('-server')                         if dedicatedServer
     args.push('-gui')                            if dedicatedServer
