@@ -179,8 +179,8 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
 
   getCurrentUser = ->
     api.getCurrentUser()
-      .then (data) ->
-        $rootScope.currentUser = data.user
+      .then (response) ->
+        $rootScope.currentUser = response.data.user
         $rootScope.playerName = $rootScope.currentUser.username
         $rootScope.log.info  "Using saved credentials"
         $rootScope.log.entry "Username: #{$rootScope.playerName}"
@@ -188,14 +188,14 @@ app.run ($q, $rootScope, $state, $timeout, accessToken, api, refreshToken, updat
           ipc.send 'start-steam-link'
         else
           remote.getCurrentWindow().show()
-      .catch (data, status) ->
-        if status == 401
+      .catch (response) ->
+        if response.status == 401
           $rootScope.log.info  "Using saved credentials"
           $rootScope.log.event "Requesting auth token"
           refreshToken.refresh()
-            .then (data) ->
-              accessToken.set data.access_token
-              refreshToken.set data.refresh_token
+            .then (rresponse) ->
+              accessToken.set response.data.access_token
+              refreshToken.set response.data.refresh_token
 
               # Try again
               getCurrentUser()
