@@ -6,7 +6,6 @@ const program = require('commander');
 
 var cache_backup_path = "./.cache";
 var java_options = "-Xmx=256m";
-var steamDirectory = 'f:/Steam/SteamApps/common/StarMade';
 
 var launcherArgs = [];
 // any args after -- should be passed directly to the launcher
