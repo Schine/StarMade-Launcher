@@ -1,9 +1,11 @@
 'use strict'
 
-remote = require('remote')
-shell = require('shell')
+electron = require('electron')
 
-dialog = remote.require('dialog')
+remote = electron.remote
+shell  = electron.shell
+
+dialog = remote.dialog
 
 app = angular.module 'launcher'
 

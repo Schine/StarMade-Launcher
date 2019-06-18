@@ -2,7 +2,7 @@
 
 _          = require('underscore')
 fs         = require('original-fs')
-ipc        = require('ipc')
+ipc        = require('electron').ipcRenderer
 path       = require('path')
 async      = require('async')
 request    = require('request')
@@ -187,7 +187,7 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
         reject("update read error: #{err.message}")
         # .on(error) emits after creating the write stream below, which truncates `app.asar`
         $rootScope.log.fatal "Launcher corrupted!  Please reinstall"  ##TODO: backup app.asar
-        require('remote').require('app').quit()
+        require('electron').remote.app.quit()
         return
 
       stream_asar = fs.createWriteStream( path.resolve(path.join(dir, 'app.asar')) )
@@ -197,7 +197,7 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
           reject("update write error: #{err.message}")
           # creating the write stream truncates `app.asar`
           $rootScope.log.fatal "Launcher corrupted!  Please reinstall"  ##TODO: backup app.asar
-          require('remote').require('app').quit()
+          require('electron').remote.app.quit()
           return
 
         .on 'finish', ->
@@ -217,7 +217,8 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
   @getChecksums = (pathName) ->
     $q (resolve, reject) ->
       $http.get "#{BASE_URL}/#{pathName}/checksums"
-        .success (data) ->
+        .then (response) ->
+          data = response.data
           checksums = []
 
           lines = data.split "\n"
@@ -249,10 +250,10 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
             checksums.push new Checksum(size, checksum, relativePath, "#{BASE_URL}/#{pathName}")
 
           resolve checksums
-        .error (data) ->
+        .catch (response) ->
           # TODO: Consolidate this to one argument to be consist with how
           # other errors are reported
-          reject data, status, headers, config
+          reject response
 
   @getEula = ->
     $http.get "#{BASE_URL}/smeula.txt"
@@ -260,7 +261,8 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
   @getVersions = (branch) ->
     $q (resolve, reject) ->
       $http.get BRANCH_INDEXES[branch]
-        .success (data) ->
+        .then (response) -> # success
+          data = response.data
           # Entry format:  2.0.8#20170712_222922 ./build/starmade-launcher-build_20170712_222922
           versions = []
 
@@ -284,13 +286,13 @@ app.service 'updater', ($q, $http, Checksum, Version, $rootScope, updaterProgres
             versions.push new Version(buildPath, buildVersion, buildBuild)
 
           resolve uniqVersions(versions)
-        .error (data, status, headers, config) ->
+        .catch (response) -> # error
           $rootScope.log.error "Error fetching #{branch} build index"
-          $rootScope.log.indent.debug   "URL:     #{config['url']}"
-          $rootScope.log.indent.debug   "Status:  #{status}"
-          $rootScope.log.indent.verbose "Headers: #{JSON.stringify headers}"
+          $rootScope.log.indent.debug   "URL:     #{response.config['url']}"
+          $rootScope.log.indent.debug   "Status:  #{response.status}"
+          $rootScope.log.indent.verbose "Headers: #{JSON.stringify response.headers}"
 
-          reject data, status, headers, config
+          reject response
 
   uniqVersions = (versions) ->
     uniq = []

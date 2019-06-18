@@ -4,9 +4,9 @@ os         = require('os')
 fs         = require('fs')
 path       = require('path')
 spawn      = require('child_process').spawn
-remote     = require('remote')
+remote     = require('electron').remote
 
-dialog     = remote.require('dialog')
+dialog     = remote.dialog
 
 util       = require('../util')
 fileExists = require('../fileexists').fileExists
@@ -258,7 +258,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     $scope.memory.slider = $scope.memory.max
     update_slider_class()
-    $rootScope.log.verbose "Slider: Snapping from #{newVal} to #{$scope.memory.max}"
+    # $rootScope.log.verbose "Slider: Snapping from #{newVal} to #{$scope.memory.max}"
 
     # Log bounding errors  (these should never happen)
     if $scope.memory.max > $scope.memory.ceiling
@@ -582,7 +582,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     if detach
       $rootScope.log.event "Launched game. Exiting"
-      remote.require('app').quit()
+      remote.app.quit()
 
 
     if ($rootScope.captureGame && !detach)
@@ -605,6 +605,6 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     child.on 'close', ->
       $rootScope.log.event "Game closed. Exiting"
-      remote.require('app').quit()
+      remote.app.quit()
 
     remote.getCurrentWindow().hide()

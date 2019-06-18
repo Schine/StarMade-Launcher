@@ -19,9 +19,9 @@ app.service 'refreshToken', ($http, $q) ->
       $http.post REGISTRY_TOKEN_URL,
         grant_type: 'refresh_token'
         refresh_token: refreshToken
-      .success (data) ->
+      .then (data) ->
         resolve data
-      .error (data) ->
+      .catch (data) ->
         reject data
 
   @delete = ->

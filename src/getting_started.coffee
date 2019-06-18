@@ -1,17 +1,19 @@
 'use strict'
 
-fs     = require('fs')
-ipc    = require('ipc')
-path   = require('path')
-shell  = require('shell')
-remote = require('remote')
+fs       = require('fs')
+path     = require('path')
+electron = require('electron')
+
+ipc    = electron.ipcRenderer
+remote = electron.remote
+shell  = electron.shell
 
 pkg    = require(path.join(path.dirname(__dirname), 'package.json'))
 util   = require('./util')
 log    = require('./log-helpers')
 
-dialog      = remote.require('dialog')
-electronApp = remote.require('app')
+dialog      = remote.dialog
+electronApp = remote.app
 
 
 log.event "Beginning initial setup"
@@ -104,7 +106,7 @@ determineInstallDirectory = ->
 
 acceptEula = ->
   log.entry "Accepted EULA"
-  
+
   localStorage.setItem 'acceptedEula', true
   close.style.display = 'inline'
   footerLinks.style.display = 'block'
@@ -135,7 +137,7 @@ acceptEula = ->
 
 close.addEventListener 'click', ->
   log.end("User clicked the close button.")
-  remote.require('app').quit()
+  remote.app.quit()
 
 # console.log("[Root]")  ##~
 # console.log(" | localStorage: #{JSON.stringify(localStorage)}")  ##~
@@ -227,7 +229,7 @@ decline.addEventListener 'mouseleave', ->
   declineBg.className = ''
 
 decline.addEventListener 'click', ->
-  remote.require('app').quit()
+  remote.app.quit()
 
 #
 # Step 1 -- install directory

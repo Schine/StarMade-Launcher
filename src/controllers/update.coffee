@@ -3,12 +3,12 @@
 fs       = require('fs')
 os       = require('os')
 path     = require('path')
-remote   = require('remote')
+remote   = require('electron').remote
 sanitize = require('sanitize-filename')
 archiver = require('archiver')  # compression
 
-dialog      = remote.require('dialog')
-electronApp = remote.require('app')
+dialog      = remote.dialog
+electronApp = remote.app
 
 fileExists  = require('../fileexists').fileExists
 

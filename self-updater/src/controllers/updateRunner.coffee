@@ -1,5 +1,5 @@
 path = require('path')
-remote = require('remote')
+remote = require('electron').remote
 _ = require 'underscore'
 
 app = angular.module 'launcher-self-updater'
@@ -25,10 +25,10 @@ app.controller 'UpdateRunnerCtrl', ($scope, $element, $http, versionService) ->
     $scope.availableVersions = []
 
     versionService.getManifestForVersion($scope.args.version).then (manifest) ->
-      
+
 
     versionService.getVersions().then (obj) ->
       $scope.availableVersions = obj.data
       latest = _.filter $scope.availableVersions, (ver) -> ver.version
-      $scope.status = "Latest version is #{latest.version}, downloading binary..." 
+      $scope.status = "Latest version is #{latest.version}, downloading binary..."
 
