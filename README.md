@@ -32,7 +32,7 @@ Download the Java jre archive(s) from here:
   * win32: https://s3.amazonaws.com/sm-launcher/java/jre-7u80-windows-i586.tar.gz
   * win64: https://s3.amazonaws.com/sm-launcher/java/jre-7u80-windows-x64.tar.gz
 
-and manually extract the contents to `launcher/dep/java/(platform)`, e.g. `launcher/dep/java/win64`
+and manually extract the contents to `dep/java/(platform)`, e.g. `dep/java/win64`
 
 ## Copyright / License
 

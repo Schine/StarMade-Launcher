@@ -545,6 +545,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     args.push("-Xmn#{$scope.memory.earlyGen}M")
     args.push("-Xms#{$scope.memory.initial}M")
     args.push("-Xmx#{$scope.memory.max}M")
+    args.push('-illegal-access=permit')
     # Custom args
     args.push arg  for arg in $scope.launcherOptions.javaArgs.split(" ")
     # Jar args
