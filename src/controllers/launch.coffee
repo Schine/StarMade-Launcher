@@ -57,7 +57,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   # Load memory settings from storage, or set the defaults
   loadMemorySettings = ->
-    _do_logging = false
+    _do_logging = true
     if not $rootScope.alreadyExecuted 'Loading memory settings', 1000
       $rootScope.log.event "Loading memory settings"
       _do_logging = true
@@ -128,7 +128,7 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
   # Load launcher settings from storage, or set the defaults
 
-  _do_logging = false
+  _do_logging = true
   if not $rootScope.alreadyExecuted "Loading launcher options"
     $rootScope.log.event "Loading launcher options"
     _do_logging = true
@@ -476,6 +476,8 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
 
     newPath = path.resolve(newPath)
 
+    javaJreDirectory = util.getJreDirectory javaVersion
+
     if fileExists( path.join(newPath, "java") )  || # osx+linux
        fileExists( path.join(newPath, "java.exe") ) # windows
       $scope.launcherOptions.javaPathStatus  = "-- Using custom Java install --"
@@ -499,8 +501,15 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     $rootScope.log.event "Launching game"
     $scope.verifyJavaPath()
     loadMemorySettings()
-
+    $rootScope.log.info " settings loaded"
     customJavaPath = null
+    # Check if game version starts with 0.2
+    if $rootScope.buildVersion().startsWith("0.2") || $rootScope.buildVersion().startsWith("0.1")
+      $rootScope.javaVersion = "1.7.0_80"
+      javaVersion = "1.7.0_80"
+    else
+      $rootScope.javaVersion = "18.0.1.1"
+      javaVersion = "18.0.1.1"
 
     # Use the custom java path if it's set and valid
     if $rootScope.javaPath && not $scope.launcherOptions.invalidJavaPath
@@ -546,13 +555,25 @@ app.controller 'LaunchCtrl', ($scope, $rootScope, $timeout, accessToken) ->
     args.push("-Xms#{$scope.memory.initial}M")
     args.push("-Xmx#{$scope.memory.max}M")
     args.push('-illegal-access=permit')
+    if !$rootScope.buildVersion().startsWith("0.2") && !$rootScope.buildVersion().startsWith("0.1")
+      args.push('--add-exports=java.base/jdk.internal.ref=ALL-UNNAMED')
+      args.push('--add-exports=java.base/sun.nio.ch=ALL-UNNAMED')
+      args.push('--add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED')
+      args.push('--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED')
+      args.push('--add-opens=jdk.compiler/com.sun.tools.javac=ALL-UNNAMED')
+      args.push('--add-opens=java.base/sun.nio.ch=ALL-UNNAMED')
+      args.push('--add-opens=java.base/java.lang=ALL-UNNAMED')
+      args.push('--add-opens=java.base/java.lang.reflect=ALL-UNNAMED')
+      args.push('--add-opens=java.base/java.io=ALL-UNNAMED')
+      args.push('--add-opens=java.base/java.util=ALL-UNNAMED')
+
     # Custom args
     args.push arg  for arg in $scope.launcherOptions.javaArgs.split(" ")
     # Jar args
     args.push('-jar')
     args.push(starmadeJar)
     args.push('-force')                      unless dedicatedServer
-    args.push('-server')                         if dedicatedServer
+   # args.push('-server')                         if dedicatedServer
     args.push('-gui')                            if dedicatedServer
     args.push("-port:#{$scope.serverPort}")
     args.push("-auth #{accessToken.get()}")      if accessToken.get()?

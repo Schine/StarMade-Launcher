@@ -639,7 +639,7 @@ gulp.task 'package-steam-appid', ['electron-packager'], ->
     .pipe gulp.dest paths.dist.platform.linux.x64
     .pipe gulp.dest paths.dist.platform.darwin.x64
 
-gulp.task 'run', ['package'], ->
+gulp.task 'run', ->
   appDir = paths.dist.platform[process.platform][process.arch]
   if process.platform == 'darwin'
     app = path.join appDir, 'Electron'
